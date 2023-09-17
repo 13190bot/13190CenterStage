@@ -52,11 +52,12 @@ public class CompositeLocalizer implements Localizer {
                avgH = 0;
 
         for (Localizer localizer : localizers) {
+            localizer.update();
+
             avgX += localizer.getPoseEstimate().getX();
             avgY += localizer.getPoseEstimate().getY();
             avgH += localizer.getPoseEstimate().getHeading();
         }
-
         avgX /= localizers.length;
         avgY /= localizers.length;
         avgH /= localizers.length;
