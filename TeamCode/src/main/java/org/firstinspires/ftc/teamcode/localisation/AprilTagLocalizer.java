@@ -27,12 +27,13 @@ import java.util.List;
                 "implement a way to do heading (if necessary)"
         }
 )
-public class AprilTagLocalizer implements Localizer {
+public class AprilTagLocalizer extends MyLocalizer {
     public AprilTagLocalizer(AprilTagProcessor detectionSupplier, Pose2d startingPose, double camera_offset_x, double camera_offset_y) {
         CAMERA_OFFSET_X = camera_offset_x;
         CAMERA_OFFSET_Y = camera_offset_y;
         poseEstimate = startingPose;
         this.detectionSupplier = detectionSupplier;
+        computesHeading = true;
     }
 
     //only really to be used for CompositeLocalizer
@@ -41,6 +42,7 @@ public class AprilTagLocalizer implements Localizer {
         CAMERA_OFFSET_Y = camera_offset_y;
         poseEstimate = null;
         this.detectionSupplier = detectionSupplier;
+        computesHeading = true;
     }
 
     @NotNull

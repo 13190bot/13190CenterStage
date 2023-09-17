@@ -18,14 +18,16 @@ import org.jetbrains.annotations.Nullable;
                 "defined update as average of all the localizers' results"
         }
 )
-public class CompositeLocalizer implements Localizer {
-    public CompositeLocalizer (Pose2d startingPose, Localizer[] localizers) {
+public class CompositeLocalizer extends MyLocalizer {
+    public CompositeLocalizer (Pose2d startingPose, MyLocalizer[] localizers) {
         poseEstimate = startingPose;
         this.localizers = localizers;
 
         for (Localizer localizer : localizers) {
             localizer.setPoseEstimate(startingPose);
         }
+
+        computesHeading = true;
     }
 
     @NotNull
@@ -47,24 +49,33 @@ public class CompositeLocalizer implements Localizer {
 
     @Override
     public void update() {
+        boolean wasHeadingUpdated = false;
         double avgX = 0,
                avgY = 0,
                avgH = 0;
 
-        for (Localizer localizer : localizers) {
+        for (MyLocalizer localizer : localizers) {
             localizer.update();
 
             avgX += localizer.getPoseEstimate().getX();
             avgY += localizer.getPoseEstimate().getY();
-            avgH += localizer.getPoseEstimate().getHeading();
+
+            if (localizer.computesHeading) {
+                avgH += localizer.getPoseEstimate().getHeading();
+                wasHeadingUpdated = true;
+            }
         }
+
         avgX /= localizers.length;
         avgY /= localizers.length;
-        avgH /= localizers.length;
-
-        poseEstimate = new Pose2d(avgX, avgY, avgH);
+        if (wasHeadingUpdated) {
+            avgH /= localizers.length;
+            poseEstimate = new Pose2d(avgX, avgY, avgH);
+        } else {
+            poseEstimate = new Pose2d(avgX, avgY, poseEstimate.getHeading());
+        }
     }
 
     Pose2d poseEstimate;
-    Localizer[] localizers;
+    MyLocalizer[] localizers;
 }
