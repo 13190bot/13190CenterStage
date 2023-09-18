@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.cv;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -8,21 +9,27 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 
 public class AprilTagDetector {
-    private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
+
+    private final static String webcamName = "Webcam"; // Update this
+    private static AprilTagProcessor aprilTag;
+    private static VisionPortal visionPortal;
 
     public static List<AprilTagDetection> allCurrentDetections;
 
 
 
-    public AprilTagDetector(WebcamName webcam){
+
+
+    public static void initAprilTag(){
         aprilTag = new AprilTagProcessor.Builder()
                 //Set Calibration Here
                 .build();
         VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(webcam);
+        builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
     }
