@@ -24,7 +24,7 @@ public class MeepMeepTesting {
         catch (IOException e) {}
 
 
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(900);
 
 
 
@@ -32,14 +32,16 @@ public class MeepMeepTesting {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-64, -62, 0))
-                                .splineTo(new Vector2d(-36, -62), 0)
-                                .turn(Math.toRadians(90))
-                                .forward(50)
-                                .splineTo(new Vector2d(-20,20),0)
+                       drive.trajectorySequenceBuilder(new Pose2d(-60, -36, 0))
+                               .splineTo(new Vector2d(-35, -43), Math.toRadians(90))
+                               .forward(90)
+
 
                                 .build()
                 );
+
+
+
 
         meepMeep.setBackground(backgroundImage)
                 .setDarkMode(true)
