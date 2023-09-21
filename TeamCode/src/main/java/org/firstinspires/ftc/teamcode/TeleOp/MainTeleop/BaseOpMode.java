@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
@@ -33,6 +34,8 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
 
+    protected DriveToAprilTagCommand driveToAprilTagCommand;
+
     @Override
     public void initialize() {
 
@@ -58,9 +61,12 @@ public class BaseOpMode extends CommandOpMode {
         driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
         driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
 
+        driveToAprilTagCommand = new DriveToAprilTagCommand(driveSubsystem);
+
         manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
         startIntakeCommand = new StartIntakeCommand(intake);
+        AprilTagDetector.initAprilTag(hardwareMap);
 
     }
 
@@ -69,7 +75,8 @@ public class BaseOpMode extends CommandOpMode {
         super.run();
 
         // add telemetry here ig
-
+        AprilTagDetector.updateAprilTagDetections();
+        AprilTagDetector.aprilTagTelemetry(telemetry);
         for (MotorEx motor : motors) {
             String velocity = "Current" + motor + "Velocity: ";
             String power = "Current" + motor + "Power: ";
