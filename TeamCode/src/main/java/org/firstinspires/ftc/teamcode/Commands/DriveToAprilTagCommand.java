@@ -19,11 +19,16 @@ public class DriveToAprilTagCommand extends CommandBase {
         
         if (!(detetctionID_1 == null)) {
             while (8 < detetctionID_1.ftcPose.range) {
-                driveSubsystem.driveRobotCentric(0.5, 0.0, 0.0);
+                driveSubsystem.driveRobotCentric(0.3, 0.0, 0.0);
+            }
+            while (8 == detetctionID_1.ftcPose.range){
+                driveSubsystem.driveRobotCentric(0.0, 0.0, 0.0);
             }
             while (8 > detetctionID_1.ftcPose.range) {
-                driveSubsystem.driveRobotCentric(-0.5, 0.0, 0.0);
+                driveSubsystem.driveRobotCentric(-0.3, 0.0, 0.0);
             }
+        } else {
+            driveSubsystem.driveRobotCentric(0.0, 0.0, 0.0);
         }
     }
 }
