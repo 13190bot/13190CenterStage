@@ -7,13 +7,14 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
 
 public class AprilTagDetector {
 
-    private final static String webcamName = "webcam"; // Update this
+    private final static String webcamName = "webcam";
     private static AprilTagProcessor aprilTag;
     private static VisionPortal visionPortal;
 
@@ -28,7 +29,7 @@ public class AprilTagDetector {
                 //Set Calibration Here
                 .build();
         VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(hardwareMap.get(WebcamName.class, "webcam"));
+        builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
     }
@@ -43,6 +44,15 @@ public class AprilTagDetector {
 
     public boolean isAprilTagDetected(){
         return allCurrentDetections.size() > 0;
+    }
+    @Nullable
+    public static AprilTagDetection detectionByID(int id){
+        for (AprilTagDetection detection : allCurrentDetections) {
+            if (detection.id == id) {
+                return detection;
+            }
+        }
+        return null;
     }
 
     public static void aprilTagTelemetry(Telemetry telemetry){ // Stolen Code from samples but it works

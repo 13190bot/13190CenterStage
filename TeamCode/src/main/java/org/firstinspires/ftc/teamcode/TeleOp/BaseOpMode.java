@@ -34,6 +34,8 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
 
+    protected DriveToAprilTagCommand driveToAprilTagCommand;
+
     @Override
     public void initialize() {
 
@@ -58,6 +60,8 @@ public class BaseOpMode extends CommandOpMode {
 
         driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
         driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
+
+        driveToAprilTagCommand = new DriveToAprilTagCommand(driveSubsystem);
 
        // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
