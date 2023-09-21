@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
@@ -40,17 +41,17 @@ public class BaseOpMode extends CommandOpMode {
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
-        liftLeft = new MotorEx(hardwareMap, "liftLeft");
-        liftRight = new MotorEx(hardwareMap, "liftRight");
+        //liftLeft = new MotorEx(hardwareMap, "liftLeft");
+        //liftRight = new MotorEx(hardwareMap, "liftRight");
 
-        clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
-        axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
+        //clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
+        //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
 
-        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+        //intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        intake = new IntakeSubsystem(intakeMotor);
-        lift = new LiftSubsystem(liftRight, liftLeft);
+        //intake = new IntakeSubsystem(intakeMotor);
+       // lift = new LiftSubsystem(liftRight, liftLeft);
 
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
@@ -58,9 +59,10 @@ public class BaseOpMode extends CommandOpMode {
         driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
         driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
 
-        manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
+       // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
-        startIntakeCommand = new StartIntakeCommand(intake);
+       // startIntakeCommand = new StartIntakeCommand(intake);
+        AprilTagDetector.initAprilTag(hardwareMap);
 
     }
 
@@ -69,14 +71,15 @@ public class BaseOpMode extends CommandOpMode {
         super.run();
 
         // add telemetry here ig
-
-        for (MotorEx motor : motors) {
-            String velocity = "Current" + motor + "Velocity: ";
-            String power = "Current" + motor + "Power: ";
-
-            telemetry.addData(velocity, motor.getVelocity());
-            telemetry.addData(power, motor.motor.getPower());
-        }
+        AprilTagDetector.updateAprilTagDetections();
+        AprilTagDetector.aprilTagTelemetry(telemetry);
+//        for (MotorEx motor : motors) {
+//            String velocity = "Current" + motor + "Velocity: ";
+//            String power = "Current" + motor + "Power: ";
+//
+//            telemetry.addData(velocity, motor.getVelocity());
+//            telemetry.addData(power, motor.motor.getPower());
+//        }
     }
 
     protected GamepadButton gb1(GamepadKeys.Button button) {
