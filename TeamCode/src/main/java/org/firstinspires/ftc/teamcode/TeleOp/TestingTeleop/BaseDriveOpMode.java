@@ -31,12 +31,6 @@ public class BaseDriveOpMode extends CommandOpMode {
 
         initializeComponents();
 
-        register(driveSubsystem);
-
-        gb1(GamepadKeys.Button.X).toggleWhenPressed(driveRobotCentricSlowModeCommand);
-
-        driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
-
     }
 
 
@@ -51,10 +45,9 @@ public class BaseDriveOpMode extends CommandOpMode {
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
-        driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
-        driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
+        driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
+        driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
 
-        driveToAprilTagCommand = new DriveToAprilTagCommand(driveSubsystem);
 
         AprilTagDetector.initAprilTag(hardwareMap);
     }
@@ -62,8 +55,6 @@ public class BaseDriveOpMode extends CommandOpMode {
     @Override
     public void run() {
         super.run();
-
-        // add telemetry here ig
         AprilTagDetector.updateAprilTagDetections();
         AprilTagDetector.aprilTagTelemetry(telemetry);
     }

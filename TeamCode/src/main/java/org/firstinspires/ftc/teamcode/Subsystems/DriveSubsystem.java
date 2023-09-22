@@ -21,8 +21,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
 
-    public void driveRobotCentric(double forward, double strafe, double rotate) {
-        mecanumDrive.driveRobotCentric(forward, strafe, rotate);
+    public void driveRobotCentric(double strafe, double forward, double rotate) {
+        mecanumDrive.driveRobotCentric(strafe, forward, rotate);
     }
 
     public void driveRobotCentricSlowMode(double forward, double strafe, double rotate) {

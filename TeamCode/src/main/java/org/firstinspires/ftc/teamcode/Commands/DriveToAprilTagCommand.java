@@ -7,28 +7,54 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public class DriveToAprilTagCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
+    private AprilTagDetection detectionID_1 = null;
+
 
     public DriveToAprilTagCommand(DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
-
         addRequirements(driveSubsystem);
     }
+
     @Override
     public void execute() {
-        AprilTagDetection detetctionID_1 = AprilTagDetector.detectionByID(1);
-        
-        if (!(detetctionID_1 == null)) {
-            while (8 < detetctionID_1.ftcPose.range) {
-                driveSubsystem.driveRobotCentric(0.3, 0.0, 0.0);
+        detectionID_1 = AprilTagDetector.getDetectionByID(1);
+
+        if (!(detectionID_1 == null)) {
+            if (6 < detectionID_1.ftcPose.range) {
+                if (0== (int) Math.round(detectionID_1.ftcPose.bearing)){
+                    driveSubsystem.driveRobotCentric(0, 0.1, 0);
+                } else if (0 < detectionID_1.ftcPose.bearing){
+                    driveSubsystem.driveRobotCentric(0, 0.1, -0.1);
+                } else if (0 > detectionID_1.ftcPose.bearing){
+                    driveSubsystem.driveRobotCentric(0, 0.1, 0.1);
+                }
             }
-            while (8 == detetctionID_1.ftcPose.range){
-                driveSubsystem.driveRobotCentric(0.0, 0.0, 0.0);
+            if (6 == (int) Math.round(detectionID_1.ftcPose.range)) {
+                if (0== (int) Math.round(detectionID_1.ftcPose.bearing)){
+                    driveSubsystem.driveRobotCentric(0.0, 0, 0);
+                } else if (0 < detectionID_1.ftcPose.bearing){
+                    driveSubsystem.driveRobotCentric(0.0, 0, -0.1);
+                } else if (0 > detectionID_1.ftcPose.bearing){
+                    driveSubsystem.driveRobotCentric(0.0, 0, 0.1);
+                }
             }
-            while (8 > detetctionID_1.ftcPose.range) {
-                driveSubsystem.driveRobotCentric(-0.3, 0.0, 0.0);
+            if (6 > detectionID_1.ftcPose.range) {
+                if (0== (int) Math.round(detectionID_1.ftcPose.bearing)){
+                    driveSubsystem.driveRobotCentric(0, -0.1, 0);
+                } else if (0 < detectionID_1.ftcPose.bearing){
+                    driveSubsystem.driveRobotCentric(0, -0.1, -0.1);
+                } else if (0 > detectionID_1.ftcPose.bearing){
+                    driveSubsystem.driveRobotCentric(0, -0.1, 0.1);
+                }
             }
+
+
         } else {
-            driveSubsystem.driveRobotCentric(0.0, 0.0, 0.0);
+            driveSubsystem.driveRobotCentric(0, 0, 0);
         }
+
     }
 }
+
+
+

@@ -34,7 +34,6 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
 
-    protected DriveToAprilTagCommand driveToAprilTagCommand;
 
     @Override
     public void initialize() {
@@ -43,29 +42,28 @@ public class BaseOpMode extends CommandOpMode {
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
-        liftLeft = new MotorEx(hardwareMap, "liftLeft");
-        liftRight = new MotorEx(hardwareMap, "liftRight");
+        //liftLeft = new MotorEx(hardwareMap, "liftLeft");
+        //liftRight = new MotorEx(hardwareMap, "liftRight");
 
-        clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
-        axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
+       // clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
+        //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
 
-        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+       // intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        intake = new IntakeSubsystem(intakeMotor);
-        lift = new LiftSubsystem(liftRight, liftLeft);
+       // intake = new IntakeSubsystem(intakeMotor);
+       // lift = new LiftSubsystem(liftRight, liftLeft);
 
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
-        driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
-        driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftX, gamepadEx1::getLeftY, gamepadEx1::getRightX);
+        driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
+        driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
 
-        driveToAprilTagCommand = new DriveToAprilTagCommand(driveSubsystem);
 
-        manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
+       // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
-        startIntakeCommand = new StartIntakeCommand(intake);
+       // startIntakeCommand = new StartIntakeCommand(intake);
         AprilTagDetector.initAprilTag(hardwareMap);
 
     }
@@ -75,15 +73,15 @@ public class BaseOpMode extends CommandOpMode {
         super.run();
 
         // add telemetry here ig
-        AprilTagDetector.updateAprilTagDetections();
-        AprilTagDetector.aprilTagTelemetry(telemetry);
-        for (MotorEx motor : motors) {
-            String velocity = "Current" + motor + "Velocity: ";
-            String power = "Current" + motor + "Power: ";
-
-            telemetry.addData(velocity, motor.getVelocity());
-            telemetry.addData(power, motor.motor.getPower());
-        }
+//        AprilTagDetector.updateAprilTagDetections();
+//        AprilTagDetector.aprilTagTelemetry(telemetry);
+//        for (MotorEx motor : motors) {
+//            String velocity = "Current" + motor + "Velocity: ";
+//            String power = "Current" + motor + "Power: ";
+//
+//            telemetry.addData(velocity, motor.getVelocity());
+//            telemetry.addData(power, motor.motor.getPower());
+//        }
     }
 
     protected GamepadButton gb1(GamepadKeys.Button button) {
