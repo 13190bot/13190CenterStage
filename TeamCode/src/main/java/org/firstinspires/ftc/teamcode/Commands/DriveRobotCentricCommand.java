@@ -20,6 +20,6 @@ public class DriveRobotCentricCommand extends CommandBase {
 
     @Override
     public void execute() {
-        driveSubsystem.driveRobotCentric(forward.getAsDouble(), strafe.getAsDouble(), rotate.getAsDouble());
+        driveSubsystem.driveRobotCentric(strafe.getAsDouble(), forward.getAsDouble(), rotate.getAsDouble());
     }
 }

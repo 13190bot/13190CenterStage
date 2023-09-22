@@ -18,7 +18,7 @@ public class AprilTagDetector {
     private static AprilTagProcessor aprilTag;
     private static VisionPortal visionPortal;
 
-    public static List<AprilTagDetection> allCurrentDetections;
+    protected static List<AprilTagDetection> allCurrentDetections;
 
 
 
@@ -34,8 +34,13 @@ public class AprilTagDetector {
         visionPortal = builder.build();
     }
 
+    public static List<AprilTagDetection> getAllCurrentDetections(){
+        return allCurrentDetections;
+    }
+
     public static void updateAprilTagDetections(){
         allCurrentDetections = aprilTag.getDetections();
+
     }
 
     public int getNumberOfDetections(){
@@ -45,10 +50,10 @@ public class AprilTagDetector {
     public boolean isAprilTagDetected(){
         return allCurrentDetections.size() > 0;
     }
-    @Nullable
-    public static AprilTagDetection detectionByID(int id){
-        for (AprilTagDetection detection : allCurrentDetections) {
-            if (detection.id == id) {
+
+    public static AprilTagDetection getDetectionByID(int id){
+        for (AprilTagDetection detection : allCurrentDetections){
+            if (id == detection.id){
                 return detection;
             }
         }
