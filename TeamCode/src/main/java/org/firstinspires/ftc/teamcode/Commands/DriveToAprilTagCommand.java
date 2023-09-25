@@ -7,12 +7,12 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.util.librarys.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
 public class DriveToAprilTagCommand extends CommandBase {
-    private final int TICKS_PER_ROTATION = 10;
-    private final int WHEEL_RADIUS = 2;
+
     private AprilTagDetection detectionID_1 = null;
     private Boolean isCentered = false;
     private MotorEx fl, fr, bl, br;
@@ -46,7 +46,7 @@ public class DriveToAprilTagCommand extends CommandBase {
 
             // Calculate the control output using the PID controller
             double output = pidController.calculate(detectionID_1.ftcPose.range, desiredPosition);
-            double targetTicks = inchesToTicks(output);
+            double targetTicks = DriveConstants.inchesToEncoderTicks(output);
             fl.setTargetDistance(targetTicks);
             fr.setTargetDistance(targetTicks);
             bl.setTargetDistance(targetTicks);
@@ -63,12 +63,7 @@ public class DriveToAprilTagCommand extends CommandBase {
         return isCentered;
     }
 
-    public double inchesToTicks(double inches) {
-        double wheelCircumference = 2 * Math.PI * WHEEL_RADIUS;
-        double ticksPerInch = TICKS_PER_ROTATION / wheelCircumference;
-        double targetTicks =  (inches * ticksPerInch);
-        return targetTicks;
-    }
+
 }
 
 
