@@ -1,18 +1,38 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+@Config
 public class DriveToAprilTagCommand extends CommandBase {
-    private DriveSubsystem driveSubsystem;
     private AprilTagDetection detectionID_1 = null;
+    private Boolean isCentered = false;
+    private MotorEx fl, fr, bl, br;
+     static double kP = 0.1; // Adjust these values based on tuning
+     static double kI = 0.0;
+     static double kD = 0.0;
+    PIDController pidController = new PIDController(kP, kI, kD);
+
+    // Set the setpoint based on the desired AprilTag position (you can adjust this as needed)
+    double desiredPosition = 10.0; // Set this to the desired position
 
 
-    public DriveToAprilTagCommand(DriveSubsystem driveSubsystem) {
-        this.driveSubsystem = driveSubsystem;
-        addRequirements(driveSubsystem);
+
+    public DriveToAprilTagCommand( MotorEx fl, MotorEx fr, MotorEx bl, MotorEx br) {
+        this.fl = fl;
+        this.fr = fr;
+        this.bl = bl;
+        this.br = br;
+    }
+    @Override
+    public void initialize() {
+        fl.setRunMode(MotorEx.RunMode.PositionControl);
     }
 
     @Override
@@ -20,39 +40,29 @@ public class DriveToAprilTagCommand extends CommandBase {
         detectionID_1 = AprilTagDetector.getDetectionByID(1);
 
         if (!(detectionID_1 == null)) {
-            if (6 < detectionID_1.ftcPose.range) {
-                if (0== (int) Math.round(detectionID_1.ftcPose.bearing)){
-                    driveSubsystem.driveRobotCentric(0, 0.1, 0);
-                } else if (0 < detectionID_1.ftcPose.bearing){
-                    driveSubsystem.driveRobotCentric(0, 0.1, -0.1);
-                } else if (0 > detectionID_1.ftcPose.bearing){
-                    driveSubsystem.driveRobotCentric(0, 0.1, 0.1);
-                }
-            }
-            if (6 == (int) Math.round(detectionID_1.ftcPose.range)) {
-                if (0== (int) Math.round(detectionID_1.ftcPose.bearing)){
-                    driveSubsystem.driveRobotCentric(0.0, 0, 0);
-                } else if (0 < detectionID_1.ftcPose.bearing){
-                    driveSubsystem.driveRobotCentric(0.0, 0, -0.1);
-                } else if (0 > detectionID_1.ftcPose.bearing){
-                    driveSubsystem.driveRobotCentric(0.0, 0, 0.1);
-                }
-            }
-            if (6 > detectionID_1.ftcPose.range) {
-                if (0== (int) Math.round(detectionID_1.ftcPose.bearing)){
-                    driveSubsystem.driveRobotCentric(0, -0.1, 0);
-                } else if (0 < detectionID_1.ftcPose.bearing){
-                    driveSubsystem.driveRobotCentric(0, -0.1, -0.1);
-                } else if (0 > detectionID_1.ftcPose.bearing){
-                    driveSubsystem.driveRobotCentric(0, -0.1, 0.1);
-                }
-            }
+            // Calculate the error (the difference between the desired position and the detected position)
 
+            // Calculate the control output using the PID controller
+            double output = pidController.calculate(detectionID_1.ftcPose.range, desiredPosition);
 
+            fl.setTargetDistance(output);
+            fr.setTargetDistance(output);
+            bl.setTargetDistance(output);
+            br.setTargetDistance(output);
         } else {
-            driveSubsystem.driveRobotCentric(0, 0, 0);
-        }
+            // If no AprilTag is detected, stop the robot
+            fl.setTargetDistance(0.0);
+            fr.setTargetDistance(0.0);
+            bl.setTargetDistance(0.0);
+            br.setTargetDistance(0.0);
 
+                }
+
+    }
+
+    @Override
+    public boolean isFinished(){
+        return isCentered;
     }
 }
 

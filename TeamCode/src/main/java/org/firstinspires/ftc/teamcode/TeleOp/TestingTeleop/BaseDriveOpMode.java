@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.LiftSubsystem;
 public class BaseDriveOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
-    private MotorEx fl, fr, bl, br;
+    protected MotorEx fl, fr, bl, br;
     private GamepadEx gamepadEx1;
     private GamepadEx gamepadEx2;
 

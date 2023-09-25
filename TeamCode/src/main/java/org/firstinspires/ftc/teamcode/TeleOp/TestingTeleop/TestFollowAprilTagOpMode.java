@@ -10,9 +10,9 @@ public class TestFollowAprilTagOpMode extends BaseDriveOpMode {
     public void initialize() {
         super.initialize();
         register(driveSubsystem);
-
-        DriveToAprilTagCommand driveToAprilTagCommand = new DriveToAprilTagCommand(driveSubsystem);
+        DriveToAprilTagCommand driveToAprilTagCommand = new DriveToAprilTagCommand(fl,fr,bl,br);
         driveSubsystem.setDefaultCommand(driveToAprilTagCommand);
+
     }
     @Override
     public void run()
