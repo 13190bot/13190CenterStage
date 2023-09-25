@@ -33,9 +33,7 @@ public class DriveToAprilTagCommand extends CommandBase {
         this.br = br;
     }
     @Override
-    public void initialize() {
-        fl.setRunMode(MotorEx.RunMode.PositionControl);
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
