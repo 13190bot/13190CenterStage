@@ -37,7 +37,13 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
         SimpleBlobDetector_Params params = new SimpleBlobDetector_Params();
         params.set_filterByArea(true);
-        params.set_minArea(25);
+//        params.set_minArea(25);
+        // some "holes" in between pixels might also be detected
+        // real solution: see if some pixels are drastically lower (average/4 cutoff)
+//        params.set_minArea(0);
+
+        // temp solution: (NEVER USE)
+//        params.set_minArea(50);
 
         params.set_filterByCircularity(true);
         params.set_minCircularity((float) 0.5);
@@ -66,12 +72,38 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
 
         KeyPoint[] keyPoints = findBlobsOutput.toArray();
-        telemetry.addData("DATA", "");
+
+        // Average size and filter out "noise" (non-pixel blobs)
+        double sizeSum = 0;
         for (int i = 0; i < keyPoints.length; i++) {
             KeyPoint keyPoint = keyPoints[i];
-            telemetry.addData(i + "", keyPoint.toString());
-            // https://www.tutorialspoint.com/opencv/opencv_drawing_circle.htm
-            Imgproc.circle(outputImage, keyPoint.pt, (int) keyPoint.size / 2, new Scalar(255, 0, 0), 10);
+            sizeSum = sizeSum + keyPoint.size;
+        }
+        double sizeAverage = sizeSum / keyPoints.length;
+        double sizeCutoff = sizeAverage / 2; // you can tune
+        for (int i = 0; i < keyPoints.length; i++) {
+            KeyPoint keyPoint = keyPoints[i];
+            if (keyPoint.size < sizeCutoff) {
+                keyPoints[i] = null;
+            }
+        }
+
+        // Now actual data gathering
+        for (int i = 0; i < keyPoints.length; i++) {
+            if (keyPoints[i] != null) {
+                KeyPoint keyPoint = keyPoints[i];
+                telemetry.addData(i + "", keyPoint.toString());
+                // https://www.tutorialspoint.com/opencv/opencv_drawing_circle.htm
+                Imgproc.circle(outputImage, keyPoint.pt, (int) (keyPoint.size / 2), new Scalar(255, 0, 0), 10);
+
+                int colorx = (int) (keyPoint.pt.x + 3 * keyPoint.size / 4);
+                int colory = (int) (keyPoint.pt.y);
+                double[] d = input.get(colorx, colory);
+                Scalar p = new Scalar(d);
+                Imgproc.circle(outputImage, new Point(colorx, colory), 10, new Scalar(0, 0, 255), 10);
+
+                telemetry.addData("color", p.toString());
+            }
         }
         telemetry.update();
 
