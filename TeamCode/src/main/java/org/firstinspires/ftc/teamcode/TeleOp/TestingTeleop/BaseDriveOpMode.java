@@ -56,7 +56,6 @@ public class BaseDriveOpMode extends CommandOpMode {
     public void run() {
         super.run();
         AprilTagDetector.updateAprilTagDetections();
-        AprilTagDetector.aprilTagTelemetry(telemetry);
     }
 
     protected GamepadButton gb1(GamepadKeys.Button button) {
