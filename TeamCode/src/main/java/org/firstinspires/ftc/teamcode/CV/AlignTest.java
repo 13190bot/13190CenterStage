@@ -48,6 +48,14 @@ public class AlignTest extends BaseOpMode {
 
         AprilTagDetection tag = AprilTagDetector.getDetectionByID(1);
 
+        if (tag != null) {
+            telemetry.addData("a", tag.ftcPose.bearing);
+        } else {
+            telemetry.addData("nothing found", "");
+        }
+        AprilTagDetector.aprilTagTelemetry(telemetry);
+//        telemetry.update();
+
         if (!rotatePIDF.atSetPoint()) {
             double output = rotatePIDF.calculate(tag.ftcPose.bearing);
             rotate = -output;
