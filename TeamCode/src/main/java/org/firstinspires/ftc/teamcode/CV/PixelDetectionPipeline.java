@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.CV;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.CV.BestPixelPlacement.Pixel;
 import org.opencv.core.*;
@@ -11,7 +12,27 @@ import org.opencv.features2d.SimpleBlobDetector_Params;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.firstinspires.ftc.teamcode.CV.BestPixelPlacement.Board;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public class PixelDetectionPipeline extends OpenCvPipeline {
+    class SortKeyPointsByX implements Comparator<KeyPoint> {
+        // Used for sorting in ascending order of
+        // roll number
+        public int compare(KeyPoint a, KeyPoint b)
+        {
+            return (int) (a.pt.x - b.pt.x);
+        }
+    }
+    class SortKeyPointsByY implements Comparator<KeyPoint> {
+        // Used for sorting in ascending order of
+        // roll number
+        public int compare(KeyPoint a, KeyPoint b)
+        {
+            return (int) (a.pt.y - b.pt.y);
+        }
+    }
+
 
     /*
     READ
@@ -54,6 +75,10 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
 
         blobDetector.setParams(params);
+
+
+        // aprilTag
+//        AprilTagDetector.initAprilTag(hardwareMap);
     }
 
 
@@ -81,17 +106,60 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         }
         double sizeAverage = sizeSum / keyPoints.length;
         double sizeCutoff = sizeAverage / 2; // you can tune
+        int nRemoved = 0;
         for (int i = 0; i < keyPoints.length; i++) {
             KeyPoint keyPoint = keyPoints[i];
             if (keyPoint.size < sizeCutoff) {
                 keyPoints[i] = null;
+                nRemoved++;
             }
         }
+        KeyPoint[] newKeyPoints = new KeyPoint[keyPoints.length - nRemoved];
+        nRemoved = 0;
+        for (int i = 0; i < keyPoints.length; i++) {
+            if (keyPoints[i] != null) {
+                newKeyPoints[i - nRemoved] = keyPoints[i];
+            } else {
+                nRemoved++;
+            }
+        }
+        keyPoints = newKeyPoints;
+
+
+        // this is some horrendous code
+        // Sort by x coordinate (to get min and max)
+        Arrays.sort(keyPoints, new SortKeyPointsByY());
+        double xMin = keyPoints[0].pt.x;
+        double xMax = keyPoints[keyPoints.length - 1].pt.x;
+
+        // Sort by y coordinate
+        Arrays.sort(keyPoints, new SortKeyPointsByY());
+        // Remember: for y axis, up is less, down is more
+        double yMax = keyPoints[0].pt.y;
+        double yMin = keyPoints[keyPoints.length - 1].pt.y;
+
+        // Sort by y, then x? idk
+//        double xSpace = 0; // how far each pixel is spaced from the next
+//        for (int i = 0; i < keyPoints.length; i++) {
+//
+//        }
+
+
 
         // Now actual data gathering
         for (int i = 0; i < keyPoints.length; i++) {
             if (keyPoints[i] != null) {
                 KeyPoint keyPoint = keyPoints[i];
+
+
+
+
+
+
+
+
+
+                // telemetry and visuals
                 telemetry.addData(i + "", keyPoint.toString());
                 // https://www.tutorialspoint.com/opencv/opencv_drawing_circle.htm
                 Imgproc.circle(outputImage, keyPoint.pt, (int) (keyPoint.size / 2), new Scalar(255, 0, 0), 10);
@@ -105,7 +173,9 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
                 telemetry.addData("color", p.toString());
             }
         }
-        telemetry.update();
+
+
+        // telemetry.update(); // aprilTagTelemetry has telemetry.update()
 
 
 //        // https://stackoverflow.com/a/28282965
