@@ -1,18 +1,17 @@
 package org.firstinspires.ftc.teamcode.CV.BestPixelPlacement;
 
-enum PixelColor {
-    X_TEST,
-    WHITE,
-    PURPLE,
-    YELLOW,
-    GREEN,
-    NONE // air / no pixel
-}
+import org.opencv.core.KeyPoint;
 
 public class Pixel {
-    int x;
-    int y;
-    PixelColor color;
+    public int x;
+    public int y;
+    public PixelColor color;
+    public int optimalScore; // Used in BestPixelPlacement to convey optimality of pixel
+
+    // used for the original positions in the image
+    public double imgX;
+    public double imgY;
+    public KeyPoint keyPoint;
     public Pixel(int x, int y, PixelColor color) {
         this.x = x;
         this.y = y;

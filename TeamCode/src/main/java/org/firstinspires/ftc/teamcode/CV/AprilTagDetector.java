@@ -31,6 +31,7 @@ public class AprilTagDetector {
         VisionPortal.Builder builder = new VisionPortal.Builder();
         builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
         builder.addProcessor(aprilTag);
+        builder.enableLiveView(true);
         visionPortal = builder.build();
     }
 

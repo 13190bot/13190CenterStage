@@ -10,7 +10,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(name = "AlignTest")
 @Config
-public class AlignTest extends BaseDriveOpMode {
+public class AlignTest extends BaseOpMode {
 
     double forward = 0;
     double strafe = 0;
@@ -49,12 +49,23 @@ public class AlignTest extends BaseDriveOpMode {
 
         AprilTagDetection tag = AprilTagDetector.getDetectionByID(1);
 
-        if (!rotatePIDF.atSetPoint()) {
-            double output = rotatePIDF.calculate(tag.ftcPose.bearing);
-            rotate = -output;
+        if (tag != null) {
+            if (!rotatePIDF.atSetPoint()) {
+                if (rotate == 0) {
+                    rotatePIDF.reset();
+                }
+                double output = rotatePIDF.calculate(tag.ftcPose.bearing);
+                rotate = -output;
+            } else {
+                rotate = 0;
+            }
         } else {
             rotate = 0;
         }
+
+        telemetry.addData("rotate", rotate);
+
+        AprilTagDetector.aprilTagTelemetry(telemetry);
 
     }
 }
