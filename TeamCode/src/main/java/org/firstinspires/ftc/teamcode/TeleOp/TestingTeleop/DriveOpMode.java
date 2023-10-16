@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import org.firstinspires.ftc.teamcode.Subsystems.GamepadSubsystem;
+
 
 public class DriveOpMode extends BaseDriveOpMode{
     @Override
@@ -9,7 +10,7 @@ public class DriveOpMode extends BaseDriveOpMode{
 
         register(driveSubsystem);
 
-        gb1(GamepadKeys.Button.X).toggleWhenPressed(driveRobotCentricSlowModeCommand);
+        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).toggleWhenPressed(driveRobotCentricSlowModeCommand);
 
         driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
     }

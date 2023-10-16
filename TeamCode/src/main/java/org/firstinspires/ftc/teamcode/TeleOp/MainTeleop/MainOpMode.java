@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Subsystems.GamepadSubsystem;
 import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
 
 @TeleOp(name = "MainTeleop")
@@ -13,10 +14,10 @@ public class MainOpMode extends BaseOpMode {
 
         register(driveSubsystem);
 
-        gb1(GamepadKeys.Button.X).toggleWhenPressed(driveRobotCentricSlowModeCommand);
+        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).toggleWhenPressed(driveRobotCentricSlowModeCommand);
 
-        gb2(GamepadKeys.Button.A).toggleWhenPressed(startIntakeCommand);
-        gb2(GamepadKeys.Button.LEFT_BUMPER).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
+        gamepadSubsystem.gb2(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).toggleWhenPressed(startIntakeCommand);
+        gamepadSubsystem.gb2(GamepadSubsystem.PLAYSTATION_BUTTONS.CROSS).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
 
         driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
 
