@@ -69,8 +69,17 @@ public class GamepadSubsystem extends SubsystemBase {
     public static void rumbleGmp1(int durationMS){
         gamepadEx1.gamepad.rumble(durationMS);
     }
+    /**
+     * Rumble the gamepad with a continuous duration
+     */
     public static void rumbleGmp2(int durationMS){
         gamepadEx2.gamepad.rumble(durationMS);
+    }
+    public static void rumbleGmp1(){
+        gamepadEx1.gamepad.rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
+    }
+    public static void rumbleGmp2(){
+        gamepadEx2.gamepad.rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
     }
 
     /**
