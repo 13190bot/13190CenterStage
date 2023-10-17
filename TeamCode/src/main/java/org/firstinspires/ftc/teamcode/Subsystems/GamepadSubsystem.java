@@ -5,10 +5,11 @@ import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import org.jetbrains.annotations.NotNull;
 
 public class GamepadSubsystem extends SubsystemBase {
-    private static GamepadEx gamepadEx1;
-    private static GamepadEx gamepadEx2;
+    protected static GamepadEx gamepadEx1;
+    protected static GamepadEx gamepadEx2;
 
     public enum PLAYSTATION_BUTTONS {
         CIRCLE(GamepadKeys.Button.B),
@@ -48,11 +49,11 @@ public class GamepadSubsystem extends SubsystemBase {
     /**
      * Get a gamepad button based on PS5 button layout
      */
-    public static GamepadButton gb1(PLAYSTATION_BUTTONS button) {
+    public GamepadButton gb1(@NotNull PLAYSTATION_BUTTONS button) {
         return gamepadEx1.getGamepadButton(button.getButton());
     }
 
-    public static GamepadButton gb2(PLAYSTATION_BUTTONS button) {
+    public GamepadButton gb2(@NotNull PLAYSTATION_BUTTONS button) {
         return gamepadEx2.getGamepadButton(button.getButton());
     }
 
@@ -64,6 +65,12 @@ public class GamepadSubsystem extends SubsystemBase {
     }
     public static void rumbleGmp2(double rumble1, double rumble2,int durationMs) {
         gamepadEx2.gamepad.rumble(rumble1, rumble2, durationMs);
+    }
+    public static void rumbleGmp1(int durationMS){
+        gamepadEx1.gamepad.rumble(durationMS);
+    }
+    public static void rumbleGmp2(int durationMS){
+        gamepadEx2.gamepad.rumble(durationMS);
     }
 
     /**

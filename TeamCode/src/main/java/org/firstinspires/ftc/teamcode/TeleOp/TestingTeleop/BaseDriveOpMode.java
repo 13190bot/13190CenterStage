@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 
-@TeleOp(name = "DriveOpMode")
 public class BaseDriveOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
@@ -37,11 +36,13 @@ public class BaseDriveOpMode extends CommandOpMode {
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
 
+        gamepadEx1 = new GamepadEx(gamepad1);
+        gamepadEx2 = new GamepadEx(gamepad2);
+
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         gamepadSubsystem = new GamepadSubsystem(gamepadEx1, gamepadEx2);
 
-        gamepadEx1 = new GamepadEx(gamepad1);
-        gamepadEx2 = new GamepadEx(gamepad2);
+
 
 
 

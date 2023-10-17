@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.DriveRobotCentricCommand;
 import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
+import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(name = "AlignTest")
