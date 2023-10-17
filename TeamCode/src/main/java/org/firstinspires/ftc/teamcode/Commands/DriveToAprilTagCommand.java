@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
@@ -34,11 +35,8 @@ public class DriveToAprilTagCommand extends CommandBase {
     double desiredPosition = 10.0; // Set this to the desired position
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
+    private double outputForward, outputRotation, outputStrafe;
 
-    public static double Q = 3; // High values put more emphasis on the sensor.
-    public static double R = 0.3; // High Values put more emphasis on regression.
-    public static int N = 3; // The number of estimates in the past we perform regression on.
-    KalmanFilter filter = new KalmanFilter(Q,R,N);
 
 
 
@@ -57,12 +55,10 @@ public class DriveToAprilTagCommand extends CommandBase {
         detection = AprilTagDetector.getDetectionByID(tagID);
 
         if (!(detection == null)) {
-            // Calculate the error (the difference between the desired position and the detected position)
 
-            // Calculate the control output using the PID controller
-            double outputForward = -pidControllerForward.calculate(detection.ftcPose.range, desiredPosition);
-            double outputRotation = pidControllerRotation.calculate(detection.ftcPose.bearing, 0);
-            double outputStrafe = pidControllerRotation.calculate(detection.ftcPose.x, 0);
+             outputForward = -pidControllerForward.calculate(detection.ftcPose.range, desiredPosition);
+             outputRotation = -Math.tanh(detection.ftcPose.bearing);
+             outputStrafe = pidControllerRotation.calculate(detection.ftcPose.x, 0);
 
 
             pidControllerForward.setTolerance(3);
@@ -70,39 +66,28 @@ public class DriveToAprilTagCommand extends CommandBase {
             pidControllerStrafe.setTolerance(3);
 
 
-            double filteredOutputForward = filter.estimate(outputForward);
+            if (pidControllerForward.atSetPoint()) outputForward = 0;
+          //  if (Math.abs(outputRotation) < 0.1) outputRotation = 0;
+            if (pidControllerStrafe.atSetPoint()) outputRotation = 0;
 
-            double targetPowerForward = (Math.tanh(filteredOutputForward/2)/3);
-            double targetPowerRotation = (Math.tanh(outputRotation/4)/3);
-            double targetPowerStrafe = (Math.tanh(outputStrafe/4)/3);
-
-            if (pidControllerForward.atSetPoint()) targetPowerForward = 0;
-            if (pidControllerRotation.atSetPoint()) targetPowerRotation = 0;
-            if (pidControllerStrafe.atSetPoint()) targetPowerStrafe = 0;
-
-            dashboardTelemetry.addData("Output of PID in inches",outputForward);
-            dashboardTelemetry.addData("Filtered Output",filteredOutputForward);
-            dashboardTelemetry.addData("Motor Power",targetPowerForward);
-
-            telemetry.addData("Target Power Rotation",targetPowerRotation);
-            telemetry.addData("Target Power Strafe", targetPowerStrafe);
-            telemetry.addData("___", "___");
+            dashboardTelemetry.addData("Output of PID in inches", outputForward);
+            telemetry.addData("FTC bearing (rotation)",detection.ftcPose.bearing);
+            telemetry.addLine("____");
+            telemetry.addData("PID output forward", outputForward/10);
             telemetry.addData("PID output Rotation", outputRotation);
-            telemetry.addData("PID output Strafe", outputStrafe);
+            telemetry.addData("PID output Strafe", outputStrafe/500);
             dashboardTelemetry.update();
             telemetry.update();
 
-                driveSubsystem.driveRobotCentric(0, targetPowerForward, 0);
+            driveSubsystem.driveRobotCentric(0, Math.round(outputForward/10), outputRotation);
 
 
         } else {
             // If no AprilTag is detected, stop the robot
-                if (!(filter == null))   driveSubsystem.driveRobotCentric(0, (Math.tanh(filter.getX()/2)/3), 0);
-                else driveSubsystem.driveRobotCentric(0, 0, 0);
-                }
 
+
+        }
     }
-
     @Override
     public boolean isFinished(){
         return isCentered;

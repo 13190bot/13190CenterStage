@@ -7,14 +7,12 @@ import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
-import org.firstinspires.ftc.teamcode.Subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.*;
 
 public class BaseOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
+    protected GamepadSubsystem gamepadSubsystem;
     protected IntakeSubsystem intake;
     protected ClawSubsystem claw;
     protected LiftSubsystem lift;
@@ -50,6 +48,7 @@ public class BaseOpMode extends CommandOpMode {
 
        // intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
+        gamepadSubsystem = new GamepadSubsystem(gamepadEx1, gamepadEx2);
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
        // intake = new IntakeSubsystem(intakeMotor);
        // lift = new LiftSubsystem(liftRight, liftLeft);
