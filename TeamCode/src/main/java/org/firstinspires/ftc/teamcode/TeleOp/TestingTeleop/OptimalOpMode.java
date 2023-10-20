@@ -32,7 +32,7 @@ public class OptimalOpMode extends BaseDriveOpMode{
                         if (y > 0) {
                             return y; // Back wheel (going forwards)
                         } else if (y < 0) {
-                            return 0; // TODO Front wheel (going backwords)
+                            return 0; // TODO Front wheel (going backwards)
                         } else {
                             return 0; // None
                         }
