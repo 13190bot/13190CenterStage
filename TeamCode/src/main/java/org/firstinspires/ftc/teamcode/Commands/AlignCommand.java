@@ -53,7 +53,7 @@ public class AlignCommand extends CommandBase {
                     rotatePIDF.reset();
                 }
                 double input = tag.ftcPose.bearing / 180; // Degrees: Should be >-180 and <180, so divide to match motor power
-                double output = rotatePIDF.calculate(input);
+                double output = rotatePIDF.calculate(input, 0);
                 rotate = -output;
                 forward = 0;
                 strafe = 0;
@@ -63,8 +63,8 @@ public class AlignCommand extends CommandBase {
                     if (forward == 0) {
                         forwardPIDF.reset();
                     }
-                    double input = tag.ftcPose.y / 10; // Inches: TODO: tune
-                    double output = forwardPIDF.calculate(input);
+                    double input = tag.ftcPose.y; // Inches: TODO: tune
+                    double output = forwardPIDF.calculate(input, 4);
                     rotate = 0;
                     forward = output;
                     strafe = 0;
@@ -75,13 +75,16 @@ public class AlignCommand extends CommandBase {
                             strafePIDF.reset();
                         }
                         double input = tag.ftcPose.x / 10; // Inches: TODO: tune
-                        double output = strafePIDF.calculate(input);
+                        double output = strafePIDF.calculate(input, 0);
                         rotate = 0;
                         forward = 0;
                         strafe = output;
                     } else {
                         // Done aligning!
                         telemetry.addLine("Done aligning!");
+                        rotate = 0;
+                        forward = 0;
+                        strafe = 0;
                     }
                 }
             }
