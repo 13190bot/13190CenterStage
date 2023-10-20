@@ -63,13 +63,6 @@ public class OptimalOpMode extends BaseDriveOpMode{
                 () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) + gamepadEx1.getRightX()
         );
 
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).toggleWhenPressed(driveRobotCentricSlowModeCommand);
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).whenPressed(new InstantCommand(() -> {
-            gamepadSubsystem.rumbleGmp1();
-            telemetry.addData("Rumbling Controller",1);
-            telemetry.update();
-        }));
-
         driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
     }
 
