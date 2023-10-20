@@ -68,8 +68,6 @@ public class OptimalOpMode extends BaseDriveOpMode{
 
     @Override
     public void run() {
-        double rightTrigger = gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
-
         super.run();
     }
 }
