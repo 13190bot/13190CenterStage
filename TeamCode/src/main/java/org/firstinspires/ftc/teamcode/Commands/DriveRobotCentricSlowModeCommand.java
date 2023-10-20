@@ -22,6 +22,6 @@ public class DriveRobotCentricSlowModeCommand extends CommandBase {
 
     @Override
     public void execute() {
-        driveSubsystem.driveRobotCentric(strafe.getAsDouble(), forward.getAsDouble(), rotate.getAsDouble());
+        driveSubsystem.driveRobotCentric(strafe.getAsDouble()/3, forward.getAsDouble()/3, rotate.getAsDouble()/3);
     }
 }

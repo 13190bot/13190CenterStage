@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Subsystems.GamepadSubsystem;
+
+@TeleOp(name = "DriveOpMode")
 
 public class DriveOpMode extends BaseDriveOpMode{
     @Override
@@ -9,7 +13,12 @@ public class DriveOpMode extends BaseDriveOpMode{
 
         register(driveSubsystem);
 
-        gb1(GamepadKeys.Button.X).toggleWhenPressed(driveRobotCentricSlowModeCommand);
+        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).toggleWhenPressed(driveRobotCentricSlowModeCommand);
+        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).whenPressed(new InstantCommand(() -> {
+            gamepadSubsystem.rumbleGmp1();
+            telemetry.addData("Rumbling Controller",1);
+            telemetry.update();
+        }));
 
         driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
     }
