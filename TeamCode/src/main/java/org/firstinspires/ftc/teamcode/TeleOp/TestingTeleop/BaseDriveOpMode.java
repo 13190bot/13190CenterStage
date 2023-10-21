@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
@@ -19,6 +20,7 @@ public class BaseDriveOpMode extends CommandOpMode {
     protected DriveRobotCentricSlowModeCommand driveRobotCentricSlowModeCommand;
 
     protected DriveToAprilTagCommand driveToAprilTagCommand;
+    protected IndividualMotorTestCommand individualMotorTestCommand;
 
 
 
@@ -31,6 +33,7 @@ public class BaseDriveOpMode extends CommandOpMode {
 
 
     private void initializeComponents() {
+
         fl = new MotorEx(hardwareMap, "frontLeft");
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
@@ -41,8 +44,17 @@ public class BaseDriveOpMode extends CommandOpMode {
 
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         gamepadSubsystem = new GamepadSubsystem(gamepadEx1, gamepadEx2);
+        individualMotorTestCommand = new IndividualMotorTestCommand(
+                driveSubsystem,
+                fl,fr,bl,br,
+                () -> gamepadSubsystem.gpT1(GamepadKeys.Trigger.LEFT_TRIGGER),
+                () -> gamepadSubsystem.gpT1(GamepadKeys.Trigger.RIGHT_TRIGGER),
+                gamepadEx1::getLeftY,
+                gamepadEx1::getRightY,
+                () -> gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER),
+                () -> gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
 
-
+        );
 
 
 

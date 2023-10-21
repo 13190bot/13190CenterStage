@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.DriveToAprilTagCommand;
+
+import static org.firstinspires.ftc.teamcode.CV.AprilTagDetector.visionPortal;
+
 
 @TeleOp(name = "TestFollowAprilTagOpMode")
 public class TestFollowAprilTagOpMode extends BaseDriveOpMode {
@@ -12,7 +16,6 @@ public class TestFollowAprilTagOpMode extends BaseDriveOpMode {
         register(driveSubsystem);
         DriveToAprilTagCommand driveToAprilTagCommand = new DriveToAprilTagCommand(driveSubsystem,1,telemetry);
         driveSubsystem.setDefaultCommand(driveToAprilTagCommand);
-
     }
     @Override
     public void run()

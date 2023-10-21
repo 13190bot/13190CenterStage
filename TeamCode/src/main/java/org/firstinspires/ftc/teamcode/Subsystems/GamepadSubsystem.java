@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.jetbrains.annotations.NotNull;
 
 public class GamepadSubsystem extends SubsystemBase {
-    protected static GamepadEx gamepadEx1;
-    protected static GamepadEx gamepadEx2;
+    public static GamepadEx gamepadEx1;
+    public static GamepadEx gamepadEx2;
 
     public enum PLAYSTATION_BUTTONS {
+        LEFT_BUMPER(GamepadKeys.Button.LEFT_BUMPER),
+        RIGHT_BUMPER(GamepadKeys.Button.LEFT_BUMPER),
         CIRCLE(GamepadKeys.Button.B),
         CROSS(GamepadKeys.Button.A),
         TRIANGLE(GamepadKeys.Button.Y),
@@ -49,13 +51,23 @@ public class GamepadSubsystem extends SubsystemBase {
     /**
      * Get a gamepad button based on PS5 button layout
      */
-    public GamepadButton gb1(@NotNull PLAYSTATION_BUTTONS button) {
+    public GamepadButton gb1(PLAYSTATION_BUTTONS button) {
         return gamepadEx1.getGamepadButton(button.getButton());
     }
 
-    public GamepadButton gb2(@NotNull PLAYSTATION_BUTTONS button) {
+    public GamepadButton gb2(PLAYSTATION_BUTTONS button) {
         return gamepadEx2.getGamepadButton(button.getButton());
     }
+    /**
+     * Get a trigger on the gamepad
+     */
+    public double gpT1(GamepadKeys.Trigger trigger) {
+        return gamepadEx1.getTrigger(trigger);
+    }
+    public double gpT2(GamepadKeys.Trigger trigger) {
+        return gamepadEx2.getTrigger(trigger);
+    }
+
 
     /**
      * Rumble the gamepad with a set duration

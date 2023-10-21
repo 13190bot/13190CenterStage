@@ -16,7 +16,7 @@ public class AprilTagDetector {
 
     private final static String webcamName = "webcam";
     private static AprilTagProcessor aprilTag;
-    private static VisionPortal visionPortal;
+    public static VisionPortal visionPortal;
 
     protected static List<AprilTagDetection> allCurrentDetections;
 
@@ -27,11 +27,16 @@ public class AprilTagDetector {
     public static void initAprilTag(HardwareMap hardwareMap){
         aprilTag = new AprilTagProcessor.Builder()
                 //Set Calibration Here
+                .setDrawTagID(true)
+                .setDrawCubeProjection(true)
+                .setDrawAxes(true)
                 .build();
         VisionPortal.Builder builder = new VisionPortal.Builder();
         builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
+        builder.enableLiveView(true);
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
+
     }
 
     public static List<AprilTagDetection> getAllCurrentDetections(){
