@@ -132,6 +132,7 @@ public class BestPixelPlacement {
 
         // Data structures that will be reused over and over
         Pixel pixel = new Pixel(0, 0, pixelColor);
+        int optimalScore = 1; // if pixelColor is not white, is the color optimal? or is it better for a different color? 1: optimal, 0: same as white, -1: breaks mosaic
 
         // 1: Find the places where we can place
 
@@ -436,6 +437,7 @@ public class BestPixelPlacement {
                         // No good positions, give up
                         // Just go for height, pass on to white algorithm
                         heightOverride = true;
+                        optimalScore = 0;
                     } else {
                         // TODO: Return mosaic options
                         pixel.x = cx1;
@@ -471,6 +473,7 @@ public class BestPixelPlacement {
                 Pixel p = calculate(board, PixelColor.WHITE);
                 pixel.x = p.x;
                 pixel.y = p.y;
+                optimalScore = -1;
             } else if (cy == -2) {
                 // Edge case: No columns
 
@@ -485,13 +488,49 @@ public class BestPixelPlacement {
         return pixel;
     }
 
+    // TODO: Make this into its own class?
+    static PixelColor[] mosaicColors = {PixelColor.PURPLE, PixelColor.YELLOW, PixelColor.GREEN};
+
+    public static PixelColor[] calculateViableColors(Board board) {
+        PixelColor[] viableColors = new PixelColor[4];
+        for (int i = 0; i < mosaicColors.length; i++) {
+            PixelColor color = mosaicColors[i];
+            Pixel pixel = calculate(board, color);
+            if (pixel.optimalScore == 1) {
+                viableColors[i] = color;
+            } else {
+                viableColors[i] = null;
+            }
+        }
+
+        return viableColors;
+    }
+    public static Pixel calculate(Board board) {
+        // Also calculate which color, automatically based on optimalScore
+
+        PixelColor[] viableColors = calculateViableColors(board);
+
+        // Choose first element, since we aren't given a color
+        PixelColor color = PixelColor.WHITE;
+        for (int i = 0; i < viableColors.length; i++) {
+            if (viableColors[i] != null) {
+                color = viableColors[i];
+                break;
+            }
+        }
+
+        return calculate(board, color);
+    }
+
     public static void main(String[] args) {
         /*
         My vision: press x, y, a, b depending on color of loaded pixel
 
          */
 
-        Board board = new Board(7, 11);
+//        Board board = new Board(7, 11);
+        Board board = new Board();
+
 
         // set pixels
         int i = 0;

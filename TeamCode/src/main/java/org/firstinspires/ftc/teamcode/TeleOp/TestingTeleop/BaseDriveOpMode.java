@@ -13,8 +13,8 @@ public class BaseDriveOpMode extends CommandOpMode {
     protected DriveSubsystem driveSubsystem;
     protected GamepadSubsystem gamepadSubsystem;
     protected MotorEx fl, fr, bl, br;
-    private GamepadEx gamepadEx1;
-    private GamepadEx gamepadEx2;
+    protected GamepadEx gamepadEx1;
+    protected GamepadEx gamepadEx2;
 
     protected DriveRobotCentricCommand driveRobotCentricCommand;
     protected DriveRobotCentricSlowModeCommand driveRobotCentricSlowModeCommand;
