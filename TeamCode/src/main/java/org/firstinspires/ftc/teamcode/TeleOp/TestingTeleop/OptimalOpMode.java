@@ -57,10 +57,10 @@ public class OptimalOpMode extends BaseDriveOpMode{
                             return y;
                         }
                     } else {
-                        return gamepadEx1.getLeftX();
+                        return gamepadEx1.getRightX();
                     }
                 },
-                () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) + gamepadEx1.getRightX()
+                () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) // + gamepadEx1.getRightX()
         );
 
         driveSubsystem.setDefaultCommand(driveRobotCentricCommand);

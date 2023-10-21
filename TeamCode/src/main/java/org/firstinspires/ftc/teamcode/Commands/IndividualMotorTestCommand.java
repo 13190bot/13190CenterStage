@@ -28,7 +28,6 @@ public class IndividualMotorTestCommand extends CommandBase {
 
         addRequirements(driveSubsystem);
 
-        fr.setInverted(true);
     }
     @Override
     public void execute() {

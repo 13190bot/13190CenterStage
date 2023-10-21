@@ -17,7 +17,7 @@ public class DriveOpMode extends BaseDriveOpMode{
 
         gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).toggleWhenPressed(driveRobotCentricSlowModeCommand);
         gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).whenPressed(new InstantCommand(() -> {
-            gamepadSubsystem.rumbleGmp1(20,20,1000);
+            gamepadSubsystem.rumbleGmp1();
             telemetry.addData("Rumbling Controller",1);
             telemetry.update();
         }));

@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
@@ -39,6 +40,11 @@ public class BaseDriveOpMode extends CommandOpMode {
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
 
+        fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
@@ -47,12 +53,12 @@ public class BaseDriveOpMode extends CommandOpMode {
         individualMotorTestCommand = new IndividualMotorTestCommand(
                 driveSubsystem,
                 fl,fr,bl,br,
-                () -> gamepadSubsystem.gpT1(GamepadKeys.Trigger.LEFT_TRIGGER),
-                () -> gamepadSubsystem.gpT1(GamepadKeys.Trigger.RIGHT_TRIGGER),
+                () -> gamepadSubsystem.gpT1(GamepadSubsystem.PLAYSTATION_TRIGGERS.L2),
+                () -> gamepadSubsystem.gpT1(GamepadSubsystem.PLAYSTATION_TRIGGERS.R2),
                 gamepadEx1::getLeftY,
                 gamepadEx1::getRightY,
-                () -> gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER),
-                () -> gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
+                () -> gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.L1).get(),
+                () -> gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.R1).get()
 
         );
 
@@ -62,13 +68,13 @@ public class BaseDriveOpMode extends CommandOpMode {
         driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
 
 
-        AprilTagDetector.initAprilTag(hardwareMap);
+        //AprilTagDetector.initAprilTag(hardwareMap);
     }
 
     @Override
     public void run() {
         super.run();
-        AprilTagDetector.updateAprilTagDetections();
+       // AprilTagDetector.updateAprilTagDetections();
     }
 
 
