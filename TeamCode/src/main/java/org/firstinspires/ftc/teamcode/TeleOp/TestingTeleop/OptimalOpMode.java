@@ -30,7 +30,7 @@ public class OptimalOpMode extends BaseDriveOpMode{
                     double y = gamepadEx1.getLeftY();
                     if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
                         if (y > 0) {
-                            return y; // Back wheel (going forwards)
+                            return 0; // Back wheel (going forwards)
                         } else if (y < 0) {
                             return 0; // TODO Front wheel (going backwards)
                         } else {
@@ -60,7 +60,26 @@ public class OptimalOpMode extends BaseDriveOpMode{
                         return gamepadEx1.getRightX();
                     }
                 },
-                () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) // + gamepadEx1.getRightX()
+                () -> {
+                    double y = gamepadEx1.getLeftY();
+                    if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+                        if (y == 0) {
+                            // None or rotate
+                            return 0; // TODO
+                        } else {
+                            return -y;
+                        }
+                    } else if (gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+                        if (y == 0) {
+                            // None or rotate
+                            return 0; // TODO
+                        } else {
+                            return y;
+                        }
+                    } else {
+                        return gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER); // + gamepadEx1.getRightX()
+                    }
+                }
         );
 
         driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
