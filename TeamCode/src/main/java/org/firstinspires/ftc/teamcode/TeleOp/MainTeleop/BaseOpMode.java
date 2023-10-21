@@ -77,8 +77,6 @@ public class BaseOpMode extends CommandOpMode {
 //        for (MotorEx motor : motors) {
 //            String velocity = "Current" + motor + "Velocity: ";
 //            String power = "Current" + motor + "Power: ";
-//
-//            telemetry.addData(velocity, motor.getVelocity());
 //            telemetry.addData(power, motor.motor.getPower());
 //        }
     }
