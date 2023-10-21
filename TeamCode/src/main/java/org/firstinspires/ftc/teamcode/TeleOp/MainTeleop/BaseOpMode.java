@@ -47,14 +47,14 @@ public class BaseOpMode extends CommandOpMode {
         //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
 
        // intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
-
+        gamepadEx1 = new GamepadEx(gamepad1);
+        gamepadEx2 = new GamepadEx(gamepad2);
         gamepadSubsystem = new GamepadSubsystem(gamepadEx1, gamepadEx2);
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
        // intake = new IntakeSubsystem(intakeMotor);
        // lift = new LiftSubsystem(liftRight, liftLeft);
 
-        gamepadEx1 = new GamepadEx(gamepad1);
-        gamepadEx2 = new GamepadEx(gamepad2);
+
 
         driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
         driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);

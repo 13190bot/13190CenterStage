@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Subsystems.GamepadSubsystem;
 
 @TeleOp(name = "DriveOpMode")
@@ -25,6 +27,8 @@ public class DriveOpMode extends BaseDriveOpMode{
 
     @Override
     public void run() {
+        double rightTrigger = gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
+
         super.run();
     }
 }

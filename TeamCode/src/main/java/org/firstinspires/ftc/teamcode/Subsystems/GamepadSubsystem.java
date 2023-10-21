@@ -8,28 +8,53 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.jetbrains.annotations.NotNull;
 
 public class GamepadSubsystem extends SubsystemBase {
-    protected static GamepadEx gamepadEx1;
-    protected static GamepadEx gamepadEx2;
+    public static GamepadEx gamepadEx1;
+    public static GamepadEx gamepadEx2;
 
     public enum PLAYSTATION_BUTTONS {
+        R3(GamepadKeys.Button.LEFT_STICK_BUTTON),
+        R2(GamepadKeys.Button.LEFT_STICK_BUTTON),
+        DPAD_UP(GamepadKeys.Button.DPAD_UP),
+        DPAD_DOWN(GamepadKeys.Button.DPAD_DOWN),
+        DPAD_RIGHT(GamepadKeys.Button.DPAD_RIGHT),
+        DPAD_LEFT(GamepadKeys.Button.DPAD_LEFT),
+        L1(GamepadKeys.Button.LEFT_BUMPER),
+        R1(GamepadKeys.Button.LEFT_BUMPER),
         CIRCLE(GamepadKeys.Button.B),
         CROSS(GamepadKeys.Button.A),
         TRIANGLE(GamepadKeys.Button.Y),
         SQUARE(GamepadKeys.Button.X),
         SHARE(GamepadKeys.Button.BACK),
         OPTIONS(GamepadKeys.Button.START);
-        public final GamepadKeys.Button button;
+        private final GamepadKeys.Button button;
 
         PLAYSTATION_BUTTONS(GamepadKeys.Button button) {
             this.button = button;
         }
 
 
-
         public GamepadKeys.Button getButton() {
             return button;
         }
     }
+
+    public enum PLAYSTATION_TRIGGERS {
+        R2(GamepadKeys.Trigger.RIGHT_TRIGGER),
+        L2(GamepadKeys.Trigger.LEFT_TRIGGER);
+
+
+        private final GamepadKeys.Trigger trigger;
+
+        PLAYSTATION_TRIGGERS(GamepadKeys.Trigger trigger) {
+            this.trigger = trigger;
+        }
+
+        public GamepadKeys.Trigger getTrigger() {
+            return trigger;
+        }
+    }
+
+
     public enum TOUCHPAD {
         FINGER_1,
         FINGER_2,
@@ -49,13 +74,23 @@ public class GamepadSubsystem extends SubsystemBase {
     /**
      * Get a gamepad button based on PS5 button layout
      */
-    public GamepadButton gb1(@NotNull PLAYSTATION_BUTTONS button) {
+    public GamepadButton gb1(PLAYSTATION_BUTTONS button) {
         return gamepadEx1.getGamepadButton(button.getButton());
     }
 
-    public GamepadButton gb2(@NotNull PLAYSTATION_BUTTONS button) {
+    public GamepadButton gb2(PLAYSTATION_BUTTONS button) {
         return gamepadEx2.getGamepadButton(button.getButton());
     }
+    /**
+     * Get a trigger on the gamepad based on PS5 Trigger naming
+     */
+    public double gpT1(PLAYSTATION_TRIGGERS trigger) {
+        return gamepadEx1.getTrigger(trigger.getTrigger());
+    }
+    public double gpT2(PLAYSTATION_TRIGGERS trigger) {
+        return gamepadEx2.getTrigger(trigger.getTrigger());
+    }
+
 
     /**
      * Rumble the gamepad with a set duration
@@ -85,7 +120,7 @@ public class GamepadSubsystem extends SubsystemBase {
     /**
      * Rumble the gamepad with a custom-built rumble effect
      */
-    public void customRumbleGmp1(Gamepad.RumbleEffect rumbleEffect){
+    public static void customRumbleGmp1(Gamepad.RumbleEffect rumbleEffect){
         gamepadEx1.gamepad.runRumbleEffect(rumbleEffect);
     }
     public void customRumbleGmp2(Gamepad.RumbleEffect rumbleEffect){
@@ -164,6 +199,16 @@ public class GamepadSubsystem extends SubsystemBase {
             }
 
         }
+    }
+
+    /**
+     * Check if a touchpad is being pressed
+     */
+    public static Boolean touchPressedGmp1(){
+        return gamepadEx1.gamepad.touchpad;
+    }
+    public static Boolean touchPressedGmp2(){
+        return gamepadEx2.gamepad.touchpad;
     }
 
     /**
