@@ -39,5 +39,5 @@ dependencies {
     implementation 'com.acmerobotics.roadrunner:core:0.5.6'
 
     // Photon
-    implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:v2.0.4'
+//    implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:v2.0.4'
 }
