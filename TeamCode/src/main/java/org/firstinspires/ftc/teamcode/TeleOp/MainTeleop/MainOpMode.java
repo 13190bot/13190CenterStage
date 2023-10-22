@@ -4,7 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Subsystems.GamepadSubsystem;
 import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
 
-@TeleOp(name = "MainTeleop")
+/*
+TODO:
+Implement photon https://github.com/8872/8872PP/pull/3/files
+ */
+
+@TeleOp(name = "MainTeleOp")
 public class MainOpMode extends BaseOpMode {
 
 
@@ -14,12 +19,12 @@ public class MainOpMode extends BaseOpMode {
 
         register(driveSubsystem);
 
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).toggleWhenPressed(driveRobotCentricSlowModeCommand);
+//        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(driveRobotCentricSlowModeCommand);
 
-        gamepadSubsystem.gb2(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).toggleWhenPressed(startIntakeCommand);
-        gamepadSubsystem.gb2(GamepadSubsystem.PLAYSTATION_BUTTONS.CROSS).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.X).toggleWhenPressed(startIntakeCommand);
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.A).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
 
-        driveSubsystem.setDefaultCommand(driveRobotCentricCommand);
+        driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
     }
 

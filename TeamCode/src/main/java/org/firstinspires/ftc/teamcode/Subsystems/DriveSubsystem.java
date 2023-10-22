@@ -11,6 +11,8 @@ public class DriveSubsystem extends SubsystemBase {
     private MecanumDrive mecanumDrive;
     private MotorEx fl, fr, bl, br;
 
+    public double speedMultiplier = 1;
+
     public DriveSubsystem(MotorEx fl, MotorEx fr, MotorEx bl, MotorEx br) {
         this.fl = fl;
         this.fr = fr;
@@ -22,10 +24,6 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     public void driveRobotCentric(double strafe, double forward, double rotate) {
-        mecanumDrive.driveRobotCentric(strafe, forward, rotate);
-    }
-
-    public void driveRobotCentricSlowMode(double forward, double strafe, double rotate) {
-        mecanumDrive.driveRobotCentric(forward/3, strafe/3, rotate/3);
+        mecanumDrive.driveRobotCentric(strafe * speedMultiplier, forward * speedMultiplier, rotate * speedMultiplier);
     }
 }

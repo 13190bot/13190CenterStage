@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.*;
 public class BaseOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
-    protected GamepadSubsystem gamepadSubsystem;
     protected IntakeSubsystem intake;
     protected ClawSubsystem claw;
     protected LiftSubsystem lift;
@@ -21,11 +20,10 @@ public class BaseOpMode extends CommandOpMode {
     private SimpleServo clawServo;
     private SimpleServo axleServo;
     private MotorEx[] motors = {fl, fr, bl, br};
-    private GamepadEx gamepadEx1;
-    private GamepadEx gamepadEx2;
+    protected GamepadEx gamepadEx1;
+    protected GamepadEx gamepadEx2;
 
-    protected DriveRobotCentricCommand driveRobotCentricCommand;
-    protected DriveRobotCentricSlowModeCommand driveRobotCentricSlowModeCommand;
+    protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
     protected StartIntakeCommand startIntakeCommand;
     protected ClawGrabCommand clawGrabCommand;
@@ -49,15 +47,12 @@ public class BaseOpMode extends CommandOpMode {
        // intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
-        gamepadSubsystem = new GamepadSubsystem(gamepadEx1, gamepadEx2);
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
        // intake = new IntakeSubsystem(intakeMotor);
        // lift = new LiftSubsystem(liftRight, liftLeft);
 
 
-
-        driveRobotCentricCommand = new DriveRobotCentricCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
-        driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
+        driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
 
 
        // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
@@ -70,22 +65,5 @@ public class BaseOpMode extends CommandOpMode {
     @Override
     public void run() {
         super.run();
-
-        // add telemetry here ig
-//        AprilTagDetector.updateAprilTagDetections();
-//        AprilTagDetector.aprilTagTelemetry(telemetry);
-//        for (MotorEx motor : motors) {
-//            String velocity = "Current" + motor + "Velocity: ";
-//            String power = "Current" + motor + "Power: ";
-//            telemetry.addData(power, motor.motor.getPower());
-//        }
-    }
-
-    protected GamepadButton gb1(GamepadKeys.Button button) {
-        return gamepadEx1.getGamepadButton(button);
-    }
-
-    protected GamepadButton gb2(GamepadKeys.Button button) {
-        return gamepadEx2.getGamepadButton(button);
     }
 }
