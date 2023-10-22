@@ -29,39 +29,36 @@ public class GamepadDemo extends BaseDriveOpMode {
 
         register(driveSubsystem);
 
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).whenPressed(new InstantCommand(() -> {
-            gamepadSubsystem.rumbleGmp1();
-        }));
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).whenPressed(new InstantCommand(() -> {
-            gamepadSubsystem.rumbleGmp1(0,0.5,1000);
-        }));
 
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CROSS).whenPressed(new InstantCommand(() -> {
-            gamepadEx1.gamepad.rumble(rumbleStrength,rumbleStrength,1000);
-        }));
 
-        gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.DPAD_DOWN).whenPressed(new InstantCommand(() -> {
-           gamepadEx1.gamepad.runRumbleEffect(testRumbleEffect);
-        }));
 
         }
 
         @Override
 
-        public void run(){
-        super.initialize();
-            gamepadEx1.gamepad.setLedColor(red,green,blue,Gamepad.RUMBLE_DURATION_CONTINUOUS);
-            telemetry.addData("Touchpad Button",gamepadSubsystem.touchPressedGmp1());
-        telemetry.addLine("______");
-        telemetry.addData("Touching Touchpad, finger 1",gamepadSubsystem.isTouchingGmp1(GamepadSubsystem.TOUCHPAD.FINGER_1));
-        telemetry.addData("Touching Touchpad, finger 2",gamepadSubsystem.isTouchingGmp1(GamepadSubsystem.TOUCHPAD.FINGER_2));
-        telemetry.addLine("______");
-        telemetry.addData("Finger 1 X",gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_1_X));
-        telemetry.addData("Finger 1 Y",gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_1_Y));
-        telemetry.addLine("______");
-        telemetry.addData("Finger 2 X",gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_2_X));
-        telemetry.addData("Finger 2 Y",gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_2_Y));
-        telemetry.update();
+        public void run() {
+            super.initialize();
+            gamepadEx1.gamepad.setLedColor(red, green, blue, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            telemetry.addData("Touchpad Button", gamepadSubsystem.touchPressedGmp1());
+            telemetry.addLine("______");
+            telemetry.addData("Touching Touchpad, finger 1", gamepadSubsystem.isTouchingGmp1(GamepadSubsystem.TOUCHPAD.FINGER_1));
+            telemetry.addData("Touching Touchpad, finger 2", gamepadSubsystem.isTouchingGmp1(GamepadSubsystem.TOUCHPAD.FINGER_2));
+            telemetry.addLine("______");
+            telemetry.addData("Finger 1 X", gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_1_X));
+            telemetry.addData("Finger 1 Y", gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_1_Y));
+            telemetry.addLine("______");
+            telemetry.addData("Finger 2 X", gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_2_X));
+            telemetry.addData("Finger 2 Y", gamepadSubsystem.touchPadGmp1(GamepadSubsystem.TOUCHPAD.FINGER_2_Y));
+            telemetry.update();
+            if (gamepadSubsystem.touchPressedGmp1()) {
+                gamepadEx1.gamepad.setLedColor(0, 0, 0, Gamepad.RUMBLE_DURATION_CONTINUOUS);
+            }
+            if(gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.CIRCLE).get()){
+                gamepadEx1.gamepad.rumble(1.0,0,500);
+            }
+            if(gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.SQUARE).get()) {
+                gamepadEx1.gamepad.rumbleBlips(5);
+            }
         }
     }
 

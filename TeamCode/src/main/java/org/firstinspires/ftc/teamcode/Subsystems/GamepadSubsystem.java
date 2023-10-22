@@ -79,6 +79,7 @@ public class GamepadSubsystem extends SubsystemBase {
     }
 
     public GamepadButton gb2(PLAYSTATION_BUTTONS button) {
+        boolean ps = gamepadEx2.gamepad.square;
         return gamepadEx2.getGamepadButton(button.getButton());
     }
     /**
@@ -92,70 +93,6 @@ public class GamepadSubsystem extends SubsystemBase {
     }
 
 
-    /**
-     * Rumble the gamepad with a set duration
-     */
-    public static void rumbleGmp1(double rumble1, double rumble2,int durationMs) {
-        gamepadEx2.gamepad.rumble(rumble1, rumble2, durationMs);
-    }
-    public static void rumbleGmp2(double rumble1, double rumble2,int durationMs) {
-        gamepadEx2.gamepad.rumble(rumble1, rumble2, durationMs);
-    }
-    public static void rumbleGmp1(int durationMS){
-        gamepadEx1.gamepad.rumble(durationMS);
-    }
-    /**
-     * Rumble the gamepad with a continuous duration
-     */
-    public static void rumbleGmp2(int durationMS){
-        gamepadEx2.gamepad.rumble(durationMS);
-    }
-    public static void rumbleGmp1(){
-        gamepadEx1.gamepad.rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-    }
-    public static void rumbleGmp2(){
-        gamepadEx2.gamepad.rumble(Gamepad.RUMBLE_DURATION_CONTINUOUS);
-    }
-
-    /**
-     * Rumble the gamepad with a custom-built rumble effect
-     */
-    public static void customRumbleGmp1(Gamepad.RumbleEffect rumbleEffect){
-        gamepadEx1.gamepad.runRumbleEffect(rumbleEffect);
-    }
-    public void customRumbleGmp2(Gamepad.RumbleEffect rumbleEffect){
-        gamepadEx2.gamepad.runRumbleEffect(rumbleEffect);
-    }
-
-    /**
-     * Set the color of the gamepad with a set duration
-     */
-    public static void colorGmp1(double red, double green, double blue,int durationMs) {
-        gamepadEx1.gamepad.setLedColor(red, green, blue,durationMs);
-    }
-    public static void colorGmp2(double red, double green, double blue,int durationMs) {
-        gamepadEx2.gamepad.setLedColor(red, green, blue,durationMs);
-    }
-
-    /**
-     * Set the color of the gamepad with a continuous duration
-     */
-    public static void colorGmp1(double red, double green, double blue) {
-        gamepadEx1.gamepad.setLedColor(red, green, blue, Gamepad.LED_DURATION_CONTINUOUS);
-    }
-    public static void colorGmp2(double red, double green, double blue) {
-        gamepadEx2.gamepad.setLedColor(red, green, blue, Gamepad.LED_DURATION_CONTINUOUS);
-    }
-
-    /**
-     * Run a custom built LED effect
-     */
-    public static void customColorGmp1(Gamepad.LedEffect ledEffect){
-        gamepadEx1.gamepad.runLedEffect(ledEffect);
-    }
-    public static void customColorGmp2(Gamepad.LedEffect ledEffect){
-        gamepadEx2.gamepad.runLedEffect(ledEffect);
-    }
 
     /**
      * Get the value of a touchpad
