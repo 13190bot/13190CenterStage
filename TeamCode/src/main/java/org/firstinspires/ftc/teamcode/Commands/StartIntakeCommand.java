@@ -19,4 +19,9 @@ public class StartIntakeCommand extends CommandBase {
     public void execute() {
         intake.startIntake();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        intake.stopIntake();
+    }
 }

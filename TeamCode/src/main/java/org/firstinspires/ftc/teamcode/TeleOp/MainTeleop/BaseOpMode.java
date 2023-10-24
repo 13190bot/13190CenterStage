@@ -51,13 +51,16 @@ public class BaseOpMode extends CommandOpMode {
        intake = new IntakeSubsystem(intakeMotor);
        // lift = new LiftSubsystem(liftRight, liftLeft);
 
+        fl.setInverted(true);
+        fr.setInverted(true);
+
 
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
 
 
        // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
-       // startIntakeCommand = new StartIntakeCommand(intake);
+     startIntakeCommand = new StartIntakeCommand(intake);
         AprilTagDetector.initAprilTag(hardwareMap);
 
     }
