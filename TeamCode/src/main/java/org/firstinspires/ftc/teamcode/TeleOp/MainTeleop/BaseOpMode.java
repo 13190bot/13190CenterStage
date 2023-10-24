@@ -44,12 +44,15 @@ public class BaseOpMode extends CommandOpMode {
        // clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
         //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
 
-       // intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+       intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-       // intake = new IntakeSubsystem(intakeMotor);
+       intake = new IntakeSubsystem(intakeMotor);
        // lift = new LiftSubsystem(liftRight, liftLeft);
+
+        fl.setInverted(true);
+        fr.setInverted(true);
 
 
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
@@ -57,7 +60,7 @@ public class BaseOpMode extends CommandOpMode {
 
        // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
-       // startIntakeCommand = new StartIntakeCommand(intake);
+     startIntakeCommand = new StartIntakeCommand(intake);
         AprilTagDetector.initAprilTag(hardwareMap);
 
     }

@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 import java.util.function.DoubleSupplier;
 
@@ -34,11 +35,11 @@ public class DriveRobotOptimalCommand extends CommandBase {
         Left and right trigger (v): Rotate
         Left and right bumpers (t/f): WheelRotate
 
-        B (t/f): Toggle slowmode
+        Circle (t/f): Toggle slowmode
          */
 
         // Slowmode
-        if (gamepadEx1.getButton(GamepadKeys.Button.B)) {
+        if (gamepadEx1.getButton(PlaystationAliases.CIRCLE)) {
             slowmodeOn = !slowmodeOn;
             if (slowmodeOn) {
                 driveSubsystem.speedMultiplier = slowmodeMultiplier;
@@ -53,7 +54,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
             driveSubsystem.driveRobotCentric(0, side, side);
         } else {
             // Normal
-            driveSubsystem.driveRobotCentric(gamepadEx1.getLeftX(), gamepadEx1.getRightY(), gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+            driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), -gamepadEx1.getLeftY(), gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 //            driveSubsystem.driveRobotCentric(strafe, forward, rotate);
         }
     }
