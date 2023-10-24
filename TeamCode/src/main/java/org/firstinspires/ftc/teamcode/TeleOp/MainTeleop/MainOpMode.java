@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Subsystems.GamepadSubsystem;
-import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
 
 /*
 TODO:

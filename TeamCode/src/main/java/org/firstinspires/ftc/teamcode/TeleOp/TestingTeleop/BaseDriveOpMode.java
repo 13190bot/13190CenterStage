@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 public class BaseDriveOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
-    protected GamepadSubsystem gamepadSubsystem;
     protected MotorEx fl, fr, bl, br;
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
@@ -49,16 +49,15 @@ public class BaseDriveOpMode extends CommandOpMode {
         gamepadEx2 = new GamepadEx(gamepad2);
 
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        gamepadSubsystem = new GamepadSubsystem(gamepadEx1, gamepadEx2);
         individualMotorTestCommand = new IndividualMotorTestCommand(
                 driveSubsystem,
                 fl,fr,bl,br,
-                () -> gamepadSubsystem.gpT1(GamepadSubsystem.PLAYSTATION_TRIGGERS.L2),
-                () -> gamepadSubsystem.gpT1(GamepadSubsystem.PLAYSTATION_TRIGGERS.R2),
+                () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER),
+                () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
                 gamepadEx1::getLeftY,
                 gamepadEx1::getRightY,
-                () -> gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.L1).get(),
-                () -> gamepadSubsystem.gb1(GamepadSubsystem.PLAYSTATION_BUTTONS.R1).get()
+                () -> gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).get(),
+                () -> gamepadEx1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).get()
 
         );
 
