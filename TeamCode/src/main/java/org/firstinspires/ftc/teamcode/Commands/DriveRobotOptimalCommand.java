@@ -45,10 +45,10 @@ public class DriveRobotOptimalCommand extends CommandBase {
         if (gamepadEx1.wasJustPressed(PlaystationAliases.CIRCLE)) {
             slowmodeOn = !slowmodeOn;
             if (slowmodeOn) {
-                gamepadEx1.gamepad.setLedColor(255,0,239,200);
+                gamepadEx1.gamepad.setLedColor(232,240,0,200);
                 driveSubsystem.speedMultiplier = slowmodeMultiplier;
             } else {
-                gamepadEx1.gamepad.setLedColor(255,0,239,200);
+                gamepadEx1.gamepad.setLedColor(232,240,0,200);
                 driveSubsystem.speedMultiplier = 1;
             }
         }

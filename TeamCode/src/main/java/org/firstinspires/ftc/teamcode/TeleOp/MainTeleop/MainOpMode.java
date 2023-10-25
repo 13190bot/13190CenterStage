@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Commands.AxleMoveCommand;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 /*
@@ -21,10 +22,10 @@ public class MainOpMode extends BaseOpMode {
 //        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(driveRobotCentricSlowModeCommand);
 
         gamepadEx2.getGamepadButton(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
-        gamepadEx2.getGamepadButton(PlaystationAliases.SQUARE).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
+        gamepadEx2.getGamepadButton(PlaystationAliases.TRIANGLE).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
 
+        clawSubsystem.setDefaultCommand(axleMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
-
     }
 
     public void run()

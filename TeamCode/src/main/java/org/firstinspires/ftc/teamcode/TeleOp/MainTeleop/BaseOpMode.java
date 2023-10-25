@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
@@ -30,6 +31,7 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawGrabCommand clawGrabCommand;
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
+    protected AxleMoveCommand axleMoveCommand;
 
 
     @Override
@@ -48,9 +50,9 @@ public class BaseOpMode extends CommandOpMode {
         //liftLeft = new MotorEx(hardwareMap, "liftLeft");
         //liftRight = new MotorEx(hardwareMap, "liftRight");
 
-       // clawLeft = new SimpleServo(hardwareMap, "clawLeft", 0, 180);
-        // clawRight = new SimpleServo(hardwareMap, "clawRight", 0, 180);
+        // claw = new SimpleServo(hardwareMap, "claw", 0, 180);
         //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
+        //TODO: Tune Min and Max
 
         intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
         gamepadEx1 = new GamepadEx(gamepad1);
@@ -59,7 +61,7 @@ public class BaseOpMode extends CommandOpMode {
         intake = new IntakeSubsystem(intakeMotor);
 
         // liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
-        // clawSubsystem = new ClawSubsystem(clawLeft, clawRight, axleServo);
+        // clawSubsystem = new ClawSubsystem(claw, axleServo);
         // clawGrabCommand = new ClawGrabCommand(clawSubsystem);
         // clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
 
@@ -74,6 +76,9 @@ public class BaseOpMode extends CommandOpMode {
 
      startIntakeCommand = new StartIntakeCommand(intake);
         AprilTagDetector.initAprilTag(hardwareMap);
+
+
+     axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
 
     }
 

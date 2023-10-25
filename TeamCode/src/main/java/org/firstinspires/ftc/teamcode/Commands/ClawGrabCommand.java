@@ -3,21 +3,17 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.Subsystems.ClawSubsystem;
 
 public class ClawGrabCommand extends CommandBase {
-    private ClawSubsystem claw;
+    private ClawSubsystem clawSubsystem;
 
-    public ClawGrabCommand(ClawSubsystem claw) {
-        this.claw = claw;
+    public ClawGrabCommand(ClawSubsystem clawSubsystem) {
+        this.clawSubsystem = clawSubsystem;
 
-        addRequirements(claw);
     }
 
     @Override
     public void initialize() {
-        claw.grab();
+        clawSubsystem.grab();
     }
 
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
+
 }
