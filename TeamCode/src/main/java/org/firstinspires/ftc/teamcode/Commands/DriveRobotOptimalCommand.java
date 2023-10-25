@@ -3,6 +3,7 @@ import com.acmerobotics.roadrunner.drive.Drive;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
@@ -39,11 +40,15 @@ public class DriveRobotOptimalCommand extends CommandBase {
          */
 
         // Slowmode
-        if (gamepadEx1.getButton(PlaystationAliases.CIRCLE)) {
+
+        gamepadEx1.readButtons();
+        if (gamepadEx1.wasJustPressed(PlaystationAliases.CIRCLE)) {
             slowmodeOn = !slowmodeOn;
             if (slowmodeOn) {
+                gamepadEx1.gamepad.setLedColor(255,0,239,200);
                 driveSubsystem.speedMultiplier = slowmodeMultiplier;
             } else {
+                gamepadEx1.gamepad.setLedColor(255,0,239,200);
                 driveSubsystem.speedMultiplier = 1;
             }
         }

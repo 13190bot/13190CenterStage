@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
@@ -38,6 +39,12 @@ public class BaseOpMode extends CommandOpMode {
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
+
+        fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         //liftLeft = new MotorEx(hardwareMap, "liftLeft");
         //liftRight = new MotorEx(hardwareMap, "liftRight");
 
