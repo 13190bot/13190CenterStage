@@ -13,8 +13,8 @@ public class BaseOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intake;
-    protected ClawSubsystem claw;
-    protected LiftSubsystem lift;
+    protected ClawSubsystem clawSubsystem;
+    protected LiftSubsystem liftSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
 
     private SimpleServo clawServo;
@@ -41,15 +41,20 @@ public class BaseOpMode extends CommandOpMode {
         //liftLeft = new MotorEx(hardwareMap, "liftLeft");
         //liftRight = new MotorEx(hardwareMap, "liftRight");
 
-       // clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
+       // clawLeft = new SimpleServo(hardwareMap, "clawLeft", 0, 180);
+        // clawRight = new SimpleServo(hardwareMap, "clawRight", 0, 180);
         //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
 
-       intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-       intake = new IntakeSubsystem(intakeMotor);
-       // lift = new LiftSubsystem(liftRight, liftLeft);
+        intake = new IntakeSubsystem(intakeMotor);
+
+        // liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
+        // clawSubsystem = new ClawSubsystem(clawLeft, clawRight, axleServo);
+        // clawGrabCommand = new ClawGrabCommand(clawSubsystem);
+        // clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
 
         fl.setInverted(true);
         fr.setInverted(true);
