@@ -55,8 +55,9 @@ public class DriveRobotOptimalCommand extends CommandBase {
 
         if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             // WheelRotate
-            double side = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? -1 : 1;
-            driveSubsystem.driveRobotCentric(0, side, side);
+            double side1 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? -1 : 1;
+            double side2 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? 0 : 0;
+            driveSubsystem.driveRobotCentric(side2, side1, side1);
         } else {
             // Normal
             driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), -gamepadEx1.getLeftY(), gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));

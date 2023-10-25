@@ -13,7 +13,7 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
         RIGHT
     }
 
-    private final Mat hsvMat = new Mat();
+    private final Mat ycbcrMat = new Mat();
 //    private final Mat binaryMat = new Mat();
 
     //TODO: change anchor points to correct points
@@ -97,11 +97,11 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
 //        Scalar lowerB = new Scalar(0, 255, 255);
 //        Scalar upperB = new Scalar(0, 255, 125);
 
-        Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2YCrCb);
+        Imgproc.cvtColor(input, ycbcrMat, Imgproc.COLOR_RGB2YCrCb);
 
-        Mat leftRegion = hsvMat.submat(new Rect(left_pointA, left_pointB));
-        Mat centerRegion = hsvMat.submat(new Rect(center_pointA, center_pointB));
-        Mat rightRegion = hsvMat.submat(new Rect(right_pointA, right_pointB));
+        Mat leftRegion = ycbcrMat.submat(new Rect(left_pointA, left_pointB));
+        Mat centerRegion = ycbcrMat.submat(new Rect(center_pointA, center_pointB));
+        Mat rightRegion = ycbcrMat.submat(new Rect(right_pointA, right_pointB));
 
         int leftAvg = (int) Core.mean(leftRegion).val[2];
         int centerAvg = (int) Core.mean(centerRegion).val[2];
