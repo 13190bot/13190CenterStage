@@ -7,6 +7,9 @@ public class ClawSubsystem extends SubsystemBase {
 
     private SimpleServo clawLeft,clawRight;
     private SimpleServo axle;
+    private final double clawOpenPos = 0.7;
+    private final double clawClosedPos = 0.2;
+
 
     public ClawSubsystem(SimpleServo clawLeft,SimpleServo clawRight, SimpleServo axle) {
         this.clawLeft = clawLeft;
@@ -15,14 +18,14 @@ public class ClawSubsystem extends SubsystemBase {
     }
 
     public void grab() {
-        clawLeft.setPosition(0.2);
-        clawRight.setPosition(0.2);
+        clawLeft.setPosition(clawClosedPos);
+        clawRight.setPosition(clawClosedPos);
         axle.setPosition(0.7);
     }
 
     public void release() {
-        clawLeft.setPosition(0.7);
-        clawRight.setPosition(0.7);
+        clawLeft.setPosition(clawOpenPos);
+        clawRight.setPosition(clawOpenPos);
         axle.setPosition(0);
     }
 }
