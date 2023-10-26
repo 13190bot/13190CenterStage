@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
@@ -14,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.*;
 public class BaseOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
-    protected IntakeSubsystem intake;
+    protected IntakeSubsystem intakeSubsystem;
     protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
@@ -58,7 +55,7 @@ public class BaseOpMode extends CommandOpMode {
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        intake = new IntakeSubsystem(intakeMotor);
+        intakeSubsystem = new IntakeSubsystem(intakeMotor);
 
         // liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
         // clawSubsystem = new ClawSubsystem(claw, axleServo);
@@ -74,7 +71,7 @@ public class BaseOpMode extends CommandOpMode {
 
        // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
 
-     startIntakeCommand = new StartIntakeCommand(intake);
+     startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
         AprilTagDetector.initAprilTag(hardwareMap);
 
 
