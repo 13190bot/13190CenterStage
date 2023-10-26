@@ -28,7 +28,7 @@ public class AxleMoveCommand extends CommandBase {
         this.clawSubsystem = clawSubsystem;
         this.gamepad2 = gamePad2;
         this.axle = axle;
-
+    addRequirements(clawSubsystem);
     }
 
 
@@ -39,7 +39,7 @@ public class AxleMoveCommand extends CommandBase {
         else if (gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) {
             axle.setPosition(axleDownPos);
         }else{
-           axle.setPosition(gamepad2.getRightY()+axle.getPosition());
+           axle.setPosition(gamepad2.getRightY()/2+axle.getPosition());
         }
     }
 }
