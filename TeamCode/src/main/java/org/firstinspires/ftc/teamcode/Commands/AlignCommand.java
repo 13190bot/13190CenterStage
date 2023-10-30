@@ -17,13 +17,13 @@ public class AlignCommand extends CommandBase {
     double forward = 0;
     double rotate = 0;
     private PIDFController rotatePIDF;
-    // TODO: implement
-//    public static double rotate_kp = 0.1;
-//    public static double rotate_ki = 0;
-//    public static double rotate_kd = 0;
-//    public static double rotate_kf = 0;
     private PIDFController forwardPIDF;
     private PIDFController strafePIDF;
+
+    public static double kp = 0.1;
+    public static double ki = 0;
+    public static double kd = 0;
+    public static double kf = 0;
 
     public AlignCommand(DriveSubsystem driveSub, Telemetry telemetry) {
         this.driveSubsystem = driveSub;
@@ -42,12 +42,14 @@ public class AlignCommand extends CommandBase {
 
     @Override
     public void execute() {
+        rotatePIDF.setPIDF(kp, ki, kd, kf);
+
         AprilTagDetector.updateAprilTagDetections();
 
         AprilTagDetection tag = AprilTagDetector.getDetectionByID(1);
 
         if (tag != null) {
-            if (!rotatePIDF.atSetPoint()) {
+            if (true || !rotatePIDF.atSetPoint()) {
                 telemetry.addLine("Rotate PIDF");
                 if (rotate == 0) {
                     rotatePIDF.reset();
