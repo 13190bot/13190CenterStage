@@ -15,6 +15,6 @@ public class ManualLiftCommand extends CommandBase {
 
     @Override
     public void execute() {
-        lift.lift(power.getAsDouble());
+        lift.manualLift(power.getAsDouble());
     }
 }

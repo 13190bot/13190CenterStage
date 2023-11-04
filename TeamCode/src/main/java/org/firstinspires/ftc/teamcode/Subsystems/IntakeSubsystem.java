@@ -10,6 +10,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class IntakeSubsystem extends SubsystemBase {
 
     private MotorEx intakeMotor;
+    private double INTAKE_SPEED = .5;
+
+    //debug method
+    public void setIntakeSpeed (double intakeSpeed) {
+        this.INTAKE_SPEED = intakeSpeed;
+    }
 
     public IntakeSubsystem(MotorEx intakeMotor) {
         this.intakeMotor = intakeMotor;
@@ -17,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     public void startIntake() {
-        intakeMotor.motor.setPower(0.7);
+        intakeMotor.motor.setPower(INTAKE_SPEED);
     }
     public void stopIntake() {
         intakeMotor.motor.setPower(0);
