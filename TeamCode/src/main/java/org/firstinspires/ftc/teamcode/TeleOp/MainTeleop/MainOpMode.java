@@ -16,7 +16,7 @@ public class MainOpMode extends BaseOpMode {
         super.initialize();
 
         register(driveSubsystem);
-        register(clawSubsystem);
+       // register(clawSubsystem);
         register(intakeSubsystem);
 
 //        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(driveRobotCentricSlowModeCommand);
@@ -24,7 +24,7 @@ public class MainOpMode extends BaseOpMode {
         gamepadEx2.getGamepadButton(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
         gamepadEx2.getGamepadButton(PlaystationAliases.TRIANGLE).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
 
-        clawSubsystem.setDefaultCommand(axleMoveCommand);
+       // clawSubsystem.setDefaultCommand(axleMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
     }
 

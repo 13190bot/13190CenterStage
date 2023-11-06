@@ -3,6 +3,8 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
@@ -15,6 +17,7 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
+    private ColorSensor colorSensor;
 
     private SimpleServo clawServo;
     private SimpleServo axleServo;
