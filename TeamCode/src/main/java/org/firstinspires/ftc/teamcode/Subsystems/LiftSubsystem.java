@@ -53,6 +53,6 @@ public class LiftSubsystem extends SubsystemBase {
 
         //Set power based on PID output
         liftRight.set(rightPower);
-        liftLeft.set(leftPower);
+        liftLeft.set(rightPower);
     }
 }
