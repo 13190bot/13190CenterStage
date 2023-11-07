@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
@@ -41,6 +42,8 @@ public class BaseOpMode extends CommandOpMode {
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensor.enableLed(true);
 
         fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -84,6 +87,7 @@ public class BaseOpMode extends CommandOpMode {
 
     @Override
     public void run() {
+        gamepadEx2.gamepad.setLedColor(colorSensor.red(), colorSensor.green(), colorSensor.blue(), Gamepad.LED_DURATION_CONTINUOUS);
         super.run();
     }
 }
