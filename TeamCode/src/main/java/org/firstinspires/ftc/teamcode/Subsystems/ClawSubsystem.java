@@ -17,7 +17,6 @@ public class ClawSubsystem extends SubsystemBase {
 
     public void grab() {
         claw.setPosition(clawClosedPos);
-        axle.setPosition(0.7);
     }
 
     public void release() {
