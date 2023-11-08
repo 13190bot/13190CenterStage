@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.tests_n_stuff;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,6 +19,9 @@ public class IntakeTuningOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry);
+        telemetry.addData("motor power", () -> intakeSpeed);
+
         intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
         intake = new IntakeSubsystem(intakeMotor);
