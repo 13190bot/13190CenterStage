@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AprilTagDetector {
 
-    private final static String webcamName = "webcam";
+    private final static String webcamName = "Webcam 1";
     private static AprilTagProcessor aprilTag;
     public static VisionPortal visionPortal;
 

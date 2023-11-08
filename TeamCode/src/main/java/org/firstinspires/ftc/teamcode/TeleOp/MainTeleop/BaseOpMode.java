@@ -42,8 +42,7 @@ public class BaseOpMode extends CommandOpMode {
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        colorSensor.enableLed(true);
+        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -53,7 +52,7 @@ public class BaseOpMode extends CommandOpMode {
         //liftLeft = new MotorEx(hardwareMap, "liftLeft");
         //liftRight = new MotorEx(hardwareMap, "liftRight");
 
-        // claw = new SimpleServo(hardwareMap, "claw", 0, 180);
+        //claw = new SimpleServo(hardwareMap, "claw", 0, 180);
         //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
         //TODO: Tune Min and Max
 
@@ -87,7 +86,6 @@ public class BaseOpMode extends CommandOpMode {
 
     @Override
     public void run() {
-        gamepadEx2.gamepad.setLedColor(colorSensor.red(), colorSensor.green(), colorSensor.blue(), Gamepad.LED_DURATION_CONTINUOUS);
         super.run();
     }
 }
