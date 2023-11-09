@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import org.firstinspires.ftc.teamcode.Subsystems.ClawSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -15,7 +16,7 @@ public class AxleMoveCommand extends CommandBase {
     private GamepadEx gamepad2;
     private double axleUpPos = 1;
     private double axleDownPos = 0;
-    private SimpleServo axle;
+    private CRServo axle;
 
     // Manual with double right y pos
     // Two booleans for up and down preset
@@ -23,7 +24,7 @@ public class AxleMoveCommand extends CommandBase {
 
 
 
-    public AxleMoveCommand(ClawSubsystem clawSubsystem, GamepadEx gamePad2, SimpleServo axle){
+    public AxleMoveCommand(ClawSubsystem clawSubsystem, GamepadEx gamePad2, CRServo axle){
         this.clawSubsystem = clawSubsystem;
         this.gamepad2 = gamePad2;
         this.axle = axle;
@@ -33,12 +34,6 @@ public class AxleMoveCommand extends CommandBase {
 
     @Override
     public void execute(){
-        if (gamepad2.getButton(GamepadKeys.Button.DPAD_UP))
-            axle.setPosition(axleUpPos);
-        else if (gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-            axle.setPosition(axleDownPos);
-        }else{
-           axle.setPosition(gamepad2.getRightY());
-        }
+     axle.set(gamepad2.getRightY());
     }
 }

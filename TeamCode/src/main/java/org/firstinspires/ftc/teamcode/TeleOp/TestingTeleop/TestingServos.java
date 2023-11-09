@@ -23,8 +23,7 @@ public class TestingServos extends BaseOpMode {
         telemetry.addData("Claw Position", clawSubsystem.claw.getPosition());
         telemetry.addData("Claw Angle", clawSubsystem.claw.getAngle());
         telemetry.addLine("_________________________");
-        telemetry.addData("Axle Position", clawSubsystem.axle.getPosition());
-        telemetry.addData("Axel Angle", clawSubsystem.axle.getAngle());
+        telemetry.addData("Axle Position", clawSubsystem.axle.get());
         telemetry.addLine("_________________________");
         telemetry.addData("Scheduled command on Claw Subsystem",clawSubsystem.getCurrentCommand());
         telemetry.addData("Claw Grab Command", clawGrabCommand.isScheduled());

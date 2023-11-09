@@ -25,6 +25,7 @@ public class MainOpMode extends BaseOpMode {
         gamepadEx2.getGamepadButton(PlaystationAliases.TRIANGLE).toggleWhenPressed(clawGrabCommand, clawReleaseCommand);
 
        // clawSubsystem.setDefaultCommand(axleMoveCommand);
+        //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
     }
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -22,8 +23,8 @@ public class BaseOpMode extends CommandOpMode {
     private ColorSensor colorSensor;
 
     private SimpleServo clawServo;
-    private SimpleServo axleServo;
-    private SimpleServo armServo;
+    private CRServo axleServo;
+    private CRServo armServo;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
@@ -41,54 +42,56 @@ public class BaseOpMode extends CommandOpMode {
     @Override
     public void initialize() {
 
+        //Motors
         fl = new MotorEx(hardwareMap, "frontLeft");
         fr = new MotorEx(hardwareMap, "frontRight");
         bl = new MotorEx(hardwareMap, "backLeft");
         br = new MotorEx(hardwareMap, "backRight");
-        //colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
+        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+
+        liftLeft = new MotorEx(hardwareMap, "liftLeft");
+        liftRight = new MotorEx(hardwareMap, "liftRight");
+
+        //Prevent Drift
         fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftLeft = new MotorEx(hardwareMap, "liftLeft");
-        liftRight = new MotorEx(hardwareMap, "liftRight");
-
-        //claw = new SimpleServo(hardwareMap, "claw", 0, 180);
-        //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
-        //armServo = new SimpleServo(hardwareMap, "arm", 0, 360);
-        //TODO: Tune Min and Max
-
-        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
-        gamepadEx1 = new GamepadEx(gamepad1);
-        gamepadEx2 = new GamepadEx(gamepad2);
-        driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        intakeSubsystem = new IntakeSubsystem(intakeMotor);
-
-        liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
-
-        // clawSubsystem = new ClawSubsystem(claw, axleServo);
-        //armSubsystem = new ArmSubsystem(armServo);
-        // clawGrabCommand = new ClawGrabCommand(clawSubsystem);
-        // clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
-
-
+        //Reverse Motors
         fl.setInverted(true);
         fr.setInverted(true);
 
 
+        //Servos
+        clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
+        axleServo = new CRServo(hardwareMap, "axle");
+        armServo = new CRServo(hardwareMap, "arm");
+
+        //Gamepads
+        gamepadEx1 = new GamepadEx(gamepad1);
+        gamepadEx2 = new GamepadEx(gamepad2);
+
+        //Subsystems
+        driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
+        intakeSubsystem = new IntakeSubsystem(intakeMotor);
+        liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
+        clawSubsystem = new ClawSubsystem(clawServo, axleServo);
+        armSubsystem = new ArmSubsystem(armServo);
+
+        //Commands
+        clawGrabCommand = new ClawGrabCommand(clawSubsystem);
+        clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
+        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+        startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
+        axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
+        armMoveCommand = new ArmMoveCommand(armSubsystem, gamepadEx2);
 
-
-       // manualLiftCommand = new ManualLiftCommand(lift, gamepadEx2::getLeftY);
-
-     startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
+        //Setup up April Tag Detector
         AprilTagDetector.initAprilTag(hardwareMap);
 
-
-     //axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
-     //armMoveCommand = new ArmMoveCommand(armSubsystem, gamepadEx2);
     }
 
     @Override
