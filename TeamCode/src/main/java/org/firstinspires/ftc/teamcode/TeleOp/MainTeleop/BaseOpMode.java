@@ -17,11 +17,13 @@ public class BaseOpMode extends CommandOpMode {
     protected IntakeSubsystem intakeSubsystem;
     protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
+    protected ArmSubsystem armSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
     private ColorSensor colorSensor;
 
     private SimpleServo clawServo;
     private SimpleServo axleServo;
+    private SimpleServo armServo;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
@@ -33,6 +35,7 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
     protected AxleMoveCommand axleMoveCommand;
+    protected ArmMoveCommand armMoveCommand;
 
 
     @Override
@@ -49,11 +52,12 @@ public class BaseOpMode extends CommandOpMode {
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //liftLeft = new MotorEx(hardwareMap, "liftLeft");
-        //liftRight = new MotorEx(hardwareMap, "liftRight");
+        liftLeft = new MotorEx(hardwareMap, "liftLeft");
+        liftRight = new MotorEx(hardwareMap, "liftRight");
 
         //claw = new SimpleServo(hardwareMap, "claw", 0, 180);
         //axleServo = new SimpleServo(hardwareMap, "axle", 0, 180);
+        //armServo = new SimpleServo(hardwareMap, "arm", 0, 360);
         //TODO: Tune Min and Max
 
         intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
@@ -62,10 +66,13 @@ public class BaseOpMode extends CommandOpMode {
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
 
-        // liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
+        liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
+
         // clawSubsystem = new ClawSubsystem(claw, axleServo);
+        //armSubsystem = new ArmSubsystem(armServo);
         // clawGrabCommand = new ClawGrabCommand(clawSubsystem);
         // clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
+
 
         fl.setInverted(true);
         fr.setInverted(true);
@@ -80,8 +87,8 @@ public class BaseOpMode extends CommandOpMode {
         AprilTagDetector.initAprilTag(hardwareMap);
 
 
-     axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
-
+     //axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
+     //armMoveCommand = new ArmMoveCommand(armSubsystem, gamepadEx2);
     }
 
     @Override

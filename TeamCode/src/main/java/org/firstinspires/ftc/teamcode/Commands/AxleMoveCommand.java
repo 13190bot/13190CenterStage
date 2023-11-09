@@ -13,9 +13,8 @@ public class AxleMoveCommand extends CommandBase {
 
     private ClawSubsystem clawSubsystem;
     private GamepadEx gamepad2;
-    private double axleUpPos = 0.1;
-    private double axleDownPos = -0.1;
-    private DoubleSupplier targetPos;
+    private double axleUpPos = 1;
+    private double axleDownPos = 0;
     private SimpleServo axle;
 
     // Manual with double right y pos
@@ -39,7 +38,7 @@ public class AxleMoveCommand extends CommandBase {
         else if (gamepad2.getButton(GamepadKeys.Button.DPAD_DOWN)) {
             axle.setPosition(axleDownPos);
         }else{
-           axle.setPosition(gamepad2.getRightY()/2+axle.getPosition());
+           axle.setPosition(gamepad2.getRightY());
         }
     }
 }
