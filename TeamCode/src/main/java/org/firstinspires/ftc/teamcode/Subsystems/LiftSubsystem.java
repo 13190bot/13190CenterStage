@@ -10,7 +10,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     private MotorEx liftRight, liftLeft;
 
-    private double kP = 0, kI = 0, kD = 0, kF = 0;
+    private double kP = 1, kI = 0, kD = 0, kF = 0;
 
     private double integralSum;
 
@@ -46,7 +46,7 @@ public class LiftSubsystem extends SubsystemBase {
         return controller.atSetPoint();
     }
 
-    public void runLift (double finalPos) {
+    public void runLift () {
         if(!controller.atSetPoint()) {
             liftLeft.setVelocity(controller.calculate(liftLeft.getCurrentPosition()));
             liftRight.setVelocity(controller.calculate(liftRight.getCurrentPosition()));

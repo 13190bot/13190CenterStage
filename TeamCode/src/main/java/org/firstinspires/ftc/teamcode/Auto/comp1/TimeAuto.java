@@ -165,7 +165,7 @@ public class TimeAuto extends LinearOpMode {
         }
     }
 
-    public static double VOLTAGE_SCALE;
+    double VOLTAGE_SCALE;
 
     public static   int TURN_DIR = 1; //plus or minus 1
     public static double DRIVE_SPEED = .1;
