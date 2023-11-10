@@ -13,30 +13,24 @@ import java.util.function.DoubleSupplier;
 @Config
 public class ArmSubsystem extends SubsystemBase {
 
-    public static double armPosHome = 0;
-    public static double armPosAway = 0;
-    public static double pitchPosHome = 0;
-    public static double pitchPosAway = 0;
-    public SimpleServo arm, pitch;
-    private DoubleSupplier doubleSupplier;
+    public static double armPosUp = 0;
+    public static double armPosDown = 1;
 
-    public ArmSubsystem(SimpleServo arm, SimpleServo pitch) {
-        this.arm =arm;
-        this.pitch = pitch;
+    public SimpleServo arm;
+
+    public ArmSubsystem(SimpleServo arm) {
+        this.arm = arm;
     }
 
-    public void moveArm(double pos) {
-       arm.setPosition(pos);
+    public void armUp() {
+       arm.setPosition(armPosUp);
     }
 
-    public void movePitch(double pos) {
-       pitch.setPosition(pos);
+    public void armDown() {
+        arm.setPosition(armPosDown);
     }
 
-//    @Override
-//    public void periodic() {
-//        if(doubleSupplier.getAsDouble()!=0) {
-//            arm.setPosition(0.3*doubleSupplier.getAsDouble() + 0.5);
-//        }
-//    }
+
+
+
 }

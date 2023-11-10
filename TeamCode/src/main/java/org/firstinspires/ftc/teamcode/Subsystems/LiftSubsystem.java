@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
@@ -23,12 +24,15 @@ public class LiftSubsystem extends SubsystemBase {
     private double goalLeft;
 
 
+
     private final ProfiledPIDController controllerLeft = new ProfiledPIDController(kP, kI, kD,
             new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
     private final ProfiledPIDController controllerRight = new ProfiledPIDController(kP, kI, kD,
             new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
 
     private Telemetry telemetry;
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
 
 
@@ -42,6 +46,7 @@ public class LiftSubsystem extends SubsystemBase {
 
         controllerLeft.setTolerance(tolerance);
         controllerRight.setTolerance(tolerance);
+
 
 
     }
@@ -69,22 +74,18 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public void stabilize(){
-
-       // double output = controllerRight.calculate(liftRight.getCurrentPosition());
-
-
         liftRight.set(0);
         liftLeft.set(0);
-
     }
 
     public void PIDtelem(){
         telemetry.addData("Goal Pos",goalRight);
         telemetry.addData("Actual Pos",liftRight.getCurrentPosition());
         telemetry.update();
+
+        dashboardTelemetry.addData("Goal Pos",goalRight);
+        dashboardTelemetry.addData("Actual Pos",liftRight.getCurrentPosition());
+        dashboardTelemetry.update();
     }
-//    @Override
-//    public void periodic(){
-//        stabalize();
-//    }
+
 }

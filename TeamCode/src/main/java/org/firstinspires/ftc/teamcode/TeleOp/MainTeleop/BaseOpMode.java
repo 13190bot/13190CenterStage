@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
-import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.*;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -21,9 +21,8 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
     protected ArmSubsystem armSubsystem;
+    protected PitchSubsystem pitchSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
-    private ColorSensor colorSensor;
-
     private SimpleServo arm,pitch,claw;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
@@ -34,13 +33,12 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawGrabCommand clawGrabCommand;
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
-    protected AxleMoveCommand axleMoveCommand;
-    protected ArmMoveCommand armMoveCommand;
+    protected Command grabAndUpCommand, releaseAndDownCommand;
+
 
     @Override
     public void initialize() {
-        arm = new SimpleServo(hardwareMap, "arm", 0, 255);
-        pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
+
         //Motors
         fl = new MotorEx(hardwareMap, "frontLeft");
         fr = new MotorEx(hardwareMap, "frontRight");
@@ -70,9 +68,10 @@ public class BaseOpMode extends CommandOpMode {
        // pitch.setPosition(0.5);
 
         //Servos
-        //clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
-        //axleServo = new CRServo(hardwareMap, "axle");
-        //armServo = new CRServo(hardwareMap, "arm");
+        claw = new SimpleServo(hardwareMap, "claw", 0, 180);
+        arm = new SimpleServo(hardwareMap, "arm", 0, 255);
+        pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
+
 
         //Gamepads
         gamepadEx1 = new GamepadEx(gamepad1);
@@ -82,17 +81,21 @@ public class BaseOpMode extends CommandOpMode {
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
         liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
-        //clawSubsystem = new ClawSubsystem(clawServo, axleServo);
-        armSubsystem = new ArmSubsystem(arm,pitch);
+        clawSubsystem = new ClawSubsystem(claw);
+        armSubsystem = new ArmSubsystem(arm);
+        pitchSubsystem = new PitchSubsystem(pitch);
 
         //Commands
         clawGrabCommand = new ClawGrabCommand(clawSubsystem);
         clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
+
+
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
         manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
         startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
-//        axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
-        armMoveCommand = new ArmMoveCommand(armSubsystem, gamepadEx2);
+
+        grabAndUpCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.grab()), new WaitCommand(1000), new InstantCommand(()->armSubsystem.armUp()), new WaitCommand(500), new InstantCommand(()->pitchSubsystem.pitchUp()));
+        releaseAndDownCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.release()), new WaitCommand(1000), new InstantCommand(()->armSubsystem.armDown()), new WaitCommand(500), new InstantCommand(()->pitchSubsystem.pitchDown()));
 
         driveSubsystem.speedMultiplier = -1;
 

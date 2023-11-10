@@ -11,7 +11,7 @@ public class ClawReleaseCommand extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
         clawSubsystem.release();
     }
 
