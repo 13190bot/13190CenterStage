@@ -30,9 +30,9 @@ public class AlignCommand extends CommandBase {
         this.telemetry = telemetry;
 
         // https://docs.ftclib.org/ftclib/features/controllers
-        rotatePIDF = new PIDFController(0.2, 0, 0, 0);
-        forwardPIDF = new PIDFController(0.2, 0, 0, 0);
-        strafePIDF = new PIDFController(0.2, 0, 0, 0);
+        rotatePIDF = new PIDFController(0.1, 0, 0, 0);
+        forwardPIDF = new PIDFController(0.1, 0, 0, 0);
+        strafePIDF = new PIDFController(0.1, 0, 0, 0);
 
         // Should be initted in the opmode
 //        AprilTagDetector.initAprilTag(hardwareMap);
@@ -50,6 +50,7 @@ public class AlignCommand extends CommandBase {
 
         if (tag != null) {
             if (true || !rotatePIDF.atSetPoint()) {
+                rotatePIDF.setPIDF(kp, ki, kd, kf);
                 telemetry.addLine("Rotate PIDF");
                 if (rotate == 0) {
                     rotatePIDF.reset();
@@ -103,6 +104,9 @@ public class AlignCommand extends CommandBase {
 
         AprilTagDetector.aprilTagTelemetry(telemetry);
 
+        rotate = 0;
+        strafe = 0;
+        forward = 0;
         driveSubsystem.driveRobotCentric(strafe, forward, rotate);
     }
 
