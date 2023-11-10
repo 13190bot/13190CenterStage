@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -22,13 +24,10 @@ public class BaseOpMode extends CommandOpMode {
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
     private ColorSensor colorSensor;
 
-    private SimpleServo clawServo;
-    private CRServo axleServo;
-    private CRServo armServo;
+    private SimpleServo arm,pitch,claw;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
-
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
     protected StartIntakeCommand startIntakeCommand;
@@ -38,10 +37,10 @@ public class BaseOpMode extends CommandOpMode {
     protected AxleMoveCommand axleMoveCommand;
     protected ArmMoveCommand armMoveCommand;
 
-
     @Override
     public void initialize() {
-
+        arm = new SimpleServo(hardwareMap, "arm", 0, 255);
+        pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
         //Motors
         fl = new MotorEx(hardwareMap, "frontLeft");
         fr = new MotorEx(hardwareMap, "frontRight");
@@ -68,7 +67,7 @@ public class BaseOpMode extends CommandOpMode {
         fr.setInverted(true);
         br.setInverted(true);
 
-
+       // pitch.setPosition(0.5);
 
         //Servos
         //clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
@@ -83,16 +82,16 @@ public class BaseOpMode extends CommandOpMode {
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
         liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
-        clawSubsystem = new ClawSubsystem(clawServo, axleServo);
-        armSubsystem = new ArmSubsystem(armServo);
+        //clawSubsystem = new ClawSubsystem(clawServo, axleServo);
+        armSubsystem = new ArmSubsystem(arm,pitch);
 
         //Commands
-        //clawGrabCommand = new ClawGrabCommand(clawSubsystem);
-        //clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
+        clawGrabCommand = new ClawGrabCommand(clawSubsystem);
+        clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
         manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
         startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
-        axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
+//        axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
         armMoveCommand = new ArmMoveCommand(armSubsystem, gamepadEx2);
 
         driveSubsystem.speedMultiplier = -1;
@@ -106,4 +105,13 @@ public class BaseOpMode extends CommandOpMode {
     public void run() {
         super.run();
     }
+
+    protected GamepadButton gb1(GamepadKeys.Button button){
+        return gamepadEx1.getGamepadButton(button);
+    }
+
+    protected GamepadButton gb2(GamepadKeys.Button button){
+        return gamepadEx2.getGamepadButton(button);
+    }
+
 }
