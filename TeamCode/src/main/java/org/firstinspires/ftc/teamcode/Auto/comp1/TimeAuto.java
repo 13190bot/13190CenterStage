@@ -33,27 +33,27 @@ public class TimeAuto extends LinearOpMode {
         telemetry.addData("voltage", VOLTAGE_SCALE);
         telemetry.update();
         
-        VOLTAGE_SCALE = TUNED_VOLTAGE / VOLTAGE_SCALE;
+        VOLTAGE_SCALE = 1; //TUNED_VOLTAGE / VOLTAGE_SCALE;
 
-        //init camera
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        propDetectionPipeline = new PropDetectionPipeline();
-
-        camera.setPipeline(propDetectionPipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                camera.startStreaming(1280 , 720, OpenCvCameraRotation.UPRIGHT);
-            }
-            @Override
-            public void onError(int errorCode)
-            {
-
-            }
-        });
+//        //init camera
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//        propDetectionPipeline = new PropDetectionPipeline();
+//
+//        camera.setPipeline(propDetectionPipeline);
+//        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+//        {
+//            @Override
+//            public void onOpened()
+//            {
+//                camera.startStreaming(1280 , 720, OpenCvCameraRotation.UPRIGHT);
+//            }
+//            @Override
+//            public void onError(int errorCode)
+//            {
+//
+//            }
+//        });
 
         //init motors
         lf = hardwareMap.dcMotor.get("frontLeft");
@@ -81,58 +81,61 @@ public class TimeAuto extends LinearOpMode {
 
         intake = hardwareMap.dcMotor.get("intakeMotor");
 
+        telemetry.addData("init", "done");
+        telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive()) {
             if(gamepad1.a) {
 
-                //determine position
-                while (!gamepad1.b) {
-                    position = propDetectionPipeline.getPosition();
-                    telemetry.addData("Detected position", () -> position);
-                }
-
-                //turn position to direction
-                switch (position) {
-                    case LEFT:   TURN_DIR =  1; break;
-                    case RIGHT:  TURN_DIR = -1; break;
-                    case NOPOS:
-                    case CENTER: TURN_DIR =  0; break;
-
-                    default: throw new IllegalArgumentException("Unrecognised Position: " + position);
-                }
-
-                //Turn to face spike
-                lf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
-                lb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
-                rf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
-                rb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
-
-                telemetry.addData("Turning to face spike. Sleeping for (ms)", TURN_TIME);
-                sleep(TURN_TIME);
-
-                lf.setPower(0);
-                lb.setPower(0);
-                rf.setPower(0);
-                rb.setPower(0);
-
-                intake.setPower(INTAKE_SPEED);
-                sleep(1000);
-                intake.setPower(0);
-
-                //Turn back to normal
-                lf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
-                lb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
-                rf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
-                rb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
-
-                telemetry.addData("Turning to face normal. Sleeping for (ms)", TURN_TIME);
-                sleep(TURN_TIME);
-
-                lf.setPower(0);
-                lb.setPower(0);
-                rf.setPower(0);
-                rb.setPower(0);
+//                //determine position
+//                while (!gamepad1.b) {
+//                    position = propDetectionPipeline.getPosition();
+//                    telemetry.addData("Detected position", () -> position);
+//                }
+//
+//                //turn position to direction
+//                switch (position) {
+//                    case LEFT:   TURN_DIR =  1; break;
+//                    case RIGHT:  TURN_DIR = -1; break;
+//                    case NOPOS:
+//                    case CENTER: TURN_DIR =  0; break;
+//
+//                    default: throw new IllegalArgumentException("Unrecognised Position: " + position);
+//                }
+//
+//                //Turn to face spike
+//                lf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
+//                lb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
+//                rf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
+//                rb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * TURN_DIR);
+//
+//                telemetry.addData("Turning to face spike. Sleeping for (ms)", TURN_TIME);
+//                sleep(TURN_TIME);
+//
+//                lf.setPower(0);
+//                lb.setPower(0);
+//                rf.setPower(0);
+//                rb.setPower(0);
+//
+//                intake.setPower(INTAKE_SPEED);
+//                sleep(1000);
+//                intake.setPower(0);
+//
+//                //Turn back to normal
+//                lf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
+//                lb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
+//                rf.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
+//                rb.setPower(DRIVE_SPEED * VOLTAGE_SCALE * -TURN_DIR);
+//
+//                telemetry.addData("Turning to face normal. Sleeping for (ms)", TURN_TIME);
+//                sleep(TURN_TIME);
+//
+//                lf.setPower(0);
+//                lb.setPower(0);
+//                rf.setPower(0);
+//                rb.setPower(0);
 
                 //Strafe sideways
                 lf.setPower(-DRIVE_SPEED * VOLTAGE_SCALE);
@@ -168,7 +171,7 @@ public class TimeAuto extends LinearOpMode {
     double VOLTAGE_SCALE;
 
     public static   int TURN_DIR = 1; //plus or minus 1
-    public static double DRIVE_SPEED = .1;
+    public static double DRIVE_SPEED = .5;
     public static double INTAKE_SPEED = .1;
     public static double TUNED_VOLTAGE;
 
