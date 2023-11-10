@@ -64,7 +64,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
             driveSubsystem.driveRobotCentric(side2, side1, side1);
         } else {
             // Normal
-            driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), -gamepadEx1.getLeftY(), gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+            driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), gamepadEx1.getLeftY(), gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 //            driveSubsystem.driveRobotCentric(strafe, forward, rotate);
         }
     }

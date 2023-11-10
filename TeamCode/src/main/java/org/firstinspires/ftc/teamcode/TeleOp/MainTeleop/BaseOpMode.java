@@ -95,6 +95,8 @@ public class BaseOpMode extends CommandOpMode {
         axleMoveCommand = new AxleMoveCommand(clawSubsystem,gamepadEx2, axleServo);
         armMoveCommand = new ArmMoveCommand(armSubsystem, gamepadEx2);
 
+        driveSubsystem.speedMultiplier = -1;
+
         //Setup up April Tag Detector
         AprilTagDetector.initAprilTag(hardwareMap);
 
