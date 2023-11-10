@@ -19,7 +19,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
 
     //CONFIG
 
-    static double slowmodeMultiplier = 0.3;
+    static double slowmodeMultiplier = -0.3;
 
     public DriveRobotOptimalCommand(DriveSubsystem driveSubsystem, GamepadEx gamepadEx1) {
         this.driveSubsystem = driveSubsystem;
@@ -53,9 +53,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
             }
         }
 
-        if (gamepadEx1.wasJustPressed(PlaystationAliases.CROSS)) {
-            driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
-        }
+
 
         if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             // WheelRotate

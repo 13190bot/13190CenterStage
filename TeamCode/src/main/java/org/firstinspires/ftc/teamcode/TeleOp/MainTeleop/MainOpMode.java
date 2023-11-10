@@ -21,6 +21,8 @@ public class MainOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
+        register(driveSubsystem, intakeSubsystem, armSubsystem);
+
 
         gb2(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
 
@@ -29,7 +31,6 @@ public class MainOpMode extends BaseOpMode {
 
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
         liftSubsystem.setDefaultCommand(manualLiftCommand);
-        register(driveSubsystem, intakeSubsystem, armSubsystem);
     }
 
     public void run()
