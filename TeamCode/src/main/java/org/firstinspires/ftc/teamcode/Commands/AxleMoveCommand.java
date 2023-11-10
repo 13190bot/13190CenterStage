@@ -34,6 +34,6 @@ public class AxleMoveCommand extends CommandBase {
 
     @Override
     public void execute(){
-     axle.set(gamepad2.getRightY());
+     axle.set(gamepad2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - gamepad2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
     }
 }

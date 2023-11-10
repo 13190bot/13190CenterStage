@@ -5,16 +5,26 @@ import org.firstinspires.ftc.teamcode.Subsystems.LiftSubsystem;
 import java.util.function.DoubleSupplier;
 
 public class ManualLiftCommand extends CommandBase {
-    private LiftSubsystem lift;
+    private LiftSubsystem liftSubsystem;
     private DoubleSupplier power;
 
-    public ManualLiftCommand(LiftSubsystem lift, DoubleSupplier power) {
-        this.lift = lift;
+    public ManualLiftCommand(LiftSubsystem liftSubsystem, DoubleSupplier power) {
+        this.liftSubsystem = liftSubsystem;
         this.power = power;
+        addRequirements(liftSubsystem);
     }
 
     @Override
     public void execute() {
-        lift.lift(power.getAsDouble());
+        if (power.getAsDouble() != 0) {
+            liftSubsystem.lift(power.getAsDouble());
+        } else {
+            liftSubsystem.stabilize();
+        }
+        liftSubsystem.PIDtelem();
+
     }
+
+
+
 }

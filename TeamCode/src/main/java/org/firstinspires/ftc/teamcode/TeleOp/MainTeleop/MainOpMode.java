@@ -27,6 +27,7 @@ public class MainOpMode extends BaseOpMode {
        // clawSubsystem.setDefaultCommand(axleMoveCommand);
         //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
+        liftSubsystem.setDefaultCommand(manualLiftCommand);
     }
 
     public void run()

@@ -53,21 +53,27 @@ public class BaseOpMode extends CommandOpMode {
         liftLeft = new MotorEx(hardwareMap, "liftLeft");
         liftRight = new MotorEx(hardwareMap, "liftRight");
 
+
         //Prevent Drift
         fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         //Reverse Motors
         fl.setInverted(true);
         fr.setInverted(true);
+        br.setInverted(true);
+
 
 
         //Servos
-        clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
-        axleServo = new CRServo(hardwareMap, "axle");
-        armServo = new CRServo(hardwareMap, "arm");
+        //clawServo = new SimpleServo(hardwareMap, "claw", 0, 180);
+        //axleServo = new CRServo(hardwareMap, "axle");
+        //armServo = new CRServo(hardwareMap, "arm");
 
         //Gamepads
         gamepadEx1 = new GamepadEx(gamepad1);
@@ -76,13 +82,13 @@ public class BaseOpMode extends CommandOpMode {
         //Subsystems
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
-        liftSubsystem = new LiftSubsystem(liftRight, liftLeft);
+        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
         clawSubsystem = new ClawSubsystem(clawServo, axleServo);
         armSubsystem = new ArmSubsystem(armServo);
 
         //Commands
-        clawGrabCommand = new ClawGrabCommand(clawSubsystem);
-        clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
+        //clawGrabCommand = new ClawGrabCommand(clawSubsystem);
+        //clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
         manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
         startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
