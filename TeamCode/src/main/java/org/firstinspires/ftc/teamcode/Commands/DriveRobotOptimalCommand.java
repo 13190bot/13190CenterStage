@@ -53,6 +53,10 @@ public class DriveRobotOptimalCommand extends CommandBase {
             }
         }
 
+        if (gamepadEx1.wasJustPressed(PlaystationAliases.CROSS)) {
+            driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
+        }
+
         if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             // WheelRotate
             double side1 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? -1 : 1;
