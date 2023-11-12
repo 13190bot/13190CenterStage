@@ -139,7 +139,7 @@ public class MainOpMode extends BaseOpMode {
 
 
         // put arm to resting position
-        arm.setPosition(0.5);
+//        arm.setPosition(0.5);
 
 
         // v2
@@ -154,8 +154,9 @@ public class MainOpMode extends BaseOpMode {
         gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(
                 new SequentialCommandGroup(
                         new InstantCommand(() -> {arm.setPosition(1);}),
-                        new WaitCommand(600),
-                        new InstantCommand(() -> {claw.setPosition(0.25);}),
+                        new WaitCommand(1000),
+//                        new InstantCommand(() -> {claw.setPosition(0.25);}),
+                        new InstantCommand(() -> {claw.setPosition(0.22);}),
                         new WaitCommand(400),
                         new InstantCommand(() -> {arm.setPosition(0.45);}),
                         new WaitCommand(1000),
@@ -184,7 +185,12 @@ public class MainOpMode extends BaseOpMode {
 //                        new WaitCommand(700),
 //                        new InstantCommand(() -> {arm.setPosition(0.95);})
 //                        new InstantCommand(() -> {arm.disable();})
-                        new InstantCommand(() -> {arm.setPosition(0.5);})
+
+
+//                        new InstantCommand(() -> {arm.setPosition(0.5);})
+
+
+                        new InstantCommand(() -> {arm.setPosition(0.95);})
                 )
 //                // drop off
 //                claw.setPosition(0.40);
@@ -202,16 +208,32 @@ public class MainOpMode extends BaseOpMode {
         );
 
         // 0.33
+//        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
+//            if (position != -1) {
+//                pitch.setPosition(position);
+//            } else if (angle != -1) {
+//                pitch.turnToAngle(angle);
+//            }
+//        });
+
+
+
         gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
-            if (position != -1) {
-                pitch.setPosition(position);
-            } else if (angle != -1) {
-                pitch.turnToAngle(angle);
-            }
+            intakeMotor.motor.setPower(-0.4);
+        });
+        gb2(PlaystationAliases.TRIANGLE).whenReleased(() -> {
+            intakeMotor.motor.setPower(0);
         });
 
-
-
+        gb2(PlaystationAliases.SQUARE).whenPressed(
+                () -> {
+                    if (claw.getPosition() == 0.22) {
+                        claw.setPosition(0.40);
+                    } else {
+                        claw.setPosition(0.22);
+                    }
+                }
+        );
 
 
 

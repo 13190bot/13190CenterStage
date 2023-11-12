@@ -22,7 +22,7 @@ public class BaseOpMode extends CommandOpMode {
     protected LiftSubsystem liftSubsystem;
     protected ArmSubsystem armSubsystem;
     protected PitchSubsystem pitchSubsystem;
-    private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
+    public MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
     public SimpleServo arm,pitch,claw;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
@@ -97,7 +97,7 @@ public class BaseOpMode extends CommandOpMode {
         grabAndUpCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.grab()), new WaitCommand(1000), new InstantCommand(()->armSubsystem.armUp()), new WaitCommand(500), new InstantCommand(()->pitchSubsystem.pitchUp()));
         releaseAndDownCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.release()), new WaitCommand(1000), new InstantCommand(()->armSubsystem.armDown()), new WaitCommand(500), new InstantCommand(()->pitchSubsystem.pitchDown()));
 
-        driveSubsystem.speedMultiplier = -1;
+        driveSubsystem.speedMultiplier = 1;
 
         //Setup up April Tag Detector
         AprilTagDetector.initAprilTag(hardwareMap);
