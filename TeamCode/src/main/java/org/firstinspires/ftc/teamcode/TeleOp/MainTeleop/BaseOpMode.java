@@ -23,7 +23,7 @@ public class BaseOpMode extends CommandOpMode {
     protected ArmSubsystem armSubsystem;
     protected PitchSubsystem pitchSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
-    private SimpleServo arm,pitch,claw;
+    public SimpleServo arm,pitch,claw;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;

@@ -49,20 +49,18 @@ public class DriveRobotOptimalCommand extends CommandBase {
                 driveSubsystem.speedMultiplier = slowmodeMultiplier;
             } else {
                 gamepadEx1.gamepad.setLedColor(232,240,0,200);
-                driveSubsystem.speedMultiplier = 1;
+                driveSubsystem.speedMultiplier = driveSubsystem.defaultSpeedMultiplier;
             }
         }
-
-
 
         if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             // WheelRotate
             double side1 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? -1 : 1;
             double side2 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? 0 : 0;
-            driveSubsystem.driveRobotCentric(side2, side1, side1);
+            driveSubsystem.driveRobotCentric(side2, -side1, side1);
         } else {
             // Normal
-            driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), gamepadEx1.getLeftY(), gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+            driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), gamepadEx1.getLeftY(), -(gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)));
 //            driveSubsystem.driveRobotCentric(strafe, forward, rotate);
         }
     }

@@ -10,7 +10,8 @@ public class DriveSubsystem extends SubsystemBase {
     private MecanumDrive mecanumDrive;
     private MotorEx fl, fr, bl, br;
 
-    public double speedMultiplier = 1;
+    public final double defaultSpeedMultiplier = 1;
+    public double speedMultiplier = defaultSpeedMultiplier;
 
     public DriveSubsystem(MotorEx fl, MotorEx fr, MotorEx bl, MotorEx br) {
         this.fl = fl;

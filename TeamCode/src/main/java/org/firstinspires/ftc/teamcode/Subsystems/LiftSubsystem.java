@@ -79,13 +79,13 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public void PIDtelem(){
-        telemetry.addData("Goal Pos",goalRight);
-        telemetry.addData("Actual Pos",liftRight.getCurrentPosition());
-        telemetry.update();
-
-        dashboardTelemetry.addData("Goal Pos",goalRight);
-        dashboardTelemetry.addData("Actual Pos",liftRight.getCurrentPosition());
-        dashboardTelemetry.update();
+//        telemetry.addData("Goal Pos",goalRight);
+//        telemetry.addData("Actual Pos",liftRight.getCurrentPosition());
+//        telemetry.update();
+//
+//        dashboardTelemetry.addData("Goal Pos",goalRight);
+//        dashboardTelemetry.addData("Actual Pos",liftRight.getCurrentPosition());
+//        dashboardTelemetry.update();
     }
 
 }
