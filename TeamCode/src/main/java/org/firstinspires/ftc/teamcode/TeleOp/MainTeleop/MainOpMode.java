@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
+
+import java.lang.reflect.WildcardType;
 
 /*
 TODO:
@@ -27,7 +31,11 @@ public class MainOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
+        register(driveSubsystem, intakeSubsystem);
 
+
+
+        /*
 
 
 //        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(driveRobotCentricSlowModeCommand);
@@ -118,11 +126,132 @@ public class MainOpMode extends BaseOpMode {
 
         gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
             if (position != -1) {
+                arm.setPosition(position);
+            } else if (angle != -1) {
+                arm.turnToAngle(angle);
+            }
+        });
+
+         */
+
+
+
+
+
+        // put arm to resting position
+        arm.setPosition(0.55);
+
+
+        // v2
+        gb2(PlaystationAliases.CROSS).whenPressed(() -> {
+            intakeSubsystem.startIntake();
+        });
+        gb2(PlaystationAliases.CROSS).whenReleased(() -> {
+            intakeSubsystem.stopIntake();
+        });
+
+
+        gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> {arm.setPosition(1);}),
+                        new WaitCommand(600),
+                        new InstantCommand(() -> {claw.setPosition(0.25);}),
+                        new WaitCommand(400),
+                        new InstantCommand(() -> {arm.setPosition(0.45);}),
+                        new WaitCommand(1000),
+                        new InstantCommand(() -> {pitch.setPosition(0.65);})
+                ),
+//            claw.setPosition(0.25);
+//            sleep(200);
+//            arm.setPosition(0.5);
+//            sleep(1200);
+//            pitch.setPosition(0.55);
+
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> {claw.setPosition(0.40);}),
+                        new WaitCommand(300),
+//                        new InstantCommand(() -> {pitch.setPosition(0.62);}),
+//                        new WaitCommand(100),
+//                        new InstantCommand(() -> {pitch.setPosition(0.7);}),
+//                        new WaitCommand(700),
+                        new InstantCommand(() -> {pitch.setPosition(0.6);}),
+                        new WaitCommand(100),
+                        new InstantCommand(() -> {pitch.setPosition(0.7);}),
+                        new WaitCommand(700),
+
+                        new InstantCommand(() -> {pitch.setPosition(0.1);}),
+//                        new InstantCommand(() -> {arm.setPosition(0.85);}),
+//                        new WaitCommand(700),
+//                        new InstantCommand(() -> {arm.setPosition(0.95);})
+//                        new InstantCommand(() -> {arm.disable();})
+                        new InstantCommand(() -> {arm.setPosition(0.55);})
+                )
+//                // drop off
+//                claw.setPosition(0.40);
+//                sleep(200);
+//                pitch.setPosition(0.52);
+//                sleep(300);
+//                pitch.setPosition(0.6);
+//                sleep(1000);
+//
+//
+//                pitch.setPosition(0);
+//                arm.setPosition(0.9);
+//                sleep(2200);
+//                arm.setPosition(1);
+        );
+
+        // 0.33
+        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
+            if (position != -1) {
                 pitch.setPosition(position);
             } else if (angle != -1) {
                 pitch.turnToAngle(angle);
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         // reverse
@@ -137,7 +266,7 @@ public class MainOpMode extends BaseOpMode {
         //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
         liftSubsystem.setDefaultCommand(manualLiftCommand);
-        register(driveSubsystem, intakeSubsystem);
+
     }
 
     public void run()
@@ -149,7 +278,7 @@ public class MainOpMode extends BaseOpMode {
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 
 
-        driveRobotOptimalCommand.execute();
+//        driveRobotOptimalCommand.execute();
         super.run();
     }
 }
