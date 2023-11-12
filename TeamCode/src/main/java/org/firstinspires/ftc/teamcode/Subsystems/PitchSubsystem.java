@@ -6,8 +6,8 @@ import com.arcrobotics.ftclib.hardware.SimpleServo;
 @Config
 public class PitchSubsystem extends SubsystemBase {
     private SimpleServo pitch;
-    public static double pitchUp = 0;
-    public static double pitchDown = 1;
+    public static double pitchUp = 0.55;
+    public static double pitchDown = 0;
 
     public PitchSubsystem(SimpleServo pitch) {
         this.pitch = pitch;

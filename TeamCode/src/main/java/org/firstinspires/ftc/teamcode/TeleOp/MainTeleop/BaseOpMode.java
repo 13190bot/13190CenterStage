@@ -94,8 +94,8 @@ public class BaseOpMode extends CommandOpMode {
         manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
         startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
 
-        grabAndUpCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.grab()), new WaitCommand(1000), new InstantCommand(()->armSubsystem.armUp()), new WaitCommand(500), new InstantCommand(()->pitchSubsystem.pitchUp()));
-        releaseAndDownCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.release()), new WaitCommand(1000), new InstantCommand(()->armSubsystem.armDown()), new WaitCommand(500), new InstantCommand(()->pitchSubsystem.pitchDown()));
+        grabAndUpCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.grab()), new WaitCommand(200), new InstantCommand(()->armSubsystem.armUp()), new WaitCommand(1200), new InstantCommand(()->pitchSubsystem.pitchUp()));
+        releaseAndDownCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.release()), new WaitCommand(200), new InstantCommand(()->armSubsystem.armDown()), new WaitCommand(300), new InstantCommand(()->pitchSubsystem.pitchDown()));
 
         driveSubsystem.speedMultiplier = -1;
 

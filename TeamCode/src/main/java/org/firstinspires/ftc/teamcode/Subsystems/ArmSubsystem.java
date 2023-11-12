@@ -13,7 +13,7 @@ import java.util.function.DoubleSupplier;
 @Config
 public class ArmSubsystem extends SubsystemBase {
 
-    public static double armPosUp = 0;
+    public static double armPosUp = 0.5;
     public static double armPosDown = 1;
 
     public SimpleServo arm;

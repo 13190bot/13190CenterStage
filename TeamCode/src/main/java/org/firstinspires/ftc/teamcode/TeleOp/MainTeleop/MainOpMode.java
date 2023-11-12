@@ -27,82 +27,85 @@ public class MainOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
+        register(driveSubsystem, intakeSubsystem, armSubsystem, clawSubsystem, pitchSubsystem);
 
 
 
-//        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(driveRobotCentricSlowModeCommand);
 
-//        gb2(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
+        gb2(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
+        gb2(PlaystationAliases.SQUARE).toggleWhenPressed(grabAndUpCommand, releaseAndDownCommand);
+
+        driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
+        liftSubsystem.setDefaultCommand(manualLiftCommand);
 
 
-        gb2(PlaystationAliases.SQUARE).whenPressed(() -> {
-            intakeSubsystem.startIntake();
+        // reverse
+        gb1(PlaystationAliases.SQUARE).whenPressed(() -> {
+            driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
         });
-        gb2(PlaystationAliases.SQUARE).whenReleased(() -> {
-            intakeSubsystem.stopIntake();
-        });
+
 
 
         // open and down
 
-        gb2(PlaystationAliases.CROSS).whenPressed(() -> {
-            if (activated) {
-
-//            claw.setPosition(0.42);
-//            pitch.setPosition(0);
-//            arm.setPosition(0.9);
-//            sleep(1000);
-//            arm.setPosition(1);
-
-//            claw.setPosition(0.42);
-//            pitch.setPosition(0);
-//            arm.setPosition(0.9);
-//            sleep(1400);
-//            arm.setPosition(1);
-
-                // drop off
-                claw.setPosition(0.40);
-                sleep(200);
-                pitch.setPosition(0.52);
-                sleep(300);
-                pitch.setPosition(0.6);
-                sleep(1000);
-
-
-                pitch.setPosition(0);
-                arm.setPosition(0.9);
-                sleep(2200);
-                arm.setPosition(1);
-
-                activated = false;
-            }
-        });
-        // close and up
-        gb2(PlaystationAliases.CIRCLE).whenPressed(() -> {
-            if (!activated) {
-//            claw.setPosition(0.25);
-//            sleep(200);
-//            arm.setPosition(0.5);
-//            sleep(1200);
-//            arm.setPosition(0.4);
-//            pitch.setPosition(0.16);
-
-//            claw.setPosition(0.25);
-//            sleep(200);
-//            arm.setPosition(0.5);
-//            sleep(1200);
-//            arm.setPosition(0.45);
-//            pitch.setPosition(0.2);
-
-                claw.setPosition(0.25);
-                sleep(200);
-                arm.setPosition(0.5);
-                sleep(1200);
-                pitch.setPosition(0.55);
-
-                activated = true;
-            }
-        });
+//        gb2(PlaystationAliases.CROSS).whenPressed(() -> {
+//            if (activated) {
+//
+////            claw.setPosition(0.42);
+////            pitch.setPosition(0);
+////            arm.setPosition(0.9);
+////            sleep(1000);
+////            arm.setPosition(1);
+//
+////            claw.setPosition(0.42);
+////            pitch.setPosition(0);
+////            arm.setPosition(0.9);
+////            sleep(1400);
+////            arm.setPosition(1);
+//
+//                // drop off
+//                claw.setPosition(0.40);
+//                sleep(200);
+//                pitch.setPosition(0.52);
+//                sleep(300);
+//                pitch.setPosition(0.6);
+//                sleep(1000);
+//
+//
+//                pitch.setPosition(0);
+//                arm.setPosition(0.9);
+//                sleep(2200);
+//                arm.setPosition(1);
+//
+//                activated = false;
+//            }
+//        });
+//        // close and up
+//        gb2(PlaystationAliases.CIRCLE).whenPressed(() -> {
+//            if (!activated) {
+////            claw.setPosition(0.25);
+////            sleep(200);
+////            arm.setPosition(0.5);
+////            sleep(1200);
+////            arm.setPosition(0.4);
+////            pitch.setPosition(0.16);
+//
+////            claw.setPosition(0.25);
+////            sleep(200);
+////            arm.setPosition(0.5);
+////            sleep(1200);
+////            arm.setPosition(0.45);
+////            pitch.setPosition(0.2);
+//
+//                claw.setPosition(0.25);
+//                sleep(200);
+//                arm.setPosition(0.5);
+//                sleep(1200);
+//                pitch.setPosition(0.55);
+//
+//                activated = true;
+//            }
+//        });
 
         //TEST
 //        gb2(PlaystationAliases.SQUARE).whenPressed(() -> {
@@ -125,31 +128,27 @@ public class MainOpMode extends BaseOpMode {
         });
 
 
-        // reverse
-        gb1(PlaystationAliases.SQUARE).whenPressed(() -> {
-           driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
-        });
-//        gb2(PlaystationAliases)
+
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
 //        gb1(GamepadKeys.Button.B).toggleWhenPressed(armSubsystem.movePitch(ArmSubsystem.pitchPosHome), armSubsystem.movePitch(ArmSubsystem.pitchPosAway));
        // clawSubsystem.setDefaultCommand(axleMoveCommand);
         //armSubsystem.setDefaultCommand(armMoveCommand);
-        driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
-        liftSubsystem.setDefaultCommand(manualLiftCommand);
-        register(driveSubsystem, intakeSubsystem);
+
     }
 
     public void run()
     {
-        telemetry.addData("clawpos", clawSubsystem.claw.getPosition());
-        telemetry.addData("clawang", clawSubsystem.claw.getAngle());
+        telemetry.addData("Claw Pos", clawSubsystem.claw.getPosition());
+        telemetry.addData("Claw Angle", clawSubsystem.claw.getAngle());
+        telemetry.addData("Intake Command is scheduled", startIntakeCommand.isScheduled());
+        telemetry.addData("grabAndUpCommand is scheduled", grabAndUpCommand.isScheduled());
+        telemetry.addData("releaseAndDownCommand is scheduled", releaseAndDownCommand.isScheduled());
         telemetry.update();
 //        AprilTagDetector.updateAprilTagDetections();
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 
 
-        driveRobotOptimalCommand.execute();
         super.run();
     }
 }
