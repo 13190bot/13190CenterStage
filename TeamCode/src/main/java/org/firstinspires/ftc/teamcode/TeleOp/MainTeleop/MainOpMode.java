@@ -33,7 +33,7 @@ public class MainOpMode extends BaseOpMode {
 
 
         gb2(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
-        gb2(PlaystationAliases.SQUARE).toggleWhenPressed(grabAndUpCommand, releaseAndDownCommand);
+        gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(grabAndUpCommand, releaseAndDownCommand);
 
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
         liftSubsystem.setDefaultCommand(manualLiftCommand);
