@@ -139,7 +139,7 @@ public class MainOpMode extends BaseOpMode {
 
 
         // put arm to resting position
-        arm.setPosition(0.55);
+        arm.setPosition(0.5);
 
 
         // v2
@@ -184,7 +184,7 @@ public class MainOpMode extends BaseOpMode {
 //                        new WaitCommand(700),
 //                        new InstantCommand(() -> {arm.setPosition(0.95);})
 //                        new InstantCommand(() -> {arm.disable();})
-                        new InstantCommand(() -> {arm.setPosition(0.55);})
+                        new InstantCommand(() -> {arm.setPosition(0.5);})
                 )
 //                // drop off
 //                claw.setPosition(0.40);
