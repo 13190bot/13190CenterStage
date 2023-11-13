@@ -27,6 +27,7 @@ public class MainOpMode extends BaseOpMode {
     public static double angle = -1;
     public static double position = -1;
     public boolean activated = true;
+    public boolean isClawOpen = true;
 
     @Override
     public void initialize() {
@@ -139,7 +140,7 @@ public class MainOpMode extends BaseOpMode {
 
 
         // put arm to resting position
-        arm.setPosition(0.5);
+//        arm.setPosition(0.5);
 
 
         // v2
@@ -154,13 +155,16 @@ public class MainOpMode extends BaseOpMode {
         gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(
                 new SequentialCommandGroup(
                         new InstantCommand(() -> {arm.setPosition(1);}),
-                        new WaitCommand(600),
-                        new InstantCommand(() -> {claw.setPosition(0.25);}),
+                        new WaitCommand(1000),
+//                        new InstantCommand(() -> {claw.setPosition(0.25);}),
+                        new InstantCommand(() -> {claw.setPosition(0.22); isClawOpen = false;}),
+                        // split here - Prateek
                         new WaitCommand(400),
                         new InstantCommand(() -> {arm.setPosition(0.45);}),
                         new WaitCommand(1000),
-                        new InstantCommand(() -> {pitch.setPosition(0.65);})
+                        new InstantCommand(() -> {pitch.setPosition(0.65 - 0.05);})
                 ),
+
 //            claw.setPosition(0.25);
 //            sleep(200);
 //            arm.setPosition(0.5);
@@ -168,23 +172,42 @@ public class MainOpMode extends BaseOpMode {
 //            pitch.setPosition(0.55);
 
                 new SequentialCommandGroup(
-                        new InstantCommand(() -> {claw.setPosition(0.40);}),
+//                        new InstantCommand(() -> {claw.setPosition(0.40); isClawOpen = true;}),
+                        new InstantCommand(() -> {claw.setPosition(0.43); isClawOpen = true;}),
                         new WaitCommand(300),
 //                        new InstantCommand(() -> {pitch.setPosition(0.62);}),
 //                        new WaitCommand(100),
 //                        new InstantCommand(() -> {pitch.setPosition(0.7);}),
 //                        new WaitCommand(700),
-                        new InstantCommand(() -> {pitch.setPosition(0.6);}),
+                        new InstantCommand(() -> {pitch.setPosition(0.6 - 0.05);}),
                         new WaitCommand(100),
-                        new InstantCommand(() -> {pitch.setPosition(0.7);}),
-                        new WaitCommand(700),
+                        new InstantCommand(() -> {pitch.setPosition(0.7 - 0.05);}),
+                        new WaitCommand(100),
 
-                        new InstantCommand(() -> {pitch.setPosition(0.1);}),
+                        new InstantCommand(() -> {pitch.setPosition(0.6 - 0.05);}),
+                        new WaitCommand(100),
+                        new InstantCommand(() -> {pitch.setPosition(0.7 - 0.05);}),
+                        new WaitCommand(100),
+                        new InstantCommand(() -> {pitch.setPosition(0.6 - 0.05);}),
+                        new WaitCommand(100),
+                        new InstantCommand(() -> {pitch.setPosition(0.7 - 0.05);}),
+                        new WaitCommand(100),
+
+
+                        new WaitCommand(600),
+
+//                        new InstantCommand(() -> {pitch.setPosition(0.1);}),
+                        new InstantCommand(() -> {pitch.setPosition(0.1 - 0.05 - 0.02);}),
 //                        new InstantCommand(() -> {arm.setPosition(0.85);}),
 //                        new WaitCommand(700),
 //                        new InstantCommand(() -> {arm.setPosition(0.95);})
 //                        new InstantCommand(() -> {arm.disable();})
-                        new InstantCommand(() -> {arm.setPosition(0.5);})
+
+
+//                        new InstantCommand(() -> {arm.setPosition(0.5);})
+
+
+                        new InstantCommand(() -> {arm.setPosition(0.9);})
                 )
 //                // drop off
 //                claw.setPosition(0.40);
@@ -200,18 +223,47 @@ public class MainOpMode extends BaseOpMode {
 //                sleep(2200);
 //                arm.setPosition(1);
         );
+//
+//        gb2(/* insert button here */).toggleWhenPressed(
+//
+//        ),
+//
+//            gb2(/* insert button here */).toggleWhenPressed(
+//                new SequentialCommandGroup(
+//                    new InstantCommand(() -> arm.setPosition(1)),
+//                    new WaitCommand(1000),
+//                    new InstantCommand(() -> claw.setPosition(0.22))
+//            )
+//    );
 
         // 0.33
+//        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
+//            if (position != -1) {
+//                pitch.setPosition(position);
+//            } else if (angle != -1) {
+//                pitch.turnToAngle(angle);
+//            }
+//        });
+
+
+
         gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
-            if (position != -1) {
-                pitch.setPosition(position);
-            } else if (angle != -1) {
-                pitch.turnToAngle(angle);
-            }
+            intakeMotor.motor.setPower(-0.4);
+        });
+        gb2(PlaystationAliases.TRIANGLE).whenReleased(() -> {
+            intakeMotor.motor.setPower(0);
         });
 
-
-
+        gb2(PlaystationAliases.SQUARE).whenPressed(
+                () -> {
+                    isClawOpen = !isClawOpen;
+                    if (isClawOpen) {
+                        claw.setPosition(0.40);
+                    } else {
+                        claw.setPosition(0.22);
+                    }
+                }
+        );
 
 
 

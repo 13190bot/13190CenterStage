@@ -26,6 +26,6 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     public void driveRobotCentric(double strafe, double forward, double rotate) {
-        mecanumDrive.driveRobotCentric(strafe * speedMultiplier, forward * speedMultiplier, rotate * speedMultiplier);
+        mecanumDrive.driveRobotCentric(strafe * speedMultiplier, forward * speedMultiplier, rotate * Math.abs(speedMultiplier));
     }
 }
