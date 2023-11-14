@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.wpilibcontroller.ProfiledPIDController;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.trajectory.TrapezoidProfile;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
@@ -20,6 +19,9 @@ public class LiftSubsystem extends SubsystemBase {
     public static double maxVelocity = 4000;
     public static double maxAcceleration = 4000;
     public static int tolerance = 2;
+    public static final int lowerLimit = 0;
+    public static final int upperLimit = 1000; //Set these to the actual values
+
     private double goalRight;
     private double goalLeft;
 
@@ -52,25 +54,34 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
 
-    public void lift(double finalPos) {
-        //Set PID Goal
-        goalRight = finalPos*manualPower+liftRight.getCurrentPosition();
-        goalLeft  = finalPos*manualPower+liftLeft.getCurrentPosition();
-        controllerRight.setGoal(goalRight);
-        controllerLeft.setGoal(goalLeft);
 
-        //Calculate PID ouput
-        double rightPower = -controllerRight.calculate(liftRight.getCurrentPosition())+kG;
-        double leftPower = -controllerLeft.calculate(liftLeft.getCurrentPosition())+kG;
 
-        //Check if the tolerance is met
-        if (controllerRight.atGoal()) rightPower = 0;
-        if (controllerLeft.atGoal()) leftPower = 0;
+    public void lift(double inputPower) {
 
-        //Set power based on PID output
-        liftRight.set(rightPower);
-        liftLeft.set(rightPower);
+        //Check Limits
+        if (inputPower > 0 && liftRight.getCurrentPosition() >= upperLimit) {
+            stabilize();
+        } else if (inputPower < 0 && liftRight.getCurrentPosition() <= lowerLimit) {
+            stabilize();
+        } else {
+            //Set PID Goal
+            goalRight = inputPower * manualPower + liftRight.getCurrentPosition();
+            goalLeft = inputPower * manualPower + liftLeft.getCurrentPosition();
+            controllerRight.setGoal(goalRight);
+            controllerLeft.setGoal(goalLeft);
 
+            //Calculate PID ouput
+            double rightPower = -controllerRight.calculate(liftRight.getCurrentPosition()) + kG;
+            double leftPower = -controllerLeft.calculate(liftLeft.getCurrentPosition()) + kG;
+
+            //Check if the tolerance is met
+            if (controllerRight.atGoal()) rightPower = 0;
+            if (controllerLeft.atGoal()) leftPower = 0;
+
+            //Set power based on PID output
+            liftRight.set(rightPower);
+            liftLeft.set(rightPower);
+        }
     }
 
     public void stabilize(){
@@ -78,14 +89,14 @@ public class LiftSubsystem extends SubsystemBase {
         liftLeft.set(0);
     }
 
-    public void PIDtelem(){
-//        telemetry.addData("Goal Pos",goalRight);
-//        telemetry.addData("Actual Pos",liftRight.getCurrentPosition());
-//        telemetry.update();
-//
-//        dashboardTelemetry.addData("Goal Pos",goalRight);
-//        dashboardTelemetry.addData("Actual Pos",liftRight.getCurrentPosition());
-//        dashboardTelemetry.update();
+    public void liftTelemetry(){
+        telemetry.addData("Goal Pos",goalRight);
+        telemetry.addData("Current Pos",liftRight.getCurrentPosition());
+        telemetry.update();
+
+        dashboardTelemetry.addData("Goal Pos",goalRight);
+        dashboardTelemetry.addData("Current Pos",liftRight.motor.getCurrentPosition());
+        dashboardTelemetry.update();
     }
 
 }

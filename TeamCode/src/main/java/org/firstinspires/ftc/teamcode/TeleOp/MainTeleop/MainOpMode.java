@@ -144,12 +144,8 @@ public class MainOpMode extends BaseOpMode {
 
 
         // v2
-        gb2(PlaystationAliases.CROSS).whenPressed(() -> {
-            intakeSubsystem.startIntake();
-        });
-        gb2(PlaystationAliases.CROSS).whenReleased(() -> {
-            intakeSubsystem.stopIntake();
-        });
+        gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
+        gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
 
 
         gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(
@@ -247,12 +243,8 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
-            intakeMotor.motor.setPower(-0.4);
-        });
-        gb2(PlaystationAliases.TRIANGLE).whenReleased(() -> {
-            intakeMotor.motor.setPower(0);
-        });
+
+
 
         gb2(PlaystationAliases.SQUARE).whenPressed(
                 () -> {
@@ -306,10 +298,7 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-        // reverse
-        gb1(PlaystationAliases.SQUARE).whenPressed(() -> {
-           driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
-        });
+
 //        gb2(PlaystationAliases)
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
@@ -323,9 +312,9 @@ public class MainOpMode extends BaseOpMode {
 
     public void run()
     {
-        telemetry.addData("clawpos", clawSubsystem.claw.getPosition());
-        telemetry.addData("clawang", clawSubsystem.claw.getAngle());
-        telemetry.update();
+//        telemetry.addData("clawpos", clawSubsystem.claw.getPosition());
+//        telemetry.addData("clawang", clawSubsystem.claw.getAngle());
+//        telemetry.update();
 //        AprilTagDetector.updateAprilTagDetections();
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 

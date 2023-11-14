@@ -19,7 +19,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
 
     //CONFIG
 
-    static double slowmodeMultiplier = -0.3;
+    static double slowmodeMultiplier = 0.5;
 
     public DriveRobotOptimalCommand(DriveSubsystem driveSubsystem, GamepadEx gamepadEx1) {
         this.driveSubsystem = driveSubsystem;

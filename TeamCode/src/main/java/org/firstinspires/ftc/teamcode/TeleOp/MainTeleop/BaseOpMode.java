@@ -60,6 +60,12 @@ public class BaseOpMode extends CommandOpMode {
         liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //Zero the lift encoders
+        liftRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
         //Reverse Motors
         fl.setInverted(true);
         fr.setInverted(true);
