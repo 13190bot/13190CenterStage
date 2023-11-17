@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.function.DoubleSupplier;
 
+@Config
 public class AlignCommand extends CommandBase {
 
     private DriveSubsystem driveSubsystem;
@@ -55,6 +57,7 @@ public class AlignCommand extends CommandBase {
                 if (rotate == 0) {
                     rotatePIDF.reset();
                 }
+                telemetry.addData("bearing", tag.ftcPose.bearing);
                 double input = tag.ftcPose.bearing / 180; // Degrees: Should be >-180 and <180, so divide to match motor power
                 double output = rotatePIDF.calculate(input, 0);
                 rotate = -output;
