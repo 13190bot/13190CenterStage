@@ -36,104 +36,13 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-        /*
-
-
-//        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).toggleWhenPressed(driveRobotCentricSlowModeCommand);
-
-//        gb2(PlaystationAliases.CROSS).whileHeld(startIntakeCommand);
-
-
-        gb2(PlaystationAliases.SQUARE).whenPressed(() -> {
-            intakeSubsystem.startIntake();
-        });
-        gb2(PlaystationAliases.SQUARE).whenReleased(() -> {
-            intakeSubsystem.stopIntake();
-        });
-
-
-        // open and down
-
-        gb2(PlaystationAliases.CROSS).whenPressed(() -> {
-            if (activated) {
-
-//            claw.setPosition(0.42);
-//            pitch.setPosition(0);
-//            arm.setPosition(0.9);
-//            sleep(1000);
-//            arm.setPosition(1);
-
-//            claw.setPosition(0.42);
-//            pitch.setPosition(0);
-//            arm.setPosition(0.9);
-//            sleep(1400);
-//            arm.setPosition(1);
-
-                // drop off
-                claw.setPosition(0.40);
-                sleep(200);
-                pitch.setPosition(0.52);
-                sleep(300);
-                pitch.setPosition(0.6);
-                sleep(1000);
-
-
-                pitch.setPosition(0);
-                arm.setPosition(0.9);
-                sleep(2200);
-                arm.setPosition(1);
-
-                activated = false;
-            }
-        });
-        // close and up
-        gb2(PlaystationAliases.CIRCLE).whenPressed(() -> {
-            if (!activated) {
-//            claw.setPosition(0.25);
-//            sleep(200);
-//            arm.setPosition(0.5);
-//            sleep(1200);
-//            arm.setPosition(0.4);
-//            pitch.setPosition(0.16);
-
-//            claw.setPosition(0.25);
-//            sleep(200);
-//            arm.setPosition(0.5);
-//            sleep(1200);
-//            arm.setPosition(0.45);
-//            pitch.setPosition(0.2);
-
-                claw.setPosition(0.25);
-                sleep(200);
-                arm.setPosition(0.5);
-                sleep(1200);
-                pitch.setPosition(0.55);
-
-                activated = true;
-            }
-        });
-
-        //TEST
-//        gb2(PlaystationAliases.SQUARE).whenPressed(() -> {
-//
-//
-//
+//        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
 //            if (position != -1) {
-//                pitch.setPosition(position);
+//                arm.setPosition(position);
 //            } else if (angle != -1) {
-//                pitch.turnToAngle(angle);
+//                arm.turnToAngle(angle);
 //            }
 //        });
-
-        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
-            if (position != -1) {
-                arm.setPosition(position);
-            } else if (angle != -1) {
-                arm.turnToAngle(angle);
-            }
-        });
-
-         */
 
 
 
@@ -160,12 +69,6 @@ public class MainOpMode extends BaseOpMode {
                         new WaitCommand(1000),
                         new InstantCommand(() -> {pitch.setPosition(0.65 - 0.05);})
                 ),
-
-//            claw.setPosition(0.25);
-//            sleep(200);
-//            arm.setPosition(0.5);
-//            sleep(1200);
-//            pitch.setPosition(0.55);
 
                 new SequentialCommandGroup(
 //                        new InstantCommand(() -> {claw.setPosition(0.40); isClawOpen = true;}),
@@ -219,27 +122,6 @@ public class MainOpMode extends BaseOpMode {
 //                sleep(2200);
 //                arm.setPosition(1);
         );
-//
-//        gb2(/* insert button here */).toggleWhenPressed(
-//
-//        ),
-//
-//            gb2(/* insert button here */).toggleWhenPressed(
-//                new SequentialCommandGroup(
-//                    new InstantCommand(() -> arm.setPosition(1)),
-//                    new WaitCommand(1000),
-//                    new InstantCommand(() -> claw.setPosition(0.22))
-//            )
-//    );
-
-        // 0.33
-//        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
-//            if (position != -1) {
-//                pitch.setPosition(position);
-//            } else if (angle != -1) {
-//                pitch.turnToAngle(angle);
-//            }
-//        });
 
 
 
