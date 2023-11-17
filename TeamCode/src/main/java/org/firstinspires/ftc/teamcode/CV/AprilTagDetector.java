@@ -15,7 +15,7 @@ import java.util.List;
 public class AprilTagDetector {
 
     private final static String webcamName = "Webcam 1";
-    private static AprilTagProcessor aprilTag;
+    private static AprilTagProcessor aprilTagProcessor;
     public static VisionPortal visionPortal;
 
     protected static List<AprilTagDetection> allCurrentDetections;
@@ -25,14 +25,15 @@ public class AprilTagDetector {
 
 
     public static void initAprilTag(HardwareMap hardwareMap){
-        aprilTag = new AprilTagProcessor.Builder()
+        aprilTagProcessor = new AprilTagProcessor.Builder()
                 //Set Calibration Here
 
                 .build();
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
-        builder.addProcessor(aprilTag);
-        visionPortal = builder.build();
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, webcamName))
+                .addProcessor(aprilTagProcessor)
+                .build();
 
     }
 
@@ -41,7 +42,7 @@ public class AprilTagDetector {
     }
 
     public static void updateAprilTagDetections(){
-        allCurrentDetections = aprilTag.getDetections();
+        allCurrentDetections = aprilTagProcessor.getDetections();
 
     }
 
