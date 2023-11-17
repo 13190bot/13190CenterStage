@@ -21,7 +21,7 @@ public class ManualLiftCommand extends CommandBase {
         } else {
             liftSubsystem.stabilize();
         }
-        liftSubsystem.PIDtelem();
+        liftSubsystem.liftTelemetry();
 
     }
 
