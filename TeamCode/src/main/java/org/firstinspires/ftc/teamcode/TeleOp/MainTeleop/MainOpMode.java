@@ -36,13 +36,13 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-//        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
-//            if (position != -1) {
-//                arm.setPosition(position);
-//            } else if (angle != -1) {
-//                arm.turnToAngle(angle);
-//            }
-//        });
+        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
+            if (position != -1) {
+                claw.setPosition(position);
+            } else if (angle != -1) {
+                claw.turnToAngle(angle);
+            }
+        });
 
 
 
