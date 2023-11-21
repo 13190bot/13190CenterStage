@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+import java.util.List;
 import java.util.function.DoubleSupplier;
 
 @Config
@@ -22,9 +23,9 @@ public class AlignCommand extends CommandBase {
     private PIDFController forwardPIDF;
     private PIDFController strafePIDF;
 
-    public static double kp = 0.1;
+    public static double kp = 0.07;
     public static double ki = 0;
-    public static double kd = 0;
+    public static double kd = 0.0001;
     public static double kf = 0;
 
     public AlignCommand(DriveSubsystem driveSub, Telemetry telemetry) {
@@ -32,9 +33,10 @@ public class AlignCommand extends CommandBase {
         this.telemetry = telemetry;
 
         // https://docs.ftclib.org/ftclib/features/controllers
-        rotatePIDF = new PIDFController(0.1, 0, 0, 0);
+        rotatePIDF = new PIDFController(0.07, 0, 0.0001, 0);
         forwardPIDF = new PIDFController(0.1, 0, 0, 0);
         strafePIDF = new PIDFController(0.1, 0, 0, 0);
+        rotatePIDF.setTolerance(0);
 
         // Should be initted in the opmode
 //        AprilTagDetector.initAprilTag(hardwareMap);
@@ -50,16 +52,35 @@ public class AlignCommand extends CommandBase {
 
         AprilTagDetection tag = AprilTagDetector.getDetectionByID(1);
 
-        if (tag != null) {
+        List allTags = AprilTagDetector.getAllCurrentDetections();
+
+        if (allTags.size() > 0) {
             if (true || !rotatePIDF.atSetPoint()) {
-                rotatePIDF.setPIDF(kp, ki, kd, kf);
-                telemetry.addLine("Rotate PIDF");
+                // DON'T USE BEARING, USE YAW
                 if (rotate == 0) {
                     rotatePIDF.reset();
                 }
-                telemetry.addData("bearing", tag.ftcPose.bearing);
-                double input = tag.ftcPose.bearing / 180; // Degrees: Should be >-180 and <180, so divide to match motor power
-                double output = rotatePIDF.calculate(input, 0);
+
+//                double bearing = 0;
+//                for (int i = 0; i < allTags.size(); i++) {
+//                    bearing += ((AprilTagDetection) allTags.get(i)).ftcPose.bearing;
+//
+//                    telemetry.addData("bearing " + i, ((AprilTagDetection) allTags.get(i)).ftcPose.bearing);
+//                }
+//                bearing = bearing / allTags.size();
+
+                AprilTagDetection rTag = (AprilTagDetection) allTags.get(0);
+
+//                double bearing = rTag.ftcPose.bearing;
+                double bearing = rTag.ftcPose.yaw;
+
+                bearing = Math.cbrt(bearing);
+
+                rotatePIDF.setPIDF(kp, ki, kd, kf);
+                telemetry.addLine("Rotate PIDF");
+                telemetry.addData("bearing TAG " + rTag.id, bearing);
+                double input = bearing; // Degrees: Should be >-180 and <180, so divide to match motor power
+                double output = rotatePIDF.calculate(input, 0); // Target value is 2nd argument
                 rotate = -output;
                 forward = 0;
                 strafe = 0;
@@ -107,9 +128,9 @@ public class AlignCommand extends CommandBase {
 
         AprilTagDetector.aprilTagTelemetry(telemetry);
 
-        rotate = 0;
-        strafe = 0;
-        forward = 0;
+//        rotate = 0;
+//        strafe = 0;
+//        forward = 0;
         driveSubsystem.driveRobotCentric(strafe, forward, rotate);
     }
 

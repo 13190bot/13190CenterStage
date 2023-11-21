@@ -21,7 +21,7 @@ public class AlignTest extends BaseDriveOpMode {
 
         register(driveSubsystem);
 
-        AprilTagDetector.initAprilTag(hardwareMap);
+//        AprilTagDetector.initAprilTag(hardwareMap);
 
         driveSubsystem.setDefaultCommand(new AlignCommand(driveSubsystem, telemetry));
     }
