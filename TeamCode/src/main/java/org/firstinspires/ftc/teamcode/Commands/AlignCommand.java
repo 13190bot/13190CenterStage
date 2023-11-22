@@ -34,9 +34,11 @@ public class AlignCommand extends CommandBase {
 
         // https://docs.ftclib.org/ftclib/features/controllers
         rotatePIDF = new PIDFController(0.07, 0, 0.0001, 0);
-        forwardPIDF = new PIDFController(0.1, 0, 0, 0);
+        forwardPIDF = new PIDFController(0.05, 0, 0.0001, 0);
         strafePIDF = new PIDFController(0.1, 0, 0, 0);
         rotatePIDF.setTolerance(0);
+        forwardPIDF.setTolerance(0);
+        strafePIDF.setTolerance(0);
 
         // Should be initted in the opmode
 //        AprilTagDetector.initAprilTag(hardwareMap);
@@ -46,16 +48,24 @@ public class AlignCommand extends CommandBase {
 
     @Override
     public void execute() {
-        rotatePIDF.setPIDF(kp, ki, kd, kf);
+        strafePIDF.setPIDF(kp, ki, kd, kf);
 
         AprilTagDetector.updateAprilTagDetections();
 
-        AprilTagDetection tag = AprilTagDetector.getDetectionByID(1);
-
         List allTags = AprilTagDetector.getAllCurrentDetections();
 
+
+
+
+
+        telemetry.addData("numTags", allTags.size());
+
+
         if (allTags.size() > 0) {
-            if (true || !rotatePIDF.atSetPoint()) {
+            AprilTagDetection tag = (AprilTagDetection) allTags.get(0);
+            telemetry.addData("tag id: ", tag.id);
+
+            if (!rotatePIDF.atSetPoint()) {
                 // DON'T USE BEARING, USE YAW
                 if (rotate == 0) {
                     rotatePIDF.reset();
@@ -69,51 +79,60 @@ public class AlignCommand extends CommandBase {
 //                }
 //                bearing = bearing / allTags.size();
 
-                AprilTagDetection rTag = (AprilTagDetection) allTags.get(0);
+//                AprilTagDetection rTag = (AprilTagDetection) allTags.get(0);
 
 //                double bearing = rTag.ftcPose.bearing;
-                double bearing = rTag.ftcPose.yaw;
+                double yaw = tag.ftcPose.yaw;
 
-                bearing = Math.cbrt(bearing);
+                yaw = Math.cbrt(yaw);
 
                 rotatePIDF.setPIDF(kp, ki, kd, kf);
                 telemetry.addLine("Rotate PIDF");
-                telemetry.addData("bearing TAG " + rTag.id, bearing);
-                double input = bearing; // Degrees: Should be >-180 and <180, so divide to match motor power
+                telemetry.addData("yaw", yaw);
+                double input = yaw; // Degrees: Should be >-180 and <180, so divide to match motor power
                 double output = rotatePIDF.calculate(input, 0); // Target value is 2nd argument
                 rotate = -output;
                 forward = 0;
                 strafe = 0;
-            } else {
+            }
+
+            if (rotate < 0.5 && rotate > -0.5) {
                 if (!forwardPIDF.atSetPoint()) {
-                    telemetry.addLine("Forward PIDF");
                     if (forward == 0) {
                         forwardPIDF.reset();
                     }
+
+                    telemetry.addLine("Forward PIDF");
                     double input = tag.ftcPose.y; // Inches: TODO: tune
-                    double output = forwardPIDF.calculate(input, 4);
-                    rotate = 0;
+                    double output = forwardPIDF.calculate(input, 10);
+//                    rotate = 0;
                     forward = output;
                     strafe = 0;
-                } else {
-                    if (!strafePIDF.atSetPoint()) {
-                        telemetry.addLine("Strafe PIDF");
+                }
+
+                if (true) {
+                    if (false && !strafePIDF.atSetPoint()) {
                         if (strafe == 0) {
                             strafePIDF.reset();
                         }
-                        double input = tag.ftcPose.x / 10; // Inches: TODO: tune
+
+                        telemetry.addLine("Strafe PIDF");
+                        double input = tag.ftcPose.x; // Inches: TODO: tune
                         double output = strafePIDF.calculate(input, 0);
-                        rotate = 0;
-                        forward = 0;
+//                    rotate = 0;
+//                    forward = 0;
                         strafe = output;
-                    } else {
+                    }
+
+                    if (true) {
                         // Done aligning!
                         telemetry.addLine("Done aligning!");
-                        rotate = 0;
-                        forward = 0;
-                        strafe = 0;
+//                    rotate = 0;
+//                    forward = 0;
+//                    strafe = 0;
                     }
                 }
+
             }
         } else {
             telemetry.addLine("No PIDF (apriltag not detected)");
