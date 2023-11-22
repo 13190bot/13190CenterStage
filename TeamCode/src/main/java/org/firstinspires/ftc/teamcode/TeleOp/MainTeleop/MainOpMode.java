@@ -120,7 +120,7 @@ public class MainOpMode extends BaseOpMode {
         register(driveSubsystem, intakeSubsystem);
 
 
-
+        // Test / tune arm
         gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
             if (A_armPosition != -1) {
 //                arm.setPosition(A_armPosition);
@@ -136,98 +136,11 @@ public class MainOpMode extends BaseOpMode {
             }
         });
 
-
-
-
-
-        // put arm to resting position
-//        arm.setPosition(0.5);
-
-
-        // v2
+        // Intake normal and reverse
         gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
         gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
 
-        /*
-        gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> {arm.setPosition(1);}),
-                        new WaitCommand(1000),
-//                        new InstantCommand(() -> {claw.setPosition(0.25);}),
-                        new InstantCommand(() -> {claw.setPosition(0.22); isClawOpen = false;}),
-                        // split here - Prateek
-                        new WaitCommand(400),
-                        new InstantCommand(() -> {arm.setPosition(0.45);}),
-                        new WaitCommand(1000),
-                        new InstantCommand(() -> {pitch.setPosition(0.65 - 0.05);})
-                ),
-
-                new SequentialCommandGroup(
-//                        new InstantCommand(() -> {claw.setPosition(0.40); isClawOpen = true;}),
-                        new InstantCommand(() -> {claw.setPosition(0.43); isClawOpen = true;}),
-                        new WaitCommand(300),
-//                        new InstantCommand(() -> {pitch.setPosition(0.62);}),
-//                        new WaitCommand(100),
-//                        new InstantCommand(() -> {pitch.setPosition(0.7);}),
-//                        new WaitCommand(700),
-                        new InstantCommand(() -> {pitch.setPosition(0.6 - 0.05);}),
-                        new WaitCommand(100),
-                        new InstantCommand(() -> {pitch.setPosition(0.7 - 0.05);}),
-                        new WaitCommand(100),
-
-                        new InstantCommand(() -> {pitch.setPosition(0.6 - 0.05);}),
-                        new WaitCommand(100),
-                        new InstantCommand(() -> {pitch.setPosition(0.7 - 0.05);}),
-                        new WaitCommand(100),
-                        new InstantCommand(() -> {pitch.setPosition(0.6 - 0.05);}),
-                        new WaitCommand(100),
-                        new InstantCommand(() -> {pitch.setPosition(0.7 - 0.05);}),
-                        new WaitCommand(100),
-
-
-                        new WaitCommand(600),
-
-//                        new InstantCommand(() -> {pitch.setPosition(0.1);}),
-                        new InstantCommand(() -> {pitch.setPosition(0.1 - 0.05 - 0.02);}),
-//                        new InstantCommand(() -> {arm.setPosition(0.85);}),
-//                        new WaitCommand(700),
-//                        new InstantCommand(() -> {arm.setPosition(0.95);})
-//                        new InstantCommand(() -> {arm.disable();})
-
-
-//                        new InstantCommand(() -> {arm.setPosition(0.5);})
-
-
-                        new InstantCommand(() -> {arm.setPosition(0.9);})
-                )
-//                // drop off
-//                claw.setPosition(0.40);
-//                sleep(200);
-//                pitch.setPosition(0.52);
-//                sleep(300);
-//                pitch.setPosition(0.6);
-//                sleep(1000);
-//
-//
-//                pitch.setPosition(0);
-//                arm.setPosition(0.9);
-//                sleep(2200);
-//                arm.setPosition(1);
-        );
-        */
-
-
-        // simple 2 stage
-//        gb2(PlaystationAliases.CIRCLE).toggleWhenPressed(
-//            new SequentialCommandGroup(
-//                new InstantCommand(() -> {armPosition = 0.3;}),
-//                updateArm()
-//            ),
-//            new SequentialCommandGroup(
-//                new InstantCommand(() -> {armPosition = 0.8;}),
-//                updateArm()
-//            )
-//        );
+        // Arm pickup stages
         gb2(PlaystationAliases.CIRCLE).whenPressed(
             new InstantCommand(
                 () -> {
@@ -327,26 +240,7 @@ public class MainOpMode extends BaseOpMode {
             )
         );
 
-
-
-
-        gb2(GamepadKeys.Button.DPAD_LEFT).whileHeld(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> {armPosition = armPosition - manualArmIncrement;}),
-                updateArm()
-            )
-        );
-        gb2(GamepadKeys.Button.DPAD_LEFT).whileHeld(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> {armPosition = armPosition + manualArmIncrement;}),
-                updateArm()
-            )
-        );
-
-
-
-
-
+        // Manual claw control
         gb2(PlaystationAliases.SQUARE).whenPressed(
                 () -> {
                     isClawOpen = !isClawOpen;
@@ -389,6 +283,7 @@ public class MainOpMode extends BaseOpMode {
     public void run()
     {
 
+        // Manual arm control
         if (gamepad2.dpad_left) {
             armPosition = armPosition - manualArmIncrement;
         }
@@ -399,6 +294,7 @@ public class MainOpMode extends BaseOpMode {
             updateArm().schedule();
         }
 
+        // Manual arm control: touchpad x (left = dustpan, right = score)
         if (gamepad2.touchpad_finger_1) {
             double x = gamepad2.touchpad_finger_1_x;
             double y = gamepad2.touchpad_finger_1_y;
@@ -414,6 +310,8 @@ public class MainOpMode extends BaseOpMode {
 
             telemetry.addLine("touchpad active: finger1 " + x + " " + y);
         }
+
+        // Manual claw control: Press down on touchpad
         if (gamepad2.touchpad && !lastTouchpad) {
             isClawOpen = !isClawOpen;
             if (isClawOpen) {
