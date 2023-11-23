@@ -83,7 +83,8 @@ public class MainOpMode extends BaseOpMode {
                         arm.setPosition(armPosition);
                     }),
 //                    new WaitCommand(500),
-                    new WaitCommand(noPitchDelayForNext ? 0 : (500 - (axonInitialized ? 200 : 0))),
+//                    new WaitCommand(noPitchDelayForNext ? 0 : (500 - (axonInitialized ? 200 : 0))),
+                    new WaitCommand(axonInitialized ? (noPitchDelayForNext ? 0 : 300) : 500),
                     new InstantCommand(() -> {
                         double pitchPercent = (0.5 - armPercent) / (0.5);
                         // pitchPercent * 1 - (1 - pitchPercent) * 0.65
