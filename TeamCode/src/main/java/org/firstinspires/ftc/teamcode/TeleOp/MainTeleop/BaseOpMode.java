@@ -67,8 +67,12 @@ public class BaseOpMode extends CommandOpMode {
 
 
         //Reverse Motors
+//        fl.setInverted(true);
+//        fr.setInverted(true);
+//        br.setInverted(true);
+
+        bl.setInverted(true);
         fl.setInverted(true);
-        fr.setInverted(true);
         br.setInverted(true);
 
        // pitch.setPosition(0.5);

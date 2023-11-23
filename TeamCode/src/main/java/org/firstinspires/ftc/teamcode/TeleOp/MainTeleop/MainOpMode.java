@@ -44,9 +44,9 @@ public class MainOpMode extends BaseOpMode {
 
 
     public double armMin = 0.3;
-    public double armMax = 0.88;
+    public double armMax = 0.89; // 0.88 when red tape
 
-    public double pitchMin = 0.22;
+    public double pitchMin = 0.22; // 0.22 when red tape
     public double pitchMax = 0.6;
 
     public double manualArmIncrement = 0.0005;
@@ -165,7 +165,7 @@ public class MainOpMode extends BaseOpMode {
                             updateArm(),
                             new WaitCommand(150),
 
-                            new InstantCommand(() -> {armPosition = 0.88;}),
+                            new InstantCommand(() -> {armPosition = armMax;}),
                             updateArm(),
                             new WaitCommand(250),
 
@@ -181,7 +181,8 @@ public class MainOpMode extends BaseOpMode {
                         // Arm is currently hovering over dustpan with a pixel
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> {armPosition = 0.3;}),
+//                            new InstantCommand(() -> {armPosition = 0.3;}), // Default
+                            new InstantCommand(() -> {armPosition = 0.33;}), // Slightly above pixel bottom
                             updateArm()
                         ).schedule();
 
@@ -227,7 +228,7 @@ public class MainOpMode extends BaseOpMode {
                             updateArm(),
                             new WaitCommand(150),
 
-                            new InstantCommand(() -> {armPosition = 0.88;}),
+                            new InstantCommand(() -> {armPosition = armMax;}),
                             updateArm(),
                             new WaitCommand(250),
 
@@ -275,7 +276,7 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
         // TODO LIFT
-//        liftSubsystem.setDefaultCommand(manualLiftCommand);
+        liftSubsystem.setDefaultCommand(manualLiftCommand);
 
     }
 
