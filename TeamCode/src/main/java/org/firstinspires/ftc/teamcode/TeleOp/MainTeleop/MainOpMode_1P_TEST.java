@@ -326,8 +326,8 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
 
         // Manual arm control: touchpad x (left = dustpan, right = score)
         if (gamepad1.touchpad_finger_1 && armPickupStage == 2) {
-            double x = gamepad2.touchpad_finger_1_x;
-            double y = gamepad2.touchpad_finger_1_y;
+            double x = gamepad1.touchpad_finger_1_x;
+            double y = gamepad1.touchpad_finger_1_y;
 
 //            double armPercent = (1 - ((x + 1) * 0.5)); // full range
 
@@ -357,10 +357,10 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
         // Manual lift
         double power = 0;
 
-        if (gamepad2.dpad_up) {
+        if (gamepad1.dpad_up) {
             power = power + 1;
         }
-        if (gamepad2.dpad_down) {
+        if (gamepad1.dpad_down) {
             power = power - 1;
         }
 
