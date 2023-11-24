@@ -216,7 +216,7 @@ public class MainOpMode extends BaseOpMode {
         );
 
         // Retry pickup
-        gb2(PlaystationAliases.CROSS).whenPressed(
+        gb2(PlaystationAliases.SQUARE).whenPressed(
             new InstantCommand(
                 () -> {
                     if (armPickupStage == 1) {
@@ -243,16 +243,16 @@ public class MainOpMode extends BaseOpMode {
         );
 
         // Manual claw control
-        gb2(PlaystationAliases.SQUARE).whenPressed(
-                () -> {
-                    isClawOpen = !isClawOpen;
-                    if (isClawOpen) {
-                        claw.setPosition(0.4);
-                    } else {
-                        claw.setPosition(0.5);
-                    }
-                }
-        );
+//        gb2(PlaystationAliases.SQUARE).whenPressed(
+//                () -> {
+//                    isClawOpen = !isClawOpen;
+//                    if (isClawOpen) {
+//                        claw.setPosition(0.4);
+//                    } else {
+//                        claw.setPosition(0.5);
+//                    }
+//                }
+//        )
 
 
 
@@ -297,7 +297,7 @@ public class MainOpMode extends BaseOpMode {
         }
 
         // Manual arm control: touchpad x (left = dustpan, right = score)
-        if (gamepad2.touchpad_finger_1) {
+        if (gamepad2.touchpad_finger_1 && armPickupStage == 2) {
             double x = gamepad2.touchpad_finger_1_x;
             double y = gamepad2.touchpad_finger_1_y;
 
