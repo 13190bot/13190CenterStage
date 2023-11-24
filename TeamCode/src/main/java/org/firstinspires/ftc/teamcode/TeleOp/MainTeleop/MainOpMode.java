@@ -113,6 +113,7 @@ public class MainOpMode extends BaseOpMode {
      */
     public double armPickupStage = -1;
 
+    public InstantCommand armPickup;
 
 
     @Override
@@ -142,7 +143,7 @@ public class MainOpMode extends BaseOpMode {
         gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
 
         // Arm pickup stages
-        gb2(PlaystationAliases.CIRCLE).whenPressed(
+        armPickup =
             new InstantCommand(
                 () -> {
                     if (armPickupStage == -1) {
@@ -212,8 +213,13 @@ public class MainOpMode extends BaseOpMode {
                         isClawOpen = true;
                     }
                 }
-            )
+            );
+
+
+        gb2(PlaystationAliases.CIRCLE).whenPressed(
+            armPickup
         );
+
 
         // Retry pickup
         gb2(PlaystationAliases.SQUARE).whenPressed(
@@ -313,20 +319,29 @@ public class MainOpMode extends BaseOpMode {
             telemetry.addLine("touchpad active: finger1 " + x + " " + y);
         }
 
-        // Manual claw control: Press down on touchpad
+        // Advance armStage: Press down on touchpad
         if (gamepad2.touchpad && !lastTouchpad) {
-            isClawOpen = !isClawOpen;
-            if (isClawOpen) {
-                claw.setPosition(0.4);
-            } else {
-                claw.setPosition(0.5);
-            }
+//            isClawOpen = !isClawOpen;
+//            if (isClawOpen) {
+//                claw.setPosition(0.4);
+//            } else {
+//                claw.setPosition(0.5);
+//            }
+            armPickup.schedule();
         }
         lastTouchpad = gamepad2.touchpad;
 
 
         // Manual lift
-        double power = gamepad2.left_stick_y;
+        double power = -gamepad2.left_stick_y;
+
+        if (gamepad2.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad2.dpad_down) {
+            power = power - 1;
+        }
+
         liftLeft.motor.setPower(power);
         liftRight.motor.setPower(power);
 

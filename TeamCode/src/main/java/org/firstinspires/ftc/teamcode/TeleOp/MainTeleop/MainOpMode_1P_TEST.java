@@ -136,6 +136,8 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
      */
     public double armPickupStage = -1;
 
+    public InstantCommand armPickup;
+
 
 
     @Override
@@ -165,7 +167,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
         gb1(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
 
         // Arm pickup stages
-        gb1(PlaystationAliases.CIRCLE).whenPressed(
+        armPickup =
             new InstantCommand(
                 () -> {
                     if (armPickupStage == -1) {
@@ -235,7 +237,10 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
                         isClawOpen = true;
                     }
                 }
-            )
+            );
+
+        gb1(PlaystationAliases.CIRCLE).whenPressed(
+                armPickup
         );
 
         // Retry pickup
@@ -338,15 +343,29 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
 
         // Manual claw control: Press down on touchpad
         if (gamepad1.touchpad && !lastTouchpad) {
-            isClawOpen = !isClawOpen;
-            if (isClawOpen) {
-                claw.setPosition(0.4);
-            } else {
-                claw.setPosition(0.5);
-            }
+//            isClawOpen = !isClawOpen;
+//            if (isClawOpen) {
+//                claw.setPosition(0.4);
+//            } else {
+//                claw.setPosition(0.5);
+//            }
+            armPickup.schedule();
         }
         lastTouchpad = gamepad1.touchpad;
 
+
+        // Manual lift
+        double power = 0;
+
+        if (gamepad2.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad2.dpad_down) {
+            power = power - 1;
+        }
+
+        liftLeft.motor.setPower(power);
+        liftRight.motor.setPower(power);
 
         telemetry.addData("armPickupStage", armPickupStage);
         telemetry.addData("armPosition", armPosition);
