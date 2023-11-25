@@ -48,7 +48,7 @@ public class AlignCommand extends CommandBase {
 
     @Override
     public void execute() {
-        strafePIDF.setPIDF(kp, ki, kd, kf);
+//        strafePIDF.setPIDF(kp, ki, kd, kf);
 
         AprilTagDetector.updateAprilTagDetections();
 
@@ -82,7 +82,8 @@ public class AlignCommand extends CommandBase {
 //                AprilTagDetection rTag = (AprilTagDetection) allTags.get(0);
 
 //                double bearing = rTag.ftcPose.bearing;
-                double yaw = tag.ftcPose.yaw;
+                // pitch on the real bot since the camera is rotated 90 degrees
+                double yaw = tag.ftcPose.pitch; // yaw normally
 
                 yaw = Math.cbrt(yaw);
 
@@ -91,7 +92,7 @@ public class AlignCommand extends CommandBase {
                 telemetry.addData("yaw", yaw);
                 double input = yaw; // Degrees: Should be >-180 and <180, so divide to match motor power
                 double output = rotatePIDF.calculate(input, 0); // Target value is 2nd argument
-                rotate = -output;
+                rotate = output;
                 forward = 0;
                 strafe = 0;
             }
@@ -136,9 +137,9 @@ public class AlignCommand extends CommandBase {
             }
         } else {
             telemetry.addLine("No PIDF (apriltag not detected)");
-            rotate = 0;
-            forward = 0;
-            strafe = 0;
+//            rotate = 0;
+//            forward = 0;
+//            strafe = 0;
         }
 
         telemetry.addData("rotate", rotate);

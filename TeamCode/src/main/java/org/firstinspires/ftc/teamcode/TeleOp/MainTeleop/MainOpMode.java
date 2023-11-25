@@ -282,7 +282,7 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
         // TODO LIFT
-//        liftSubsystem.setDefaultCommand(manualLiftCommand);
+        liftSubsystem.setDefaultCommand(manualLiftCommand);
 
     }
 
@@ -333,17 +333,20 @@ public class MainOpMode extends BaseOpMode {
 
 
         // Manual lift
-        double power = -gamepad2.left_stick_y;
-
-        if (gamepad2.dpad_up) {
-            power = power + 1;
-        }
-        if (gamepad2.dpad_down) {
-            power = power - 1;
-        }
-
-        liftLeft.motor.setPower(power);
-        liftRight.motor.setPower(power);
+//        double power = -gamepad2.left_stick_y;
+//
+//        if (gamepad2.dpad_up) {
+//            power = power + 1;
+//        }
+//        if (gamepad2.dpad_down) {
+//            power = power - 1;
+//        }
+//
+//        telemetry.addData("power", power);
+//
+//        liftLeft.motor.setPower(power);
+////        liftRight.motor.setPower(power);
+//        telemetry.addData("w", liftLeft.motor.getPower());
 
 
         telemetry.addData("armPickupStage", armPickupStage);

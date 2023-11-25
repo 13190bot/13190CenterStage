@@ -304,7 +304,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
         driveSubsystem.setDefaultCommand(new DriveRobotOptimalCommand_1P_TEST(driveSubsystem, gamepadEx1));
 
         // TODO LIFT
-        liftSubsystem.setDefaultCommand(manualLiftCommand);
+//        liftSubsystem.setDefaultCommand(manualLiftCommand);
 
     }
 
