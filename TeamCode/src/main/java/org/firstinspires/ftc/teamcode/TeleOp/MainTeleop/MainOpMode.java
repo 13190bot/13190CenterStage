@@ -32,6 +32,7 @@ NEW
 @Config
 @TeleOp(name = "MainTeleOp")
 public class MainOpMode extends BaseOpMode {
+
     public static double A_armPosition = -1;
     public static double A_pitchPosition = -1;
     public static double A_clawPosition = -1;
@@ -48,6 +49,9 @@ public class MainOpMode extends BaseOpMode {
 
     public double pitchMin = 0.22; // 0.22 when red tape
     public double pitchMax = 0.6;
+
+    public double clawClosed = 0.5;
+    public double clawOpen = 0.4;
 
     public double manualArmIncrement = 0.0005;
 
@@ -150,10 +154,12 @@ public class MainOpMode extends BaseOpMode {
                         // Arm is currently unpowered, on dustpan
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(0.5)), // Close claw
+                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(250),
                             new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm()
+                            updateArm(),
+                            new WaitCommand(175),
+                            new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
 
                         armPickupStage = 1;
@@ -170,10 +176,12 @@ public class MainOpMode extends BaseOpMode {
                             updateArm(),
                             new WaitCommand(250),
 
-                            new InstantCommand(() -> claw.setPosition(0.5)), // Close claw
+                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm()
+                            updateArm(),
+//                            new WaitCommand(0),
+                            new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
 
                         armPickupStage = 1;
@@ -193,7 +201,7 @@ public class MainOpMode extends BaseOpMode {
                         // Arm is currently hovering scoring
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(0.4)), // Open claw
+                            new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
                             new WaitCommand(100),
 
                             // Shake it
@@ -227,7 +235,7 @@ public class MainOpMode extends BaseOpMode {
                 () -> {
                     if (armPickupStage == 1) {
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(0.4)), // Open claw
+                            new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
                             new WaitCommand(200),
 
                             new InstantCommand(() -> {armPosition = 0.86;}),
@@ -238,7 +246,7 @@ public class MainOpMode extends BaseOpMode {
                             updateArm(),
                             new WaitCommand(250),
 
-                            new InstantCommand(() -> claw.setPosition(0.5)), // Close claw
+                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm()
@@ -282,7 +290,7 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
         // TODO LIFT
-        liftSubsystem.setDefaultCommand(manualLiftCommand);
+//        liftSubsystem.setDefaultCommand(manualLiftCommand);
 
     }
 
@@ -333,20 +341,18 @@ public class MainOpMode extends BaseOpMode {
 
 
         // Manual lift
-//        double power = -gamepad2.left_stick_y;
-//
-//        if (gamepad2.dpad_up) {
-//            power = power + 1;
-//        }
-//        if (gamepad2.dpad_down) {
-//            power = power - 1;
-//        }
-//
-//        telemetry.addData("power", power);
-//
-//        liftLeft.motor.setPower(power);
-////        liftRight.motor.setPower(power);
-//        telemetry.addData("w", liftLeft.motor.getPower());
+        double power = -gamepad2.left_stick_y;
+
+        if (gamepad2.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad2.dpad_down) {
+            power = power - 1;
+        }
+
+        telemetry.addData("power", power);
+        liftLeft.motor.setPower(-power);
+        liftRight.motor.setPower(-power);
 
 
         telemetry.addData("armPickupStage", armPickupStage);

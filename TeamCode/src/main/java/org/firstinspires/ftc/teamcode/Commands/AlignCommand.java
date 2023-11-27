@@ -48,6 +48,8 @@ public class AlignCommand extends CommandBase {
 
     @Override
     public void execute() {
+//        rotatePIDF.setPIDF(kp, ki, kd, kf);
+//        forwardPIDF.setPIDF(kp, ki, kd, kf);
 //        strafePIDF.setPIDF(kp, ki, kd, kf);
 
         AprilTagDetector.updateAprilTagDetections();
@@ -87,7 +89,7 @@ public class AlignCommand extends CommandBase {
 
                 yaw = Math.cbrt(yaw);
 
-                rotatePIDF.setPIDF(kp, ki, kd, kf);
+//                rotatePIDF.setPIDF(kp, ki, kd, kf);
                 telemetry.addLine("Rotate PIDF");
                 telemetry.addData("yaw", yaw);
                 double input = yaw; // Degrees: Should be >-180 and <180, so divide to match motor power
@@ -95,9 +97,9 @@ public class AlignCommand extends CommandBase {
                 rotate = output;
                 forward = 0;
                 strafe = 0;
-            }
+            } else {
 
-            if (rotate < 0.5 && rotate > -0.5) {
+//            if (rotate < 0.5 && rotate > -0.5) {
                 if (!forwardPIDF.atSetPoint()) {
                     if (forward == 0) {
                         forwardPIDF.reset();
@@ -128,18 +130,18 @@ public class AlignCommand extends CommandBase {
                     if (true) {
                         // Done aligning!
                         telemetry.addLine("Done aligning!");
-//                    rotate = 0;
-//                    forward = 0;
-//                    strafe = 0;
+                    rotate = 0;
+                    forward = 0;
+                    strafe = 0;
                     }
                 }
 
             }
         } else {
             telemetry.addLine("No PIDF (apriltag not detected)");
-//            rotate = 0;
-//            forward = 0;
-//            strafe = 0;
+            rotate = 0;
+            forward = 0;
+            strafe = 0;
         }
 
         telemetry.addData("rotate", rotate);

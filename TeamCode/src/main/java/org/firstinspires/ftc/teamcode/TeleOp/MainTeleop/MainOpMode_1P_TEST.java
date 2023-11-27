@@ -31,6 +31,7 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Commands.DriveRobotOptimalCommand_1P_TEST;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
@@ -52,6 +53,7 @@ NEW
 - claw: 0.4 (open) -> 0.5 (closed)
  */
 
+@Disabled
 @Config
 @TeleOp(name = "TEST_MainOpMode_1PLAYER")
 public class MainOpMode_1P_TEST extends BaseOpMode {
@@ -71,6 +73,9 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
 
     public double pitchMin = 0.22; // 0.22 when red tape
     public double pitchMax = 0.6;
+
+    public double clawClosed = 0.7; // 0.5 -> 0.6
+    public double clawOpen = 0.47; // 0.4 -> 0.5
 
     public double manualArmIncrement = 0.0005;
 
@@ -174,7 +179,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
                         // Arm is currently unpowered, on dustpan
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(0.5)), // Close claw
+                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(250),
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm()
@@ -194,7 +199,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
                             updateArm(),
                             new WaitCommand(250),
 
-                            new InstantCommand(() -> claw.setPosition(0.5)), // Close claw
+                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm()
@@ -217,7 +222,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
                         // Arm is currently hovering scoring
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(0.4)), // Open claw
+                            new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
                             new WaitCommand(100),
 
                             // Shake it
@@ -249,7 +254,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
                 () -> {
                     if (armPickupStage == 1) {
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(0.4)), // Open claw
+                            new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
                             new WaitCommand(200),
 
                             new InstantCommand(() -> {armPosition = 0.86;}),
@@ -260,7 +265,7 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
                             updateArm(),
                             new WaitCommand(250),
 
-                            new InstantCommand(() -> claw.setPosition(0.5)), // Close claw
+                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm()
@@ -364,8 +369,8 @@ public class MainOpMode_1P_TEST extends BaseOpMode {
             power = power - 1;
         }
 
-        liftLeft.motor.setPower(power);
-        liftRight.motor.setPower(power);
+        liftLeft.motor.setPower(-power);
+        liftRight.motor.setPower(-power);
 
         telemetry.addData("armPickupStage", armPickupStage);
         telemetry.addData("armPosition", armPosition);

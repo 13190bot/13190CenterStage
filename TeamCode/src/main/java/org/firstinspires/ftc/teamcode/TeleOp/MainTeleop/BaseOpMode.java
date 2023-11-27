@@ -61,8 +61,8 @@ public class BaseOpMode extends CommandOpMode {
         liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Zero the lift encoders
-        liftRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        liftRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        liftLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
 
@@ -90,7 +90,7 @@ public class BaseOpMode extends CommandOpMode {
         //Subsystems
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
-        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
+//        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
         clawSubsystem = new ClawSubsystem(claw);
         armSubsystem = new ArmSubsystem(arm);
         pitchSubsystem = new PitchSubsystem(pitch);
@@ -101,7 +101,7 @@ public class BaseOpMode extends CommandOpMode {
 
 
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
-        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+//        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
         startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
 
         grabAndUpCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.grab()), new WaitCommand(200), new InstantCommand(()->armSubsystem.armUp()), new WaitCommand(1200), new InstantCommand(()->pitchSubsystem.pitchUp()));
