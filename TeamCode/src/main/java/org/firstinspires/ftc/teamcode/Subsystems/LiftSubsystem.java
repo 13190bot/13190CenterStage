@@ -20,7 +20,7 @@ public class LiftSubsystem extends SubsystemBase {
     public static double maxAcceleration = 4000;
     public static int tolerance = 2;
     public static final int lowerLimit = 0;
-    public static final int upperLimit = 4700; //Set these to the actual values
+    public static final int upperLimit = 4700;
     private final boolean useLimits = true;
 
     private static double goalRight;
@@ -107,7 +107,6 @@ public class LiftSubsystem extends SubsystemBase {
         telemetry.addData("Goal Pos",goalRight);
         telemetry.addData("Current Pos Right",liftRight.getCurrentPosition());
         telemetry.addData("Current Pos Left",liftLeft.getCurrentPosition());
-        telemetry.update();
 
         dashboardTelemetry.addData("Goal Pos",goalRight);
         dashboardTelemetry.addData("Current Pos Right",liftRight.getCurrentPosition());

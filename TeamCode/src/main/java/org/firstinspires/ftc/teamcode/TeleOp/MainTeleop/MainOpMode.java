@@ -287,7 +287,6 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-
 //        gb2(PlaystationAliases)
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
@@ -300,10 +299,16 @@ public class MainOpMode extends BaseOpMode {
 
     }
 
-
+    @Override
+    public void st(){
+        beforeMatchEnd.start();
+    }
     private boolean lastTouchpad = false;
     public void run()
     {
+
+        telemetry.addData("Time left", beforeMatchEnd.remainingTime());
+
         // Manual arm control
         if (gamepad2.dpad_left) {
             armPosition = armPosition - manualArmIncrement;
@@ -375,7 +380,7 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-
+        telemetry.update();
         super.run();
     }
 }

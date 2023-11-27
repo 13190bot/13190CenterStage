@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,8 +14,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.util.CommandOpModeEx;
 
-public class BaseOpMode extends CommandOpMode {
+import java.util.concurrent.TimeUnit;
+
+public class BaseOpMode extends CommandOpModeEx {
 
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intakeSubsystem;
@@ -34,10 +38,14 @@ public class BaseOpMode extends CommandOpMode {
     protected ClawReleaseCommand clawReleaseCommand;
     protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
+    protected Timing.Timer beforeMatchEnd;
 
 
     @Override
     public void initialize() {
+
+        //Timer to calculate time left in match
+        beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);
 
         //Motors
         fl = new MotorEx(hardwareMap, "frontLeft");
@@ -56,6 +64,7 @@ public class BaseOpMode extends CommandOpMode {
         fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
 
         //Zero the lift encoders
