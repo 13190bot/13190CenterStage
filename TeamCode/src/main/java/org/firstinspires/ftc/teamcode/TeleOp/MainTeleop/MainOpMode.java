@@ -123,7 +123,13 @@ public class MainOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
-        register(driveSubsystem, intakeSubsystem);
+        register(driveSubsystem, intakeSubsystem, liftSubsystem);
+
+
+        //Reset Lift
+        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
+            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
+        });
 
 
         // Test / tune arm
@@ -141,6 +147,7 @@ public class MainOpMode extends BaseOpMode {
                 claw.setPosition(A_clawPosition);
             }
         });
+
 
         // Intake normal and reverse
         gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
@@ -289,8 +296,7 @@ public class MainOpMode extends BaseOpMode {
         //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
-        // TODO LIFT
-//        liftSubsystem.setDefaultCommand(manualLiftCommand);
+    liftSubsystem.setDefaultCommand(manualLiftCommand);
 
     }
 
@@ -298,7 +304,6 @@ public class MainOpMode extends BaseOpMode {
     private boolean lastTouchpad = false;
     public void run()
     {
-
         // Manual arm control
         if (gamepad2.dpad_left) {
             armPosition = armPosition - manualArmIncrement;
@@ -340,29 +345,32 @@ public class MainOpMode extends BaseOpMode {
         lastTouchpad = gamepad2.touchpad;
 
 
-        // Manual lift
-        double power = -gamepad2.left_stick_y;
 
-        if (gamepad2.dpad_up) {
-            power = power + 1;
-        }
-        if (gamepad2.dpad_down) {
-            power = power - 1;
-        }
+        // Manual lift, Not used for now
 
-        telemetry.addData("power", power);
-        liftLeft.motor.setPower(-power);
-        liftRight.motor.setPower(-power);
+//        double power = -gamepad2.left_stick_y;
+//
+//        if (gamepad2.dpad_up) {
+//            power = power + 1;
+//        }
+//        if (gamepad2.dpad_down) {
+//            power = power - 1;
+//        }
+//
+//        telemetry.addData("power", power);
+//        liftLeft.motor.setPower(-power);
+//        liftRight.motor.setPower(-power);
 
 
-        telemetry.addData("armPickupStage", armPickupStage);
-        telemetry.addData("armPosition", armPosition);
-        telemetry.update();
+//        telemetry.addData("armPickupStage", armPickupStage);
+//        telemetry.addData("armPosition", armPosition);
+//        telemetry.update();
 //        AprilTagDetector.updateAprilTagDetections();
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 
 
 //        driveRobotOptimalCommand.execute();
+
 
 
 
