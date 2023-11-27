@@ -4,13 +4,8 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
-
-import java.lang.reflect.WildcardType;
 
 /*
 TODO:
@@ -295,7 +290,7 @@ public class MainOpMode extends BaseOpMode {
         //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
-    liftSubsystem.setDefaultCommand(manualLiftCommand);
+    liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
     }
 

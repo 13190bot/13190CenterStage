@@ -4,11 +4,11 @@ import org.firstinspires.ftc.teamcode.Subsystems.LiftSubsystem;
 
 import java.util.function.DoubleSupplier;
 
-public class ManualLiftCommand extends CommandBase {
+public class PIDLiftCommand extends CommandBase {
     private LiftSubsystem liftSubsystem;
     private DoubleSupplier power;
 
-    public ManualLiftCommand(LiftSubsystem liftSubsystem, DoubleSupplier power) {
+    public PIDLiftCommand(LiftSubsystem liftSubsystem, DoubleSupplier power) {
         this.liftSubsystem = liftSubsystem;
         this.power = power;
         addRequirements(liftSubsystem);
