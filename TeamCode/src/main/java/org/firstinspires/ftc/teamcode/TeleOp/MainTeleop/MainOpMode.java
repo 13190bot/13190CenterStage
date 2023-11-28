@@ -50,8 +50,8 @@ public class MainOpMode extends BaseOpMode {
     public double pitchMin = 0.22; // 0.22 when red tape
     public double pitchMax = 0.6;
 
-    public double clawClosed = 0.5;
-    public double clawOpen = 0.4;
+    public double clawClosed = 0.4;
+    public double clawOpen = 0.26;
 
     public double manualArmIncrement = 0.0005;
 
