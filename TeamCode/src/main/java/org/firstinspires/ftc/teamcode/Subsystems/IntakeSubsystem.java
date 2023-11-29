@@ -23,13 +23,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     public void startIntake() {
-        intakeMotor.motor.setPower(intakeSpeed);
+        intakeMotor.set(intakeSpeed);
     }
     public void reverseIntake() {
-        intakeMotor.motor.setPower(-intakeSpeed);
+        intakeMotor.set(-intakeSpeed);
     }
     public void stopIntake() {
-        intakeMotor.motor.setPower(0);
+        intakeMotor.set(0);
     }
 
     public Command startIntakeCommand() {

@@ -4,13 +4,8 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
-
-import java.lang.reflect.WildcardType;
 
 /*
 TODO:
@@ -123,7 +118,13 @@ public class MainOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
-        register(driveSubsystem, intakeSubsystem);
+        register(driveSubsystem, intakeSubsystem, liftSubsystem);
+
+
+        //Reset Lift
+        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
+            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
+        });
 
 
         // Test / tune arm
@@ -141,6 +142,7 @@ public class MainOpMode extends BaseOpMode {
                 claw.setPosition(A_clawPosition);
             }
         });
+
 
         // Intake normal and reverse
         gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
@@ -280,7 +282,6 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-
 //        gb2(PlaystationAliases)
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
@@ -289,15 +290,19 @@ public class MainOpMode extends BaseOpMode {
         //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
-        // TODO LIFT
-//        liftSubsystem.setDefaultCommand(manualLiftCommand);
+    liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
     }
 
-
+    @Override
+    public void st(){
+        beforeMatchEnd.start();
+    }
     private boolean lastTouchpad = false;
     public void run()
     {
+
+        telemetry.addData("Time left", beforeMatchEnd.remainingTime());
 
         // Manual arm control
         if (gamepad2.dpad_left) {
@@ -340,24 +345,26 @@ public class MainOpMode extends BaseOpMode {
         lastTouchpad = gamepad2.touchpad;
 
 
-        // Manual lift
-        double power = -gamepad2.left_stick_y;
 
-        if (gamepad2.dpad_up) {
-            power = power + 1;
-        }
-        if (gamepad2.dpad_down) {
-            power = power - 1;
-        }
+        // Manual lift, Not used for now
 
-        telemetry.addData("power", power);
-        liftLeft.motor.setPower(-power);
-        liftRight.motor.setPower(-power);
+//        double power = -gamepad2.left_stick_y;
+//
+//        if (gamepad2.dpad_up) {
+//            power = power + 1;
+//        }
+//        if (gamepad2.dpad_down) {
+//            power = power - 1;
+//        }
+//
+//        telemetry.addData("power", power);
+//        liftLeft.motor.setPower(-power);
+//        liftRight.motor.setPower(-power);
 
 
-        telemetry.addData("armPickupStage", armPickupStage);
-        telemetry.addData("armPosition", armPosition);
-        telemetry.update();
+//        telemetry.addData("armPickupStage", armPickupStage);
+//        telemetry.addData("armPosition", armPosition);
+//        telemetry.update();
 //        AprilTagDetector.updateAprilTagDetections();
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 
@@ -368,6 +375,7 @@ public class MainOpMode extends BaseOpMode {
 
 
 
+        telemetry.update();
         super.run();
     }
 }

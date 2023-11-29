@@ -4,24 +4,21 @@ import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
-import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.arcrobotics.ftclib.util.Timing;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
+import org.firstinspires.ftc.teamcode.util.CommandOpModeEx;
 
-public class BaseOpMode extends CommandOpMode {
+import java.util.concurrent.TimeUnit;
+
+public class BaseOpMode extends CommandOpModeEx {
 
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intakeSubsystem;
-    protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
-    protected ArmSubsystem armSubsystem;
-    protected PitchSubsystem pitchSubsystem;
     public MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
     public SimpleServo arm,pitch,claw;
     private MotorEx[] motors = {fl, fr, bl, br};
@@ -29,15 +26,16 @@ public class BaseOpMode extends CommandOpMode {
     protected GamepadEx gamepadEx2;
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
-    protected StartIntakeCommand startIntakeCommand;
-    protected ClawGrabCommand clawGrabCommand;
-    protected ClawReleaseCommand clawReleaseCommand;
-    protected ManualLiftCommand manualLiftCommand;
+    protected PIDLiftCommand PIDLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
+    protected Timing.Timer beforeMatchEnd;
 
 
     @Override
     public void initialize() {
+
+        //Timer to calculate time left in match
+        beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);
 
         //Motors
         fl = new MotorEx(hardwareMap, "frontLeft");
@@ -57,12 +55,12 @@ public class BaseOpMode extends CommandOpMode {
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         //Zero the lift encoders
-//        liftRight.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        liftLeft.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        liftRight.resetEncoder();
+        liftLeft.resetEncoder();
 
 
 
@@ -90,22 +88,14 @@ public class BaseOpMode extends CommandOpMode {
         //Subsystems
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
-//        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
-        clawSubsystem = new ClawSubsystem(claw);
-        armSubsystem = new ArmSubsystem(arm);
-        pitchSubsystem = new PitchSubsystem(pitch);
+        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
+
+
 
         //Commands
-        clawGrabCommand = new ClawGrabCommand(clawSubsystem);
-        clawReleaseCommand = new ClawReleaseCommand(clawSubsystem);
-
-
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
-//        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
-        startIntakeCommand = new StartIntakeCommand(intakeSubsystem);
+        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
 
-        grabAndUpCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.grab()), new WaitCommand(200), new InstantCommand(()->armSubsystem.armUp()), new WaitCommand(1200), new InstantCommand(()->pitchSubsystem.pitchUp()));
-        releaseAndDownCommand = new SequentialCommandGroup(new InstantCommand(()->clawSubsystem.release()), new WaitCommand(200), new InstantCommand(()->armSubsystem.armDown()), new WaitCommand(300), new InstantCommand(()->pitchSubsystem.pitchDown()));
 
         driveSubsystem.speedMultiplier = 1;
 

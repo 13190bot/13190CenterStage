@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
@@ -26,6 +28,13 @@ public class GamepadDemo extends BaseDriveOpMode {
 
         register(driveSubsystem);
 
+        gamepadEx1.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> {
+            gamepadEx1.gamepad.rumble(0,1.0,500);
+        });
+
+        gamepadEx1.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
+            gamepadEx1.gamepad.rumble(1.0,0,500);
+        });
 
 
 
@@ -49,12 +58,6 @@ public class GamepadDemo extends BaseDriveOpMode {
         telemetry.update();
         if (gamepadEx1.gamepad.touchpad) {
             gamepadEx1.gamepad.setLedColor(0, 0, 0, Gamepad.RUMBLE_DURATION_CONTINUOUS);
-        }
-        if(gamepadEx1.getGamepadButton(PlaystationAliases.CIRCLE).get()){
-            gamepadEx1.gamepad.rumble(1.0,0,500);
-        }
-        if(gamepadEx1.getGamepadButton(PlaystationAliases.SQUARE).get()) {
-            gamepadEx1.gamepad.rumbleBlips(5);
         }
     }
 }
