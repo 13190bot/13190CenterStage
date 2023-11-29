@@ -290,6 +290,7 @@ public class MainOpMode extends BaseOpMode {
         //armSubsystem.setDefaultCommand(armMoveCommand);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
+
     liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
     }
