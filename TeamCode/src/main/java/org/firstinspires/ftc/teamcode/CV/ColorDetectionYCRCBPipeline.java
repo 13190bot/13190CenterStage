@@ -4,28 +4,28 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
+public class ColorDetectionYCRCBPipeline extends OpenCvPipeline {
 
-    private enum PropPosition {
+    public enum PropPosition {
         NOPOS,
         LEFT,
         CENTER,
         RIGHT
     }
 
-    private final Mat ycbcrMat = new Mat();
-//    private final Mat binaryMat = new Mat();
+    private final Mat ycrcbMat = new Mat();
+    private final Mat binaryMat = new Mat();
 
     //TODO: change anchor points to correct points
-    private final Point LEFTPOS_TOPLEFT_ANCHOR_POINT = new Point(100, 300);
+    private final Point LEFTPOS_TOPLEFT_ANCHOR_POINT = new Point(50, 400);
 
-    private final Point CENTERPOS_TOPLEFT_ANCHOR_POINT = new Point(500, 300);
+    private final Point CENTERPOS_TOPLEFT_ANCHOR_POINT = new Point(550, 400);
 
-    private final Point RIGHTPOS_TOPLEFT_ANCHOR_POINT = new Point(1000, 300);
+    private final Point RIGHTPOS_TOPLEFT_ANCHOR_POINT = new Point(1200, 400);
 
     // Width and height for the bounding boxes
-    public static int REGION_WIDTH = 30;
-    public static int REGION_HEIGHT = 50;
+    public static int REGION_WIDTH = 70;
+    public static int REGION_HEIGHT = 30;
 
     // Anchor point definitions
     Point left_pointA = new Point(
@@ -56,19 +56,28 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
     );
 
     // Running variable storing the parking position
-    private volatile PropDetectionPipeline.PropPosition position = PropDetectionPipeline.PropPosition.NOPOS;
+    private volatile ColorDetectionYCRCBPipeline.PropPosition position = ColorDetectionYCRCBPipeline.PropPosition.NOPOS;
 
-    private final Scalar lowerB;
-    private final Scalar upperB;
+    private final int colorInd;
 
-    public ColorDetectionYCBCRPipeline(Scalar lowerB, Scalar upperB) {
-        this.lowerB = lowerB;
-        this.upperB = upperB;
+    public ColorDetectionYCRCBPipeline(int colorInd) {
+        this.colorInd = colorInd;
     }
 
 
     @Override
     public Mat processFrame(Mat input) {
+
+        Scalar lowerB = new Scalar(158, 158, 158);
+        Scalar upperB = new Scalar(255, 255, 255);
+//
+        Imgproc.cvtColor(input, ycrcbMat, Imgproc.COLOR_RGB2YCrCb);
+        Core.extractChannel(ycrcbMat, ycrcbMat, colorInd);
+//
+        Core.inRange(ycrcbMat, lowerB, upperB, binaryMat);
+
+        Imgproc.morphologyEx(binaryMat, binaryMat, Imgproc.MORPH_CLOSE, new Mat());
+        Imgproc.morphologyEx(binaryMat, binaryMat, Imgproc.MORPH_OPEN, new Mat());
 
         Imgproc.rectangle(
                 input,
@@ -94,26 +103,22 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
                 1
         );
 
-//        Scalar lowerB = new Scalar(0, 255, 255);
-//        Scalar upperB = new Scalar(0, 255, 125);
+        Mat leftRegion = binaryMat.submat(new Rect(left_pointA, left_pointB));
+        Mat centerRegion = binaryMat.submat(new Rect(center_pointA, center_pointB));
+        Mat rightRegion = binaryMat.submat(new Rect(right_pointA, right_pointB));
+//
+//
+        int leftAvg = (int) Core.mean(leftRegion).val[0];
+        int centerAvg = (int) Core.mean(centerRegion).val[0];
+        int rightAvg = (int) Core.mean(rightRegion).val[0];
 
-        Imgproc.cvtColor(input, ycbcrMat, Imgproc.COLOR_RGB2YCrCb);
-
-        Mat leftRegion = ycbcrMat.submat(new Rect(left_pointA, left_pointB));
-        Mat centerRegion = ycbcrMat.submat(new Rect(center_pointA, center_pointB));
-        Mat rightRegion = ycbcrMat.submat(new Rect(right_pointA, right_pointB));
-
-        int leftAvg = (int) Core.mean(leftRegion).val[2];
-        int centerAvg = (int) Core.mean(centerRegion).val[2];
-        int rightAvg = (int) Core.mean(rightRegion).val[2];
-
-        if (leftAvg < lowerB.val[2] && centerAvg < lowerB.val[2] && rightAvg < lowerB.val[2]) {
-            position = PropDetectionPipeline.PropPosition.NOPOS;
-        }
-
-
-        if (leftAvg > lowerB.val[2] && leftAvg < upperB.val[2]) {
-            position = PropDetectionPipeline.PropPosition.LEFT;
+        int max = Math.max(leftAvg, Math.max(centerAvg, rightAvg));
+//
+//
+        if (max < 158) {
+            position = PropPosition.NOPOS;
+        } else if (max == leftAvg) {
+            position = PropPosition.LEFT;
             Imgproc.rectangle(
                     input,
                     left_pointA,
@@ -121,10 +126,8 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
                     new Scalar(255, 0, 0),
                     1
             );
-        }
-
-        if (centerAvg > lowerB.val[2] && centerAvg < upperB.val[2]) {
-            position = PropDetectionPipeline.PropPosition.CENTER;
+        } else if (max == centerAvg) {
+            position = PropPosition.CENTER;
             Imgproc.rectangle(
                     input,
                     center_pointA,
@@ -132,10 +135,8 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
                     new Scalar(255, 0, 0),
                     1
             );
-        }
-
-        if (rightAvg > lowerB.val[2] && rightAvg < upperB.val[2]) {
-            position = PropDetectionPipeline.PropPosition.RIGHT;
+        } else {
+            position = PropPosition.RIGHT;
             Imgproc.rectangle(
                     input,
                     right_pointA,
@@ -149,7 +150,8 @@ public class ColorDetectionYCBCRPipeline extends OpenCvPipeline {
 
     }
 
-    public PropDetectionPipeline.PropPosition getPosition() {
+    public ColorDetectionYCRCBPipeline.PropPosition getPosition() {
         return position;
     }
+
 }

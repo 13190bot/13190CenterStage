@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.CV;
 
+import android.util.Size;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -25,12 +28,21 @@ public class AprilTagDetector {
 
 
     public static void initAprilTag(HardwareMap hardwareMap){
+        // Error: User code threw an uncaught exception: OpenCvCameraException - Viewport container specified by user is not empty!
+
         aprilTag = new AprilTagProcessor.Builder()
                 //Set Calibration Here
 
                 .build();
         VisionPortal.Builder builder = new VisionPortal.Builder();
         builder.setCamera(hardwareMap.get(WebcamName.class, webcamName));
+
+//        // Choose a camera resolution. Not all cameras support all resolutions.
+//        builder.setCameraResolution(new Size(640, 480));
+//
+//        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
+//        builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
+
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
 

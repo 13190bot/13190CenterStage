@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.function.DoubleSupplier;
 
+@Config(value = "AlignCommand")
 public class AlignCommand extends CommandBase {
 
     private DriveSubsystem driveSubsystem;
@@ -60,6 +62,8 @@ public class AlignCommand extends CommandBase {
                 rotate = -output;
                 forward = 0;
                 strafe = 0;
+
+                telemetry.addData("bearing", tag.ftcPose.bearing);
             } else {
                 if (!forwardPIDF.atSetPoint()) {
                     telemetry.addLine("Forward PIDF");
@@ -97,6 +101,10 @@ public class AlignCommand extends CommandBase {
             forward = 0;
             strafe = 0;
         }
+
+
+
+
 
         telemetry.addData("rotate", rotate);
         telemetry.addData("forward", forward);

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(name = "AlignTest")
 @Config
-public class AlignTest extends BaseOpMode {
+public class AlignTest extends BaseDriveOpMode {
     @Override
     public void initialize() {
         super.initialize();
