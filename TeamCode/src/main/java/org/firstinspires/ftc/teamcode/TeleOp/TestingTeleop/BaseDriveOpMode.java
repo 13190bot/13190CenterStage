@@ -46,8 +46,15 @@ public class BaseDriveOpMode extends CommandOpMode {
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        fr.setInverted(true);
+        // real bot
+//        fr.setInverted(true);
+//        fl.setInverted(true);
+
+        // testing chassis
         fl.setInverted(true);
+        fr.setInverted(true);
+        bl.setInverted(true);
+        br.setInverted(true);
 
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);

@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
 import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+// TODO: Change back to BaseOpMode
+
 @TeleOp(name = "AlignTest")
 @Config
 public class AlignTest extends BaseDriveOpMode {
@@ -19,9 +21,9 @@ public class AlignTest extends BaseDriveOpMode {
 
         register(driveSubsystem);
 
-        driveSubsystem.setDefaultCommand(new AlignCommand(driveSubsystem, telemetry));
+//        AprilTagDetector.initAprilTag(hardwareMap);
 
-        AprilTagDetector.initAprilTag(hardwareMap);
+        driveSubsystem.setDefaultCommand(new AlignCommand(driveSubsystem, telemetry));
     }
 
     @Override

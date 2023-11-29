@@ -15,7 +15,7 @@ import java.util.Set;
 public class IntakeSubsystem extends SubsystemBase {
 
     private MotorEx intakeMotor;
-    public static double intakeSpeed = 0.4;
+    public static double intakeSpeed = 0.6;
 
     public IntakeSubsystem(MotorEx intakeMotor) {
         this.intakeMotor = intakeMotor;
@@ -23,13 +23,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     public void startIntake() {
-        intakeMotor.motor.setPower(intakeSpeed);
+        intakeMotor.set(intakeSpeed);
     }
     public void reverseIntake() {
-        intakeMotor.motor.setPower(-intakeSpeed);
+        intakeMotor.set(-intakeSpeed);
     }
     public void stopIntake() {
-        intakeMotor.motor.setPower(0);
+        intakeMotor.set(0);
     }
 
     public Command startIntakeCommand() {

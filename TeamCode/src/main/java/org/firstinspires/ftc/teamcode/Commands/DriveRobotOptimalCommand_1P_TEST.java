@@ -1,16 +1,11 @@
 package org.firstinspires.ftc.teamcode.Commands;
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
-import java.util.function.DoubleSupplier;
-
-public class DriveRobotOptimalCommand extends CommandBase {
+public class DriveRobotOptimalCommand_1P_TEST extends CommandBase {
 
     private DriveSubsystem driveSubsystem;
     private GamepadEx gamepadEx1;
@@ -22,7 +17,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
 
     static double slowmodeMultiplier = 0.5;
 
-    public DriveRobotOptimalCommand(DriveSubsystem driveSubsystem, GamepadEx gamepadEx1) {
+    public DriveRobotOptimalCommand_1P_TEST(DriveSubsystem driveSubsystem, GamepadEx gamepadEx1) {
         this.driveSubsystem = driveSubsystem;
         this.gamepadEx1 = gamepadEx1;
 
@@ -43,7 +38,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
         // Slowmode
 
         gamepadEx1.readButtons();
-        if (gamepadEx1.wasJustPressed(PlaystationAliases.CIRCLE)) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
             slowmodeOn = !slowmodeOn;
             if (slowmodeOn) {
                 gamepadEx1.gamepad.setLedColor(232,240,0,200);
@@ -54,14 +49,13 @@ public class DriveRobotOptimalCommand extends CommandBase {
             }
         }
 
-        if (gamepadEx1.wasJustPressed(PlaystationAliases.CROSS)) {
+        if (gamepadEx1.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
             driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
         }
 
         if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             // WheelRotate
             double side1 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? -1 : 1;
-
             double side2 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? 0 : 0;
             driveSubsystem.driveRobotCentric(side2, side1, side1);
         } else {

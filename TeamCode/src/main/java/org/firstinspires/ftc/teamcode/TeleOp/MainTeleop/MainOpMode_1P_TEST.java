@@ -1,10 +1,39 @@
+// 1 player, made from MainOpMode.java
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Commands.DriveRobotOptimalCommand_1P_TEST;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 /*
@@ -24,10 +53,10 @@ NEW
 - claw: 0.4 (open) -> 0.5 (closed)
  */
 
+@Disabled
 @Config
-@TeleOp(name = "MainTeleOp")
-public class MainOpMode extends BaseOpMode {
-
+@TeleOp(name = "TEST_MainOpMode_1PLAYER")
+public class MainOpMode_1P_TEST extends BaseOpMode {
     public static double A_armPosition = -1;
     public static double A_pitchPosition = -1;
     public static double A_clawPosition = -1;
@@ -45,8 +74,8 @@ public class MainOpMode extends BaseOpMode {
     public double pitchMin = 0.22; // 0.22 when red tape
     public double pitchMax = 0.6;
 
-    public double clawClosed = 0.4;
-    public double clawOpen = 0.26;
+    public double clawClosed = 0.7; // 0.5 -> 0.6
+    public double clawOpen = 0.47; // 0.4 -> 0.5
 
     public double manualArmIncrement = 0.0005;
 
@@ -115,20 +144,15 @@ public class MainOpMode extends BaseOpMode {
     public InstantCommand armPickup;
 
 
+
     @Override
     public void initialize() {
         super.initialize();
-        register(driveSubsystem, intakeSubsystem, liftSubsystem);
-
-
-        //Reset Lift
-        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
-            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
-        });
+        register(driveSubsystem, intakeSubsystem);
 
 
         // Test / tune arm
-        gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
+        gb1(PlaystationAliases.TRIANGLE).whenPressed(() -> {
             if (A_armPosition != -1) {
 //                arm.setPosition(A_armPosition);
 
@@ -143,10 +167,9 @@ public class MainOpMode extends BaseOpMode {
             }
         });
 
-
         // Intake normal and reverse
-        gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
-        gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
+        gb1(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
+        gb1(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
 
         // Arm pickup stages
         armPickup =
@@ -159,9 +182,7 @@ public class MainOpMode extends BaseOpMode {
                             new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(250),
                             new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm(),
-                            new WaitCommand(175),
-                            new InstantCommand(() -> {pitch.setPosition(0.15);})
+                            updateArm()
                         ).schedule();
 
                         armPickupStage = 1;
@@ -181,9 +202,7 @@ public class MainOpMode extends BaseOpMode {
                             new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm(),
-//                            new WaitCommand(0),
-                            new InstantCommand(() -> {pitch.setPosition(0.15);})
+                            updateArm()
                         ).schedule();
 
                         armPickupStage = 1;
@@ -225,14 +244,12 @@ public class MainOpMode extends BaseOpMode {
                 }
             );
 
-
-        gb2(PlaystationAliases.CIRCLE).whenPressed(
-            armPickup
+        gb1(PlaystationAliases.CIRCLE).whenPressed(
+                armPickup
         );
 
-
         // Retry pickup
-        gb2(PlaystationAliases.SQUARE).whenPressed(
+        gb1(PlaystationAliases.SQUARE).whenPressed(
             new InstantCommand(
                 () -> {
                     if (armPickupStage == 1) {
@@ -282,44 +299,40 @@ public class MainOpMode extends BaseOpMode {
 
 
 
+
 //        gb2(PlaystationAliases)
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
 //        gb1(GamepadKeys.Button.B).toggleWhenPressed(armSubsystem.movePitch(ArmSubsystem.pitchPosHome), armSubsystem.movePitch(ArmSubsystem.pitchPosAway));
        // clawSubsystem.setDefaultCommand(axleMoveCommand);
         //armSubsystem.setDefaultCommand(armMoveCommand);
-        driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
+        driveSubsystem.setDefaultCommand(new DriveRobotOptimalCommand_1P_TEST(driveSubsystem, gamepadEx1));
 
-
-    liftSubsystem.setDefaultCommand(PIDLiftCommand);
+        // TODO LIFT
+//        liftSubsystem.setDefaultCommand(manualLiftCommand);
 
     }
 
-    @Override
-    public void st(){
-        beforeMatchEnd.start();
-    }
+
     private boolean lastTouchpad = false;
     public void run()
     {
 
-        telemetry.addData("Time left", beforeMatchEnd.remainingTime());
-
         // Manual arm control
-        if (gamepad2.dpad_left) {
+        if (gamepad1.dpad_left) {
             armPosition = armPosition - manualArmIncrement;
         }
-        if (gamepad2.dpad_right) {
+        if (gamepad1.dpad_right) {
             armPosition = armPosition + manualArmIncrement;
         }
-        if (gamepad2.dpad_left || gamepad2.dpad_right) {
+        if (gamepad1.dpad_left || gamepad1.dpad_right) {
             updateArm().schedule();
         }
 
         // Manual arm control: touchpad x (left = dustpan, right = score)
-        if (gamepad2.touchpad_finger_1 && armPickupStage == 2) {
-            double x = gamepad2.touchpad_finger_1_x;
-            double y = gamepad2.touchpad_finger_1_y;
+        if (gamepad1.touchpad_finger_1 && armPickupStage == 2) {
+            double x = gamepad1.touchpad_finger_1_x;
+            double y = gamepad1.touchpad_finger_1_y;
 
 //            double armPercent = (1 - ((x + 1) * 0.5)); // full range
 
@@ -333,8 +346,8 @@ public class MainOpMode extends BaseOpMode {
             telemetry.addLine("touchpad active: finger1 " + x + " " + y);
         }
 
-        // Advance armStage: Press down on touchpad
-        if (gamepad2.touchpad && !lastTouchpad) {
+        // Manual claw control: Press down on touchpad
+        if (gamepad1.touchpad && !lastTouchpad) {
 //            isClawOpen = !isClawOpen;
 //            if (isClawOpen) {
 //                claw.setPosition(0.4);
@@ -343,29 +356,25 @@ public class MainOpMode extends BaseOpMode {
 //            }
             armPickup.schedule();
         }
-        lastTouchpad = gamepad2.touchpad;
+        lastTouchpad = gamepad1.touchpad;
 
 
+        // Manual lift
+        double power = 0;
 
-        // Manual lift, Not used for now
+        if (gamepad1.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad1.dpad_down) {
+            power = power - 1;
+        }
 
-//        double power = -gamepad2.left_stick_y;
-//
-//        if (gamepad2.dpad_up) {
-//            power = power + 1;
-//        }
-//        if (gamepad2.dpad_down) {
-//            power = power - 1;
-//        }
-//
-//        telemetry.addData("power", power);
-//        liftLeft.motor.setPower(-power);
-//        liftRight.motor.setPower(-power);
+        liftLeft.motor.setPower(-power);
+        liftRight.motor.setPower(-power);
 
-
-//        telemetry.addData("armPickupStage", armPickupStage);
-//        telemetry.addData("armPosition", armPosition);
-//        telemetry.update();
+        telemetry.addData("armPickupStage", armPickupStage);
+        telemetry.addData("armPosition", armPosition);
+        telemetry.update();
 //        AprilTagDetector.updateAprilTagDetections();
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 
@@ -376,7 +385,6 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-        telemetry.update();
         super.run();
     }
 }
