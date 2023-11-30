@@ -14,7 +14,6 @@ public class MainOpMode_TestingChassis extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intakeSubsystem;
-    protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
     private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
 
