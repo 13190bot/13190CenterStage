@@ -177,9 +177,17 @@ public class RecordTeleOp extends LinearOpMode {
                 // Busy loop
             }
 
+            // If needed for (more) accuracy, factor in voltage difference (UNTESTED)
+            double startVoltage = voltageSensor.getVoltage();
+            double powerMultiplier = (double) data[1].get(i) / startVoltage; // assumes linear model
             for (int i2 = 0; i2 < motors.length; i2++) {
-                motors[i2].setPower((double) data[i2 + 2].get(i));
+                motors[i2].setPower((double) data[i2 + 2].get(i) * powerMultiplier);
             }
+
+            // Don't factor in voltage (TESTED)
+//            for (int i2 = 0; i2 < motors.length; i2++) {
+//                motors[i2].setPower((double) data[i2 + 2].get(i));
+//            }
 
             // Other code
             // Stop replaying
