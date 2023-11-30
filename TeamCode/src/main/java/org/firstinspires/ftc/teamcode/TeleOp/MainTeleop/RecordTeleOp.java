@@ -8,12 +8,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @TeleOp(name = "RecordTeleOp")
 public class RecordTeleOp extends LinearOpMode {
+    public String filename = "recording.java"; // file where recording is saved to
     public String[] motorNames = {"frontLeft", "frontRight", "backLeft", "backRight"};
     DcMotor[] motors = new DcMotor[motorNames.length];
 
@@ -132,6 +136,31 @@ public class RecordTeleOp extends LinearOpMode {
                 break;
             }
         }
+
+
+        // Save recording
+        File file = new File(filename);
+        try {
+            // https://www.w3schools.com/java/java_files_create.asp
+
+            file.createNewFile();
+//            if (file.createNewFile()) {
+//                System.out.println("File created: " + file.getName());
+//            } else {
+//                System.out.println("File already exists.");
+//            }
+            FileWriter myWriter = new FileWriter(filename);
+            myWriter.write(dataToCode(data));
+            myWriter.close();
+
+            telemetry.addData("file path:", file.getAbsolutePath());
+            telemetry.update();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
 
 
 
