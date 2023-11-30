@@ -37,11 +37,11 @@ public class PropDetectionTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         FtcDashboard.getInstance().startCameraStream(camera, 30);
-        ColorDetectionYCBCRPipeline colorDetectionYCBCRPipeline = new ColorDetectionYCBCRPipeline(new Scalar(0, 255, 125), new Scalar(0, 255, 255));
+        ColorDetectionYCRCBPipeline colorDetectionYCRCBPipeline = new ColorDetectionYCRCBPipeline(2);
 
-        camera.setPipeline(colorDetectionYCBCRPipeline);
+        camera.setPipeline(colorDetectionYCRCBPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -57,7 +57,7 @@ public class PropDetectionTest extends LinearOpMode {
         });
 
         while (!isStarted()) {
-            telemetry.addData("Current Position: ", colorDetectionYCBCRPipeline.getPosition());
+            telemetry.addData("Current Position: ", colorDetectionYCRCBPipeline.getPosition());
             telemetry.update();
         }
 
