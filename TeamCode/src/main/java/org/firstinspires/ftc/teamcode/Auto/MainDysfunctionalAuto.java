@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.CV.ColorDetectionYCRCBPipeline;
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.util.librarys.roadrunner.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -26,9 +24,6 @@ public class MainDysfunctionalAuto extends OpMode {
 
     private int colorInd = 1;
     private int count;
-
-    private ClawSubsystem clawSubsytem;
-    private ArmSubsystem armSubsystem;
     private LiftSubsystem liftSubsystem;
 
     private SampleMecanumDrive drive;
@@ -85,8 +80,6 @@ public class MainDysfunctionalAuto extends OpMode {
         armServo = new SimpleServo(hardwareMap, "arm", 0, 255);
         pitchServo = new SimpleServo(hardwareMap, "pitch", 0, 255);
 
-        clawSubsytem = new ClawSubsystem(clawServo);
-        armSubsystem = new ArmSubsystem(clawServo);
         liftSubsystem = new LiftSubsystem(leftLift, rightLift, telemetry);
 
 
@@ -103,7 +96,7 @@ public class MainDysfunctionalAuto extends OpMode {
 
         switch (autoState) {
             case WAIT_FOR_PRELOAD:
-                clawSubsytem.grab();
+                System.exit(0); //"TODO: CLAW GRAB");
 
                 autoState = AutoState.MOVE_TO_PROP;
                 break;
