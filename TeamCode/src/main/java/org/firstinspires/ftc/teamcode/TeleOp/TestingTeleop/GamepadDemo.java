@@ -3,10 +3,11 @@ package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
-
+@Disabled
 @Config
 @TeleOp(name = "GamePad Demo OpMode")
 public class GamepadDemo extends BaseDriveOpMode {
