@@ -11,10 +11,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public final class Recorder {
-    public void init (HardwareMap hMap, String file) {
+    public static void init (HardwareMap hMap, String file) {
         currentFile = file;
 
         if (!isInitialised) {
@@ -48,15 +49,14 @@ public final class Recorder {
         }
 
         data = new ArrayList[motors.size() + servos.size() + 2];
-        for (int i = 2; i < motors.size() + 2; ++i) data[i] = new ArrayList<Double>();
-        for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i] = new ArrayList<Integer>();
+        for (int i = 2; i < motors.size() + servos.size() + 2; ++i) data[i] = new ArrayList<Double>();
     }
 
-    public void stratLogging () {
+    public static void stratLogging () {
         recordingStartTime = System.nanoTime();
     }
 
-    public void log () {
+    public static void log () {
         data[0].add(System.nanoTime() - recordingStartTime);
         data[1].add(voltageSensor.getVoltage());
 
@@ -64,7 +64,7 @@ public final class Recorder {
         for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i].add(servos.get(i - motors.size()).getPosition());
     }
 
-    public void saveLog () {
+    public static void saveLog () {
         File file = new File(DIRPATH + currentFile + ".java");
         try {
             // https://www.w3schools.com/java/java_files_create.asp
@@ -84,12 +84,12 @@ public final class Recorder {
         }
     }
 
-    public String dataToCode () {
+    public static String dataToCode () {
         String out = "";
 
         out +=
                 //header stuff TODO: MAKE SURE NO MORE HEADERS NECESSARY
-                "package org.firstinspires.ftc.teamcode.recordedAutos;"        + "\n"
+                          "package org.firstinspires.ftc.teamcode.recordedAutos;"        + "\n"
                         + ""                                                             + "\n"
                         + "import com.qualcomm.robotcore.eventloop.opmode.TeleOp;"       + "\n"
                         + "import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;" + "\n"
@@ -101,8 +101,8 @@ public final class Recorder {
 
         //code:
         out +=
-                "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
-                        + "public class " + currentFile + " extends LinearOpMode {"                                                    + "\n"
+                          "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
+                        + "public class " + currentFile + " extends LinearOpMode {"                                                 + "\n"
                         + "    ArrayList<DcMotor> motors;"                                                                          + "\n"
                         + "    ArrayList<Servo>   servos;"                                                                          + "\n"
                         + ""                                                                                                        + "\n"
@@ -113,12 +113,12 @@ public final class Recorder {
         ;
 
         //data:
-        for (int i = 0; i < data.length-1; ++i) out += "        Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
-        out += "        Arrays.asList(" + data[data.length-1].toString().substring(1, data[data.length-1].toString().length()-1) + ")\n";
+        for (int i = 0; i < data.length-1; ++i) out += "        (ArrayList)Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
+        out += "        new ArrayList(Arrays.asList(" + data[data.length-1].toString().substring(1, data[data.length-1].toString().length()-1) + "))\n";
 
         //continue rest of code
         out +=
-                "    };"                                                                                                                    + "\n"
+                          "    };"                                                                                                                    + "\n"
                         + ""                                                                                                                          + "\n"
                         + "    //replay based off of data"                                                                                            + "\n"
                         + "    @Override"                                                                                                             + "\n"
@@ -154,26 +154,26 @@ public final class Recorder {
         return out;
     }
 
-    boolean isInitialised = false;
+    static boolean isInitialised = false;
 
     /*
         Format of data:
         0: nanosecond since opmode start (long)
         1: voltage                       (double)
         2: motor powers                  (double)
-        3: servo positions               (int)
+        3: servo positions               (double)
     */
-    ArrayList[] data;
+    static ArrayList[] data;
 
-    ArrayList<DcMotor> motors;
-    ArrayList<Servo> servos;
-    VoltageSensor voltageSensor;
+    static ArrayList<DcMotor> motors;
+    static ArrayList<Servo> servos;
+    static VoltageSensor voltageSensor;
 
-    ArrayList<String> motorNames;
-    ArrayList<String> servoNames;
+    static ArrayList<String> motorNames;
+    static ArrayList<String> servoNames;
 
-    String currentFile;
+    static String currentFile;
     public static final String DIRPATH = "";
 
-    long recordingStartTime;
+    static long recordingStartTime;
 }

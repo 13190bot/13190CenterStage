@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,9 +20,10 @@ import java.util.Map;
 
 //FIXME: for now just doing motors and servos
 @Config(value = "Recording Teleop for motors and servos")
+@TeleOp
 public class RecordAllTeleOp extends LinearOpMode {
     public static final String DIRPATH = "";
-    public ststic String filename = "Recording"; // file where recording is saved to
+    public static String filename = "Recording"; // file where recording is saved to
 
     ArrayList<DcMotor> motors;
     ArrayList<Servo> servos;
@@ -54,16 +56,23 @@ public class RecordAllTeleOp extends LinearOpMode {
 
         motorNames = new ArrayList<>();
         servoNames = new ArrayList<>();
-        try{ //dont need the names but i cant be bothered
+        try { //dont need the names but i cant be bothered
             Field deviceMapField = HardwareMap.DeviceMapping.class.getField("map");
             deviceMapField.setAccessible(true);
 
-            ((HashMap<String, DcMotor>)deviceMapField.get(hardwareMap.dcMotor)).forEach((k, v) -> { motorNames.add(k); motors.add(v); } );
-            ((HashMap<String, Servo  >)deviceMapField.get(hardwareMap.servo  )).forEach((k, v) -> { servoNames.add(k); servos.add(v); } );
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+            ((HashMap<String, DcMotor>) deviceMapField.get(hardwareMap.dcMotor)).forEach((k, v) -> {
+                motorNames.add(k);
+                motors.add(v);
+            });
+            ((HashMap<String, Servo>) deviceMapField.get(hardwareMap.servo)).forEach((k, v) -> {
+                servoNames.add(k);
+                servos.add(v);
+            });
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        }
 
         data = new ArrayList[motors.size() + servos.size() + 3];
-        for (int i = 2            ; i < motors.size() + 2            ; ++i) data[i] = new ArrayList<Double >();
+        for (int i = 2; i < motors.size() + 2; ++i) data[i] = new ArrayList<Double>();
         for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i] = new ArrayList<Integer>();
 
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
@@ -101,8 +110,9 @@ public class RecordAllTeleOp extends LinearOpMode {
             data[0].add(startTime - recordingStartTime);
             data[1].add(startVoltage);
 
-            for (int i = 0            ; i < motors.size()                ; ++i) data[i].add(motors.get(i).getPower());
-            for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i].add(servos.get(i + servos.size()).getPosition());
+            for (int i = 0; i < motors.size(); ++i) data[i].add(motors.get(i).getPower());
+            for (int i = motors.size(); i < servos.size() + motors.size(); ++i)
+                data[i].add(servos.get(i + servos.size()).getPosition());
 
             // Other code
             // Stop recording
@@ -110,7 +120,6 @@ public class RecordAllTeleOp extends LinearOpMode {
                 break;
             }
         }
-
 
 
 //        // Replay
@@ -191,6 +200,7 @@ public class RecordAllTeleOp extends LinearOpMode {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
     public String getFileName () { return DIRPATH + filename + ".java"; }
 
@@ -199,13 +209,20 @@ public class RecordAllTeleOp extends LinearOpMode {
         String out = "";
 
         out += 
-        //header stuff
-              "package org.firstinspires.ftc.teamcode.;" /* insert pckage here */ + "\n"
-            + /* imports */ ";"                                                  + "\n"
+        //header stuff TODO: MAKE SURE NO MORE HEADERS NECESSARY
+              "package org.firstinspires.ftc.teamcode.recordedAutos;"        + "\n"
+            + ""                                                             + "\n"
+            + "import com.qualcomm.robotcore.eventloop.opmode.TeleOp;"       + "\n"
+            + "import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;" + "\n"
+            + "import com.qualcomm.robotcore.hardware.*;"                    + "\n"
+            + ""                                                             + "\n"
+            + "import java.util.ArrayList"                                   + "\n"
+            + ""                                                             + "\n"
             ; 
 
         //code:
-            + "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
+        out +=
+            "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
             + "public class " + filename + " extends LinearOpMode {"                                                    + "\n"
             + "    ArrayList<DcMotor> motors;"                                                                          + "\n"
             + "    ArrayList<Servo>   servos;"                                                                          + "\n"
@@ -217,8 +234,8 @@ public class RecordAllTeleOp extends LinearOpMode {
             ;
         
         //data:
-        for (int i = 0; i < data.size-1)(; ++i) out += "        Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
-        out += "        Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + ")\n";
+        for (int i = 0; i < data.length-1; ++i) out += "        Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
+        out += "        Arrays.asList(" + data[data.length-1].toString().substring(1, data[data.length-1].toString().length()-1) + ")\n";
 
         //continue rest of code
         out += 
@@ -254,6 +271,8 @@ public class RecordAllTeleOp extends LinearOpMode {
             + "    }"                                                                                                                     + "\n"
             + "}"
             ;
+
+        return out;
     }
 }
 
