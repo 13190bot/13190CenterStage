@@ -18,8 +18,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 //FIXME: for now just doing motors and servos
+@Config(value = "Recording Teleop for motors and servos")
 public class RecordAllTeleOp extends LinearOpMode {
     public static final String DIRPATH = "";
+    public ststic String filename = "Recording"; // file where recording is saved to
 
     ArrayList<DcMotor> motors;
     ArrayList<Servo> servos;
@@ -27,10 +29,10 @@ public class RecordAllTeleOp extends LinearOpMode {
 
     /*
     Format of data:
-    0: nanosecond since opmode start
-    1: voltage
-    2: motor powers
-    3: servo positions
+    0: nanosecond since opmode start (long)
+    1: voltage                       (double)
+    2: motor powers                  (double)
+    3: servo positions               (int)
      */
     ArrayList[] data;
 
@@ -60,8 +62,8 @@ public class RecordAllTeleOp extends LinearOpMode {
             ((HashMap<String, Servo  >)deviceMapField.get(hardwareMap.servo  )).forEach((k, v) -> { servoNames.add(k); servos.add(v); } );
         } catch (NoSuchFieldException | IllegalAccessException ignored) {}
 
-        data = new ArrayList[motors.size() + servos.size()];
-        for (int i = 0            ; i < motors.size()                ; ++i) data[i] = new ArrayList<Double>();
+        data = new ArrayList[motors.size() + servos.size() + 3];
+        for (int i = 2            ; i < motors.size() + 2            ; ++i) data[i] = new ArrayList<Double >();
         for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i] = new ArrayList<Integer>();
 
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
@@ -152,8 +154,11 @@ public class RecordAllTeleOp extends LinearOpMode {
 //                // Busy loop
 //            }
 //
-//            for (int i2 = 0; i2 < motors.length; i2++) {
+//            for (int i2 = 0; i2 < motors.size(); i2++) {
 //                motors[i2].setPower((double) data[i2 + 2].get(i));
+//            }
+//            for (int i2 = 0; i2 < servos.size(); ++i2) {
+//               servos[i2].setPower(data[i2 + motors.size() + 2];
 //            }
 //
 //            // Other code
@@ -165,19 +170,90 @@ public class RecordAllTeleOp extends LinearOpMode {
 //            i = i + 1;
 //        }
 
+        // Save recording (copied from RecordTeleOp
+        File file = new File(getFileName());
         try {
+            // https://www.w3schools.com/java/java_files_create.asp
 
-            String fileName = DIRPATH + getFileName();
-            new File(fileName).createNewFile();
+            file.createNewFile();
+//            if (file.createNewFile()) {
+//                System.out.println("File created: " + file.getName());
+//            } else {
+//                System.out.println("File already exists.");
+//            }
+            FileWriter myWriter = new FileWriter(file);
+            myWriter.write(dataToCode());
+            myWriter.close();
 
-            BufferedWriter out = new BufferedWriter( new FileWriter(fileName) );
-
+            telemetry.addData("file path:", file.getAbsolutePath());
+            telemetry.update();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
 
-    public String getFileName () { return null; }
+    public String getFileName () { return DIRPATH + filename + ".java"; }
+
+    //TODO: add canmera and zoning capabillity to the dataToString
+    public String dataToCode () {
+        String out = "";
+
+        out += 
+        //header stuff
+              "package org.firstinspires.ftc.teamcode.;" /* insert pckage here */ + "\n"
+            + /* imports */ ";"                                                  + "\n"
+            ; 
+
+        //code:
+            + "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
+            + "public class " + filename + " extends LinearOpMode {"                                                    + "\n"
+            + "    ArrayList<DcMotor> motors;"                                                                          + "\n"
+            + "    ArrayList<Servo>   servos;"                                                                          + "\n"
+            + ""                                                                                                        + "\n"
+            + "    String[] motorNames = {" + motorNames.toString().substring(1, motorNames.toString().length()) + "};" + "\n"
+            + "    String[] servoNames = {" + servoNames.toString().substring(1, servoNames.toString().length()) + "};" + "\n"
+            + ""                                                                                                        + "\n"
+            + "    ArrayList[] data  = {"                                                                               + "\n"
+            ;
+        
+        //data:
+        for (int i = 0; i < data.size-1)(; ++i) out += "        Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
+        out += "        Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + ")\n";
+
+        //continue rest of code
+        out += 
+              "    };"                                                                                                                    + "\n"
+            + ""                                                                                                                          + "\n"
+            + "    //replay based off of data"                                                                                            + "\n"
+            + "    @Override"                                                                                                             + "\n"
+            + "    public void runOpMode() throws InterruptedException {"                                                                 + "\n"
+            + "        //get devices"                                                                                                     + "\n"
+            + "        motors = new ArrayList<>()"                                                                                        + "\n"
+            + "        servos = new Arraylist<>()"                                                                                        + "\n"
+            + "        for (String name : motorNames) motors.add(hardwareMap.dcMotor.get(name));"                                         + "\n"
+            + "        for (String name : servoNames) servos.add(hardwareMap.dcMotor.get(name));"                                         + "\n"
+            + ""                                                                                                                          + "\n"
+            + "        telemetry.addData(\"init\", \"done\");"                                                                            + "\n"
+            + "        telemetry.update();"                                                                                               + "\n"
+            + ""                                                                                                                          + "\n"
+            + "        waitForStart();"                                                                                                   + "\n"
+            + ""                                                                                                                          + "\n"
+            + "        //loop through the logs as long as op mode is active or untill we hit the end"                                     + "\n" 
+            + "        double replayingStartTime = System.nanoTime();"                                                                    + "\n"
+            + "        for (int i = 0; opModeIsActive() && i < data[0].size(); ++i) {"                                                    + "\n"
+            + "            while ((double) data[0].get(i) > System.nanoTime() - replayingStartTime) {} //wait till next log"              + "\n"
+            + ""                                                                                                                          + "\n"
+            + "            //write data to devices"                                                                                       + "\n"
+            + "            for (int i2 = 0; i2 < motors.size(); ++i2) motors[i2].setPower((double) data[i2                 + 2].get(i));" + "\n"
+            + "            for (int i2 = 0; i2 < servos.size(); ++i2) servos[i2].setPower((double) data[i2 + motors.size() + 2].get(i));" + "\n"
+            + ""                                                                                                                          + "\n"
+            + "            //write to telemetry and increment targel log # (i)"                                                           + "\n"
+            + "            telemetry.addData(\"datapoint, i++ + \"/\" + data[0].size());"                                                 + "\n"
+            + "            telemety.update();"                                                                                            + "\n"
+            + "        }"                                                                                                                 + "\n"
+            + "    }"                                                                                                                     + "\n"
+            + "}"
+            ;
+    }
 }
 
