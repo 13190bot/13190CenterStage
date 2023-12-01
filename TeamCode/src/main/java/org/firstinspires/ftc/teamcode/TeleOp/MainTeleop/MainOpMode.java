@@ -42,11 +42,11 @@ public class MainOpMode extends BaseOpMode {
     public double armMin = 0.3;
     public double armMax = 0.89; // 0.88 when red tape
 
-    public double pitchMin = 0.22; // 0.22 when red tape
+    public double pitchMin = 0.25; // 0.22 when red tape
     public double pitchMax = 0.6;
 
-    public double clawClosed = 0.4;
-    public double clawOpen = 0.26;
+    public double clawClosed = 0.17;
+    public double clawOpen = 0.1;
 
     public double manualArmIncrement = 0.0005;
 
@@ -95,7 +95,7 @@ public class MainOpMode extends BaseOpMode {
                 new SequentialCommandGroup(
                     // arm is mostly down: we do not want to move the pitch
                     new InstantCommand(() -> {
-                        pitch.setPosition(0.22); // ready to pick up
+                        pitch.setPosition(pitchMin); // ready to pick up
                         arm.setPosition(armPosition);
                     })
                 ),
@@ -291,7 +291,7 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-    liftSubsystem.setDefaultCommand(PIDLiftCommand);
+//    liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
     }
 
@@ -349,18 +349,18 @@ public class MainOpMode extends BaseOpMode {
 
         // Manual lift, Not used for now
 
-//        double power = -gamepad2.left_stick_y;
-//
-//        if (gamepad2.dpad_up) {
-//            power = power + 1;
-//        }
-//        if (gamepad2.dpad_down) {
-//            power = power - 1;
-//        }
-//
-//        telemetry.addData("power", power);
-//        liftLeft.motor.setPower(-power);
-//        liftRight.motor.setPower(-power);
+        double power = -gamepad2.left_stick_y;
+
+        if (gamepad2.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad2.dpad_down) {
+            power = power - 1;
+        }
+
+        telemetry.addData("power", power);
+        liftLeft.motor.setPower(-power);
+        liftRight.motor.setPower(-power);
 
 
 //        telemetry.addData("armPickupStage", armPickupStage);

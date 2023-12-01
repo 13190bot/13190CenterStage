@@ -19,6 +19,12 @@ import java.util.stream.Collectors;
 public class RecordTeleOp extends LinearOpMode {
     public String filename = "recording.java"; // file where recording is saved to
     public String[] motorNames = {"frontLeft", "frontRight", "backLeft", "backRight"};
+    public static double maxSpeed = 0.8;
+
+
+
+
+
     DcMotor[] motors = new DcMotor[motorNames.length];
 
     /*
@@ -56,6 +62,19 @@ public class RecordTeleOp extends LinearOpMode {
 //                new ArrayList[]{new ArrayList(Arrays.asList(0, 1, 2, 2.5))}
 //        ));
 //    }
+
+    public static ArrayList[] reverseData(ArrayList[] data) {
+        ArrayList[] out = new ArrayList[data.length];
+        for (int i = 0; i < data.length; i++) {
+            ArrayList row = data[i];
+            ArrayList rowOut = out[i];
+            for (int i2 = row.size() - 1; i2 > -1; i2--) {
+                rowOut.add(row.get(i2));
+            }
+        }
+        return out;
+    }
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -95,11 +114,16 @@ public class RecordTeleOp extends LinearOpMode {
         waitForStart();
 
         // Recording
+        telemetry.addLine("Press a to start recording");
+        telemetry.update();
 
         // Wait
         while (!gamepad1.a && opModeIsActive()) {
             sleep(10);
         }
+
+        telemetry.addLine("Press b to stop recording");
+        telemetry.update();
 
         double recordingStartTime = System.nanoTime();
 
@@ -112,8 +136,7 @@ public class RecordTeleOp extends LinearOpMode {
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_trigger - gamepad1.left_trigger;
-//            double denominator = Math.max(Math.abs(x) + Math.abs(y) + Math.abs(rx), 1);
-            double denominator = Math.abs(x) + Math.abs(y) + Math.abs(rx); // FORCE SPEED TO ALWAYS BE MAXED
+            double denominator = Math.max(Math.abs(x) + Math.abs(y) + Math.abs(rx), 1) / maxSpeed;
             fl.setPower((y + x + rx) / denominator);
             bl.setPower((y - x + rx) / denominator);
             fr.setPower((y - x - rx) / denominator);
@@ -139,6 +162,7 @@ public class RecordTeleOp extends LinearOpMode {
 
 
         // Save recording
+        /*
         File file = new File(filename);
         try {
             // https://www.w3schools.com/java/java_files_create.asp
@@ -159,17 +183,22 @@ public class RecordTeleOp extends LinearOpMode {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+         */
 
 
 
 
 
         // Replay
+        telemetry.addLine("Press a to start replaying");
+        telemetry.update();
 
         // Wait
         while (!gamepad1.a && opModeIsActive()) {
             sleep(10);
         }
+        telemetry.addLine("Press b to stop replaying");
+        telemetry.update();
 
         double replayingStartTime = System.nanoTime();
         int i = 0;

@@ -55,6 +55,9 @@ public class BaseOpMode extends CommandOpModeEx {
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //ONLY USE IF NOT USING LIFT PID
+        liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         //Zero the lift encoders
