@@ -312,7 +312,7 @@ public class MainOpMode extends BaseOpMode {
         });
 
         gb1(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> {
-            Recorder.startReplaying(Recorder.data, () -> {
+            Recorder.startReplaying(Recorder.reverseData(Recorder.data), () -> {
                 return !gamepad1.dpad_down && opModeIsActive();
             });
         });

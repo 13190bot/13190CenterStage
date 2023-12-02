@@ -67,7 +67,7 @@ public class BaseDriveOpMode extends CommandOpMode {
                 fl,fr,bl,br,
                 () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER),
                 () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
-                gamepadEx1::getLeftY,
+                gamepadEx1::getLeftY, //reverse fl and fr reverse
                 gamepadEx1::getRightY,
                 () -> gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).get(),
                 () -> gamepadEx1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).get()

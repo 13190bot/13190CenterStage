@@ -73,6 +73,10 @@ public final class Recorder {
             dir.delete();
         }
 
+        clearRecording();
+    }
+
+    public static void clearRecording() {
         data = new ArrayList[motors.size() + servos.size() + 2];
         data[0] = new ArrayList();
         data[1] = new ArrayList();
@@ -80,6 +84,9 @@ public final class Recorder {
     }
 
     public static void startRecording () {
+        // clear data
+        clearRecording();
+
         recordingStartTime = System.nanoTime();
     }
 
@@ -239,6 +246,7 @@ public final class Recorder {
         ArrayList[] out = new ArrayList[data.length];
         for (int i = 0; i < data.length; i++) {
             ArrayList row = data[i];
+            out[i] = new ArrayList();
             ArrayList rowOut = out[i];
             for (int i2 = row.size() - 1; i2 > -1; i2--) {
                 rowOut.add(row.get(i2));
