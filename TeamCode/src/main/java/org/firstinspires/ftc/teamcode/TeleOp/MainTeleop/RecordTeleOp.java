@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class RecordTeleOp extends LinearOpMode {
     public String filename = "recording.java"; // file where recording is saved to
     public String[] motorNames = {"frontLeft", "frontRight", "backLeft", "backRight"};
+    public String[] servoNames = {"arm", "pitch", "claw"};
     public static double maxSpeed = 0.8;
 
 
@@ -26,6 +28,7 @@ public class RecordTeleOp extends LinearOpMode {
 
 
     DcMotor[] motors = new DcMotor[motorNames.length];
+    Servo[] servos = new Servo[servoNames.length];
 
     /*
     Format of data:

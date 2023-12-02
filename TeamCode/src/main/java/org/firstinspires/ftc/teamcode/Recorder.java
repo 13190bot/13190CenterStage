@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -13,14 +14,17 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.BooleanSupplier;
 
 public final class Recorder {
-    public static void init (HardwareMap hMap, String file) {
+    public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
+        telemetry = t;
         currentFile = file;
 
         if (!isInitialised) {
             isInitialised = true;
 
+            /*
             motors = new ArrayList<>();
             servos = new ArrayList<>();
 
@@ -42,6 +46,27 @@ public final class Recorder {
                     servos.add(v);
                 });
             } catch (NoSuchFieldException | IllegalAccessException ignored) {}
+             */
+
+
+            voltageSensor = hardwareMap.voltageSensor.iterator().next();
+
+            motorNames = new ArrayList<>(Arrays.asList("frontLeft", "frontRight", "backLeft", "backRight"));
+            servoNames = new ArrayList<>(Arrays.asList("arm", "pitch", "claw"));
+
+            motors = new ArrayList<>();
+            servos = new ArrayList<>();
+            for (int i = 0; i < motorNames.size(); i++) {
+                motors.add(hardwareMap.get(DcMotor.class, motorNames.get(i)));
+            }
+            for (int i = 0; i < servoNames.size(); i++) {
+                servos.add(hardwareMap.get(Servo.class, servoNames.get(i)));
+            }
+
+
+
+
+
 
             File dir = new File(DIRPATH + File.separator + "temp");
             dir.mkdirs();
@@ -49,23 +74,34 @@ public final class Recorder {
         }
 
         data = new ArrayList[motors.size() + servos.size() + 2];
+        data[0] = new ArrayList();
+        data[1] = new ArrayList();
         for (int i = 2; i < motors.size() + servos.size() + 2; ++i) data[i] = new ArrayList<Double>();
     }
 
-    public static void stratLogging () {
+    public static void startRecording () {
         recordingStartTime = System.nanoTime();
     }
 
-    public static void log () {
+    public static void record () {
         data[0].add(System.nanoTime() - recordingStartTime);
         data[1].add(voltageSensor.getVoltage());
 
-        for (int i = 0;             i < motors.size();                 ++i) data[i].add(motors.get(i                ).getPower());
-        for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i].add(servos.get(i - motors.size()).getPosition());
+        int motorsLength = motors.size();
+        for (int i = 0; i < motorsLength; i++) {
+            data[i + 2].add(motors.get(i).getPower());
+        }
+        for (int i = 0; i < servos.size(); i++) {
+            data[i + motorsLength + 2].add(servos.get(i).getPosition());
+        }
+
+
+//        for (int i = 0;             i < motors.size();                 ++i) data[i + 2].add(motors.get(i                ).getPower());
+//        for (int i = motors.size(); i < servos.size() + motors.size(); ++i) data[i].add(servos.get(i - motors.size()).getPosition());
     }
 
-    public static void saveLog () {
-        File file = new File(DIRPATH + currentFile + ".java");
+    public static void saveRecording () {
+        File file = new File(DIRPATH + File.separator + currentFile + ".java");
         try {
             // https://www.w3schools.com/java/java_files_create.asp
 
@@ -145,7 +181,7 @@ public final class Recorder {
                         + ""                                                                                                                          + "\n"
                         + "            //write to telemetry and increment targel log # (i)"                                                           + "\n"
                         + "            telemetry.addData(\"datapoint, i++ + \"/\" + data[0].size());"                                                 + "\n"
-                        + "            telemety.update();"                                                                                            + "\n"
+                        + "            telemetry.update();"                                                                                            + "\n"
                         + "        }"                                                                                                                 + "\n"
                         + "    }"                                                                                                                     + "\n"
                         + "}"
@@ -153,6 +189,78 @@ public final class Recorder {
 
         return out;
     }
+
+    public static void startReplaying(ArrayList[] data, BooleanSupplier replaying) {
+        double replayingStartTime = System.nanoTime();
+        int i = 0;
+        // Busy looping for each ms (assuming replay loop time is less than recording loop time)
+        int length = data[0].size();
+        while (replaying.getAsBoolean()) {
+            while ((long) data[0].get(i) > System.nanoTime() - replayingStartTime) {
+                // Busy loop
+            }
+
+            // If needed for (more) accuracy, factor in voltage difference (UNTESTED)
+//            double startVoltage = voltageSensor.getVoltage();
+//            double powerMultiplier = (double) data[1].get(i) / startVoltage; // assumes linear model
+//            for (int i2 = 0; i2 < motors.size(); i2++) {
+//                motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier);
+//
+//                telemetry.addData("a", (double) data[i2 + 2].get(i) * powerMultiplier);
+//            }
+
+            // Don't factor in voltage (TESTED)
+            for (int i2 = 0; i2 < motors.size(); i2++) {
+                motors.get(i2).setPower((double) data[i2 + 2].get(i));
+            }
+
+            // Other code
+            // Stop replaying
+//            if (gamepad1.b) {
+//                break;
+//            }
+
+            i = i + 1;
+            if (i == length) {
+                break;
+            }
+
+
+
+            // telemetry shit
+            telemetry.addData("REPLAYING", i + "/" + length);
+            telemetry.update();
+        }
+    }
+
+
+
+    public static ArrayList[] reverseData(ArrayList[] data) {
+        ArrayList[] out = new ArrayList[data.length];
+        for (int i = 0; i < data.length; i++) {
+            ArrayList row = data[i];
+            ArrayList rowOut = out[i];
+            for (int i2 = row.size() - 1; i2 > -1; i2--) {
+                rowOut.add(row.get(i2));
+            }
+        }
+        return out;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     static boolean isInitialised = false;
 
@@ -163,7 +271,7 @@ public final class Recorder {
         2: motor powers                  (double)
         3: servo positions               (double)
     */
-    static ArrayList[] data;
+    public static ArrayList[] data;
 
     static ArrayList<DcMotor> motors;
     static ArrayList<Servo> servos;
@@ -173,7 +281,9 @@ public final class Recorder {
     static ArrayList<String> servoNames;
 
     static String currentFile;
-    public static final String DIRPATH = "";
+    public static final String DIRPATH = "/sdcard/Recorder";
 
     static long recordingStartTime;
+    public static boolean recording = false;
+    public static Telemetry telemetry;
 }

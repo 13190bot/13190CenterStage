@@ -4,7 +4,10 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 /*
@@ -293,6 +296,27 @@ public class MainOpMode extends BaseOpMode {
 
 //    liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
+        Recorder.init(hardwareMap, "test", telemetry);
+
+
+//        Recorder.startRecording();
+
+        gb1(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
+            Recorder.startRecording();
+            Recorder.recording = true;
+        });
+
+        gb1(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
+            Recorder.saveRecording();
+            Recorder.recording = false;
+        });
+
+        gb1(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> {
+            Recorder.startReplaying(Recorder.data, () -> {
+                return !gamepad1.dpad_down && opModeIsActive();
+            });
+        });
+
     }
 
     @Override
@@ -373,7 +397,7 @@ public class MainOpMode extends BaseOpMode {
 //        driveRobotOptimalCommand.execute();
 
 
-
+        telemetry.addData("isRecording", Recorder.recording);
 
 
         telemetry.update();
