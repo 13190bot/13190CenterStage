@@ -244,7 +244,16 @@ public final class Recorder {
 
     public static ArrayList[] reverseData(ArrayList[] data) {
         ArrayList[] out = new ArrayList[data.length];
-        for (int i = 0; i < data.length; i++) {
+
+        // ms
+        out[0] = new ArrayList();
+        for (int i = 0; i < data[0].size(); i++) {
+            out[0].add(data[0].get(i));
+        }
+
+        // voltage
+        {
+            int i = 1;
             ArrayList row = data[i];
             out[i] = new ArrayList();
             ArrayList rowOut = out[i];
@@ -252,6 +261,27 @@ public final class Recorder {
                 rowOut.add(row.get(i2));
             }
         }
+
+        // motors
+        for (int i = 2; i < 2 + motors.size(); i++) {
+            ArrayList row = data[i];
+            out[i] = new ArrayList();
+            ArrayList rowOut = out[i];
+            for (int i2 = row.size() - 1; i2 > -1; i2--) {
+                rowOut.add(-(double) row.get(i2));
+            }
+        }
+
+        // servos: todo
+        for (int i = 2 + motors.size(); i < 2 + motors.size() + servos.size(); i++) {
+            ArrayList row = data[i];
+            out[i] = new ArrayList();
+            ArrayList rowOut = out[i];
+            for (int i2 = row.size() - 1; i2 > -1; i2--) {
+                rowOut.add(row.get(i2));
+            }
+        }
+
         return out;
     }
 
