@@ -207,6 +207,9 @@ public final class Recorder {
                 // Busy loop
             }
 
+
+            // Motors
+
             // If needed for (more) accuracy, factor in voltage difference (UNTESTED)
 //            double startVoltage = voltageSensor.getVoltage();
 //            double powerMultiplier = (double) data[1].get(i) / startVoltage; // assumes linear model
@@ -219,6 +222,11 @@ public final class Recorder {
             // Don't factor in voltage (TESTED)
             for (int i2 = 0; i2 < motors.size(); i2++) {
                 motors.get(i2).setPower((double) data[i2 + 2].get(i));
+            }
+
+            // Servos
+            for (int i2 = 0; i2 < servos.size(); i2++) {
+                servos.get(i2).setPosition((double) data[i2 + motors.size() + 2].get(i));
             }
 
             // Other code
