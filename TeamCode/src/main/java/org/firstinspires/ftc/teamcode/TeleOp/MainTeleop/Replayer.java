@@ -4,32 +4,38 @@ package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.function.BooleanSupplier;
-import java.util.stream.Collectors;
 
 @Autonomous(group="Recorder", name="Replayer")
 public class Replayer extends LinearOpMode {
+
+    // AUTOGEN
+    double[][] data = {{}, {}};
+    String[] motorNames = {""};
+    String[] servoNames = {""};
+
+
+
+
+    DcMotor[] motors = new DcMotor[motorNames.length];
+    Servo[] servos = new Servo[servoNames.length];
     @Override
     public void runOpMode() throws InterruptedException {
-        double replayingStartTime = System.nanoTime();
+        for (int i = 0; i < motorNames.length; i++) {
+            motors[i] = hardwareMap.get(DcMotor.class, motorNames[i]);
+        }
+        for (int i = 0; i < servoNames.length; i++) {
+            servos[i] = hardwareMap.get(Servo.class, servoNames[i]);
+        }
+
+        waitForStart();
+
+        long replayingStartTime = System.nanoTime();
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
-        int length = data[0].size();
-        while (replaying.getAsBoolean()) {
-            while ((long) data[0].get(i) > System.nanoTime() - replayingStartTime) {
+        int length = data[0].length;
+        while (opModeIsActive()) {
+            while ((long) data[0][i] > System.nanoTime() - replayingStartTime) {
                 // Busy loop
             }
 
@@ -46,13 +52,13 @@ public class Replayer extends LinearOpMode {
 //            }
 
             // Don't factor in voltage (TESTED)
-            for (int i2 = 0; i2 < motors.size(); i2++) {
-                motors.get(i2).setPower((double) data[i2 + 2].get(i));
+            for (int i2 = 0; i2 < motors.length; i2++) {
+                motors[i2].setPower(data[i2 + 2][i]);
             }
 
             // Servos
-            for (int i2 = 0; i2 < servos.size(); i2++) {
-                servos.get(i2).setPosition((double) data[i2 + motors.size() + 2].get(i));
+            for (int i2 = 0; i2 < servos.length; i2++) {
+                servos[i2].setPosition(data[i2 + motors.length + 2][i]);
             }
 
             // Other code
@@ -69,8 +75,8 @@ public class Replayer extends LinearOpMode {
 
 
             // telemetry shit
-//            telemetry.addData("REPLAYING", i + "/" + length);
-//            telemetry.update();
+            telemetry.addData("REPLAYING", i + "/" + length);
+            telemetry.update();
         }
     }
 }
