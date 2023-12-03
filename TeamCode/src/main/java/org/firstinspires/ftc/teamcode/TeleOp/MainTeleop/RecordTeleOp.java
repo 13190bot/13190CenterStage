@@ -1,7 +1,10 @@
+// NOT UPDATED, DO NOT USE
+
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Disabled
 @TeleOp(name = "RecordTeleOp")
 public class RecordTeleOp extends LinearOpMode {
     public String filename = "recording.java"; // file where recording is saved to
@@ -66,17 +70,18 @@ public class RecordTeleOp extends LinearOpMode {
 //        ));
 //    }
 
-    public static ArrayList[] reverseData(ArrayList[] data) {
-        ArrayList[] out = new ArrayList[data.length];
-        for (int i = 0; i < data.length; i++) {
-            ArrayList row = data[i];
-            ArrayList rowOut = out[i];
-            for (int i2 = row.size() - 1; i2 > -1; i2--) {
-                rowOut.add(row.get(i2));
-            }
-        }
-        return out;
-    }
+    // DYSFUNCTIOANL
+//    public static ArrayList[] reverseData(ArrayList[] data) {
+//        ArrayList[] out = new ArrayList[data.length];
+//        for (int i = 0; i < data.length; i++) {
+//            ArrayList row = data[i];
+//            ArrayList rowOut = out[i];
+//            for (int i2 = row.size() - 1; i2 > -1; i2--) {
+//                rowOut.add(row.get(i2));
+//            }
+//        }
+//        return out;
+//    }
 
 
     @Override

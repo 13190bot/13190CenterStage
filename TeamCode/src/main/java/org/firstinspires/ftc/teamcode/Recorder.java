@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.BooleanSupplier;
+import java.util.stream.Collectors;
 
 public final class Recorder {
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
@@ -122,7 +123,7 @@ public final class Recorder {
 //                System.out.println("File already exists.");
 //            }
             FileWriter myWriter = new FileWriter(file);
-            myWriter.write(dataToCode());
+            myWriter.write(generateAuto());
             myWriter.close();
 
         } catch (IOException e) {
@@ -130,74 +131,104 @@ public final class Recorder {
         }
     }
 
-    public static String dataToCode () {
+//    public static String dataToCode () {
+//        String out = "";
+//
+//        out +=
+//                //header stuff TODO: MAKE SURE NO MORE HEADERS NECESSARY
+//                          "package org.firstinspires.ftc.teamcode.recordedAutos;"        + "\n"
+//                        + ""                                                             + "\n"
+//                        + "import com.qualcomm.robotcore.eventloop.opmode.TeleOp;"       + "\n"
+//                        + "import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;" + "\n"
+//                        + "import com.qualcomm.robotcore.hardware.*;"                    + "\n"
+//                        + ""                                                             + "\n"
+//                        + "import java.util.ArrayList"                                   + "\n"
+//                        + ""                                                             + "\n"
+//        ;
+//
+//        //code:
+//        out +=
+//                          "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
+//                        + "public class " + currentFile + " extends LinearOpMode {"                                                 + "\n"
+//                        + "    ArrayList<DcMotor> motors;"                                                                          + "\n"
+//                        + "    ArrayList<Servo>   servos;"                                                                          + "\n"
+//                        + ""                                                                                                        + "\n"
+//                        + "    String[] motorNames = {" + motorNames.toString().substring(1, motorNames.toString().length()) + "};" + "\n"
+//                        + "    String[] servoNames = {" + servoNames.toString().substring(1, servoNames.toString().length()) + "};" + "\n"
+//                        + ""                                                                                                        + "\n"
+//                        + "    ArrayList[] data  = {"                                                                               + "\n"
+//        ;
+//
+//        //data:
+//        for (int i = 0; i < data.length-1; ++i) out += "        (ArrayList)Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
+//        out += "        new ArrayList(Arrays.asList(" + data[data.length-1].toString().substring(1, data[data.length-1].toString().length()-1) + "))\n";
+//
+//        //continue rest of code
+//        out +=
+//                          "    };"                                                                                                                    + "\n"
+//                        + ""                                                                                                                          + "\n"
+//                        + "    //replay based off of data"                                                                                            + "\n"
+//                        + "    @Override"                                                                                                             + "\n"
+//                        + "    public void runOpMode() throws InterruptedException {"                                                                 + "\n"
+//                        + "        //get devices"                                                                                                     + "\n"
+//                        + "        motors = new ArrayList<>()"                                                                                        + "\n"
+//                        + "        servos = new Arraylist<>()"                                                                                        + "\n"
+//                        + "        for (String name : motorNames) motors.add(hardwareMap.dcMotor.get(name));"                                         + "\n"
+//                        + "        for (String name : servoNames) servos.add(hardwareMap.dcMotor.get(name));"                                         + "\n"
+//                        + ""                                                                                                                          + "\n"
+//                        + "        telemetry.addData(\"init\", \"done\");"                                                                            + "\n"
+//                        + "        telemetry.update();"                                                                                               + "\n"
+//                        + ""                                                                                                                          + "\n"
+//                        + "        waitForStart();"                                                                                                   + "\n"
+//                        + ""                                                                                                                          + "\n"
+//                        + "        //loop through the logs as long as op mode is active or untill we hit the end"                                     + "\n"
+//                        + "        double replayingStartTime = System.nanoTime();"                                                                    + "\n"
+//                        + "        for (int i = 0; opModeIsActive() && i < data[0].size(); ++i) {"                                                    + "\n"
+//                        + "            while ((double) data[0].get(i) > System.nanoTime() - replayingStartTime) {} //wait till next log"              + "\n"
+//                        + ""                                                                                                                          + "\n"
+//                        + "            //write data to devices"                                                                                       + "\n"
+//                        + "            for (int i2 = 0; i2 < motors.size(); ++i2) motors[i2].setPower((double) data[i2                 + 2].get(i));" + "\n"
+//                        + "            for (int i2 = 0; i2 < servos.size(); ++i2) servos[i2].setPower((double) data[i2 + motors.size() + 2].get(i));" + "\n"
+//                        + ""                                                                                                                          + "\n"
+//                        + "            //write to telemetry and increment targel log # (i)"                                                           + "\n"
+//                        + "            telemetry.addData(\"datapoint, i++ + \"/\" + data[0].size());"                                                 + "\n"
+//                        + "            telemetry.update();"                                                                                            + "\n"
+//                        + "        }"                                                                                                                 + "\n"
+//                        + "    }"                                                                                                                     + "\n"
+//                        + "}"
+//        ;
+//
+//        return out;
+//    }
+
+
+    public static String dataToCode() {
+        String out = "ArrayList[]data={";
+        for (int i = 0; i < data.length; i++) {
+            // Optimized (https://stackoverflow.com/a/23183963)
+            out = out + "new ArrayList(Arrays.asList(" + data[i].stream().map(Object::toString).collect(Collectors.joining(",")) + "))";
+            if (i != data.length - 1) {
+                out = out + ",";
+            }
+
+
+//            ArrayList row = data[i];
+//            for (int i2 = 0; i2 < row.size(); i2++) {
+//
+//            }
+        }
+        out = out + "}";
+        return out;
+    }
+
+    public static String hardwareToCode() {
+        // WARNING: GENERATES A PRIMITIVE ARRAY WHILE THIS LIBRARY USES ARRAYLIST
+        return "String[]motorNames={" + String.join(",", motorNames) + "};\nString[]servoNames={" + String.join(",", servoNames) + "};";
+    }
+
+    public static String generateAuto() {
         String out = "";
 
-        out +=
-                //header stuff TODO: MAKE SURE NO MORE HEADERS NECESSARY
-                          "package org.firstinspires.ftc.teamcode.recordedAutos;"        + "\n"
-                        + ""                                                             + "\n"
-                        + "import com.qualcomm.robotcore.eventloop.opmode.TeleOp;"       + "\n"
-                        + "import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;" + "\n"
-                        + "import com.qualcomm.robotcore.hardware.*;"                    + "\n"
-                        + ""                                                             + "\n"
-                        + "import java.util.ArrayList"                                   + "\n"
-                        + ""                                                             + "\n"
-        ;
-
-        //code:
-        out +=
-                          "@Autonomous(group = \"Recorded Autos\")"                                                                 + "\n"
-                        + "public class " + currentFile + " extends LinearOpMode {"                                                 + "\n"
-                        + "    ArrayList<DcMotor> motors;"                                                                          + "\n"
-                        + "    ArrayList<Servo>   servos;"                                                                          + "\n"
-                        + ""                                                                                                        + "\n"
-                        + "    String[] motorNames = {" + motorNames.toString().substring(1, motorNames.toString().length()) + "};" + "\n"
-                        + "    String[] servoNames = {" + servoNames.toString().substring(1, servoNames.toString().length()) + "};" + "\n"
-                        + ""                                                                                                        + "\n"
-                        + "    ArrayList[] data  = {"                                                                               + "\n"
-        ;
-
-        //data:
-        for (int i = 0; i < data.length-1; ++i) out += "        (ArrayList)Arrays.asList(" + data[i].toString().substring(1, data.toString().length()-1) + "),\n";
-        out += "        new ArrayList(Arrays.asList(" + data[data.length-1].toString().substring(1, data[data.length-1].toString().length()-1) + "))\n";
-
-        //continue rest of code
-        out +=
-                          "    };"                                                                                                                    + "\n"
-                        + ""                                                                                                                          + "\n"
-                        + "    //replay based off of data"                                                                                            + "\n"
-                        + "    @Override"                                                                                                             + "\n"
-                        + "    public void runOpMode() throws InterruptedException {"                                                                 + "\n"
-                        + "        //get devices"                                                                                                     + "\n"
-                        + "        motors = new ArrayList<>()"                                                                                        + "\n"
-                        + "        servos = new Arraylist<>()"                                                                                        + "\n"
-                        + "        for (String name : motorNames) motors.add(hardwareMap.dcMotor.get(name));"                                         + "\n"
-                        + "        for (String name : servoNames) servos.add(hardwareMap.dcMotor.get(name));"                                         + "\n"
-                        + ""                                                                                                                          + "\n"
-                        + "        telemetry.addData(\"init\", \"done\");"                                                                            + "\n"
-                        + "        telemetry.update();"                                                                                               + "\n"
-                        + ""                                                                                                                          + "\n"
-                        + "        waitForStart();"                                                                                                   + "\n"
-                        + ""                                                                                                                          + "\n"
-                        + "        //loop through the logs as long as op mode is active or untill we hit the end"                                     + "\n"
-                        + "        double replayingStartTime = System.nanoTime();"                                                                    + "\n"
-                        + "        for (int i = 0; opModeIsActive() && i < data[0].size(); ++i) {"                                                    + "\n"
-                        + "            while ((double) data[0].get(i) > System.nanoTime() - replayingStartTime) {} //wait till next log"              + "\n"
-                        + ""                                                                                                                          + "\n"
-                        + "            //write data to devices"                                                                                       + "\n"
-                        + "            for (int i2 = 0; i2 < motors.size(); ++i2) motors[i2].setPower((double) data[i2                 + 2].get(i));" + "\n"
-                        + "            for (int i2 = 0; i2 < servos.size(); ++i2) servos[i2].setPower((double) data[i2 + motors.size() + 2].get(i));" + "\n"
-                        + ""                                                                                                                          + "\n"
-                        + "            //write to telemetry and increment targel log # (i)"                                                           + "\n"
-                        + "            telemetry.addData(\"datapoint, i++ + \"/\" + data[0].size());"                                                 + "\n"
-                        + "            telemetry.update();"                                                                                            + "\n"
-                        + "        }"                                                                                                                 + "\n"
-                        + "    }"                                                                                                                     + "\n"
-                        + "}"
-        ;
-
-        return out;
     }
 
     public static void startReplaying(ArrayList[] data, BooleanSupplier replaying) {
@@ -330,7 +361,7 @@ public final class Recorder {
     static ArrayList<String> servoNames;
 
     static String currentFile;
-    public static final String DIRPATH = "/sdcard/Recorder";
+    public static final String DIRPATH = "/sdcard/FIRST/Recorder";
 
     static long recordingStartTime;
     public static boolean recording = false;
