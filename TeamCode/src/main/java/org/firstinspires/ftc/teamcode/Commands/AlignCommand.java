@@ -87,7 +87,7 @@ public class AlignCommand extends CommandBase {
                 // pitch on the real bot since the camera is rotated 90 degrees
                 double yaw = tag.ftcPose.pitch; // yaw normally
 
-                yaw = Math.cbrt(yaw);
+                yaw = yaw;
 
 //                rotatePIDF.setPIDF(kp, ki, kd, kf);
                 telemetry.addLine("Rotate PIDF");
