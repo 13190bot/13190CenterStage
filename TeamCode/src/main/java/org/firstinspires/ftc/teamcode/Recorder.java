@@ -1,4 +1,10 @@
-// UNTESTED: TEST ASAP
+/*
+TODO:
+ - Use encoders and slow down / speed up depending on how it matches up
+ - Use replayer function in Replayer.java instead of hardcoding
+ - Multiple recorded data
+ - Test saving
+ */
 
 
 package org.firstinspires.ftc.teamcode;
@@ -185,6 +191,12 @@ public final class Recorder {
                 "\n" +
                 "        waitForStart();\n" +
                 "\n" +
+                "        replay(data);\n" +
+                "    }\n" +
+                "\n" +
+                "\n" +
+                "    // Yields, synchronous\n" +
+                "    public void replay(double[][] data) {\n" +
                 "        long replayingStartTime = System.nanoTime();\n" +
                 "        int i = 0;\n" +
                 "        // Busy looping for each ms (assuming replay loop time is less than recording loop time)\n" +

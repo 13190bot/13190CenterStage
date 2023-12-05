@@ -19,9 +19,20 @@ public class IndividualWheelTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             // In case of no dashboard
-            if (gamepad1.dpad_left) {
-
+            if (gamepad1.dpad_up) {
+                if (gamepad1.dpad_left) {
+                    MOTOR_NAME = "frontLeft";
+                } else if (gamepad1.dpad_right) {
+                    MOTOR_NAME = "frontRight";
+                }
+            } else if (gamepad1.dpad_down) {
+                if (gamepad1.dpad_left) {
+                    MOTOR_NAME = "backLeft";
+                } else if (gamepad1.dpad_right) {
+                    MOTOR_NAME = "backRight";
+                }
             }
+
 
 
             if (gamepad1.a) {
@@ -31,6 +42,8 @@ public class IndividualWheelTest extends LinearOpMode {
             } else {
                 hardwareMap.dcMotor.get(MOTOR_NAME).setPower(0);
             }
+            telemetry.addData("motor", MOTOR_NAME);
+            telemetry.update();
         }
     }
 }

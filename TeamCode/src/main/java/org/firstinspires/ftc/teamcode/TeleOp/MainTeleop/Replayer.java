@@ -30,6 +30,12 @@ public class Replayer extends LinearOpMode {
 
         waitForStart();
 
+        replay(data);
+    }
+
+
+    // Yields, synchronous
+    public void replay(double[][] data) {
         long replayingStartTime = System.nanoTime();
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
@@ -79,4 +85,5 @@ public class Replayer extends LinearOpMode {
             telemetry.update();
         }
     }
+
 }
