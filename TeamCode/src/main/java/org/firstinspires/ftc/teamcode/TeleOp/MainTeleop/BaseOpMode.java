@@ -75,6 +75,7 @@ public class BaseOpMode extends CommandOpModeEx {
         bl.setInverted(true);
         fl.setInverted(true);
         br.setInverted(true);
+        fr.setInverted(true);
 
        // pitch.setPosition(0.5);
 

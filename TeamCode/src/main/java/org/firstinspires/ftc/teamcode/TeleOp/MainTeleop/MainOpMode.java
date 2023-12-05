@@ -45,7 +45,7 @@ public class MainOpMode extends BaseOpMode {
     public double armMin = 0.3;
     public double armMax = 0.89; // 0.88 when red tape
 
-    public double pitchMin = 0.25; // 0.22 when red tape
+    public static double pitchMin = 0.23; // 0.22 when red tape
     public double pitchMax = 0.6;
 
     public double clawClosed = 0.17;
@@ -53,6 +53,7 @@ public class MainOpMode extends BaseOpMode {
 
     public double manualArmIncrement = 0.0005;
 
+    public static double test = 250;
 
 
 //    public void setArmPosition(double targetArmPosition) {
@@ -163,7 +164,7 @@ public class MainOpMode extends BaseOpMode {
                             new WaitCommand(250),
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm(),
-                            new WaitCommand(175),
+                            new WaitCommand(250),
                             new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
 
@@ -241,8 +242,14 @@ public class MainOpMode extends BaseOpMode {
                     if (armPickupStage == 1) {
                         new SequentialCommandGroup(
                             new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
+
+                            new InstantCommand(() -> {armPosition = 0.8;}),
+                            updateArm(),
+
                             new WaitCommand(200),
 
+
+                            // same as armPickupStage == 0 except pitchPosition
                             new InstantCommand(() -> {armPosition = 0.86;}),
                             updateArm(),
                             new WaitCommand(150),
@@ -254,7 +261,9 @@ public class MainOpMode extends BaseOpMode {
                             new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm()
+                            updateArm(),
+//                            new WaitCommand(0),
+                            new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
                     }
                 }
