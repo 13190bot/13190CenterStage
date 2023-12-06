@@ -10,12 +10,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class LiftSubsystem extends SubsystemBase {
 
-    private MotorEx liftRight, liftLeft;
+    public MotorEx liftRight, liftLeft;
 
-    public static double kP = 0.01;
-    public static double kI = 0;
-    public static double kD = 0.0003;
-    public static double kG = 0.1;
+    public static double kP = 0.01; //0.01
+    public static double kI = 0.00001;
+    public static double kD = 0.0001;  //0.0003
+    public static double kG = 0.001;
     public static double maxVelocity = 4000;
     public static double maxAcceleration = 4000;
     public static int tolerance = 2;
@@ -23,8 +23,8 @@ public class LiftSubsystem extends SubsystemBase {
     public static final int upperLimit = 4700;
     private final boolean useLimits = true;
 
-    private static double goalRight;
-    private static double goalLeft;
+    private static double goalRight = 0;
+    private static double goalLeft = 0;
 
 
 
@@ -51,7 +51,7 @@ public class LiftSubsystem extends SubsystemBase {
         controllerRight.setTolerance(tolerance);
     }
 
-    private void moveLiftToTarget() {
+    public void moveLiftToTarget() {
         controllerRight.setGoal(goalRight);
         controllerLeft.setGoal(goalLeft);
 
@@ -64,8 +64,8 @@ public class LiftSubsystem extends SubsystemBase {
         if (controllerLeft.atGoal()) leftPower = 0;
 
         //Set power based on PID output
-        liftRight.set(rightPower);
-        liftLeft.set(rightPower);
+        liftRight.set(leftPower);
+        liftLeft.set(leftPower);
     }
 
     public static void setLiftGoal(int goal){
@@ -73,42 +73,51 @@ public class LiftSubsystem extends SubsystemBase {
         goalLeft = goal;
     }
 
-
-
-
-    public void lift(double inputPower) {
+    public boolean checkLimits(double inputPower){
         if (useLimits) {
-            //Check Limits
-            if (inputPower > 0 && liftRight.getCurrentPosition() >= upperLimit) {
-                stabilize();
-            } else if (inputPower < 0 && liftRight.getCurrentPosition() <= lowerLimit) {
-                stabilize();
+            if (inputPower > 0 && liftLeft.getCurrentPosition() >= upperLimit) {
+                return false;
+            } else if (inputPower < 0 && liftLeft.getCurrentPosition() <= lowerLimit) {
+                return false;
             } else {
-                //Set PID Goal
-                goalRight = inputPower * manualPower + liftRight.getCurrentPosition();
-                goalLeft = inputPower * manualPower + liftLeft.getCurrentPosition();
-                moveLiftToTarget();
+                return true;
             }
         } else {
-                //Set PID Goal
-                goalRight = inputPower * manualPower + liftRight.getCurrentPosition();
-                goalLeft = inputPower * manualPower + liftLeft.getCurrentPosition();
-                moveLiftToTarget();
+            return true;
         }
 
 
     }
 
-    public void stabilize(){
-       moveLiftToTarget();
+
+
+
+    public void lift(double inputPower) {
+        if (checkLimits(inputPower)) {
+                //Set PID Goal
+                goalRight = inputPower * manualPower + liftRight.getCurrentPosition();
+                goalLeft = inputPower * manualPower + liftLeft.getCurrentPosition();
+                moveLiftToTarget();
+        } else {
+            moveLiftToTarget();
+        }
+
+
     }
 
+
+    public void captureCurrentPos(){
+        goalRight = liftRight.getCurrentPosition();
+        goalLeft = liftLeft.getCurrentPosition();
+    }
+
+
     public void liftTelemetry(){
-        telemetry.addData("Goal Pos",goalRight);
+        telemetry.addData("Goal Pos",goalLeft);
         telemetry.addData("Current Pos Right",liftRight.getCurrentPosition());
         telemetry.addData("Current Pos Left",liftLeft.getCurrentPosition());
 
-        dashboardTelemetry.addData("Goal Pos",goalRight);
+        dashboardTelemetry.addData("Goal Pos",goalLeft);
         dashboardTelemetry.addData("Current Pos Right",liftRight.getCurrentPosition());
         dashboardTelemetry.addData("Current Pos Left",liftLeft.getCurrentPosition());
         dashboardTelemetry.update();

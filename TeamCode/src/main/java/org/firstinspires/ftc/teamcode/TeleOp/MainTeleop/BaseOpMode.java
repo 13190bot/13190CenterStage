@@ -27,6 +27,7 @@ public class BaseOpMode extends CommandOpModeEx {
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
     protected PIDLiftCommand PIDLiftCommand;
+    protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
 
@@ -58,6 +59,7 @@ public class BaseOpMode extends CommandOpModeEx {
         //ONLY USE IF NOT USING LIFT PID
         liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftRight.setInverted(true);
 
 
         //Zero the lift encoders
@@ -99,6 +101,7 @@ public class BaseOpMode extends CommandOpModeEx {
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
         PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
 
 
         driveSubsystem.speedMultiplier = 1;
