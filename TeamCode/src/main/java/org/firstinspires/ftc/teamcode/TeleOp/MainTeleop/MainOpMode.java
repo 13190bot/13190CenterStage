@@ -147,6 +147,8 @@ public class MainOpMode extends BaseOpMode {
             }
         });
 
+        gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand());
+
 
         // Intake normal and reverse
         gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
