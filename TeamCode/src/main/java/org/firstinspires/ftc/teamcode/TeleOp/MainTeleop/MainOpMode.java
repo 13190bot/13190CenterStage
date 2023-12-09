@@ -42,10 +42,15 @@ public class MainOpMode extends BaseOpMode {
 
 
 
+    // AXON (ORIGINAL BEFORE 12/8/2023)
     public double armMin = 0.3;
     public double armMax = 0.89; // 0.88 when red tape
 
-    public static double pitchMin = 0.23; // 0.22 when red tape
+    // GOBILDA
+//    public static double armMin = 0.2;
+//    public static double armMax = 0.9;
+
+    public double pitchMin = 0.23; // 0.22 when red tape
     public double pitchMax = 0.6;
 
     public double clawClosed = 0.17;
