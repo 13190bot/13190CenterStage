@@ -15,18 +15,20 @@ import org.firstinspires.ftc.teamcode.util.CommandOpModeEx;
 import java.util.concurrent.TimeUnit;
 
 public class BaseOpMode extends CommandOpModeEx {
+    protected DroneSubsystem droneSubsystem;
 
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intakeSubsystem;
     protected LiftSubsystem liftSubsystem;
     public MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
-    public SimpleServo arm,pitch,claw;
+    public SimpleServo arm,pitch,claw,drone;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
     protected PIDLiftCommand PIDLiftCommand;
+    protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
 
@@ -45,6 +47,7 @@ public class BaseOpMode extends CommandOpModeEx {
 
         intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
+
         liftLeft = new MotorEx(hardwareMap, "liftLeft");
         liftRight = new MotorEx(hardwareMap, "liftRight");
 
@@ -58,6 +61,7 @@ public class BaseOpMode extends CommandOpModeEx {
         //ONLY USE IF NOT USING LIFT PID
         liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftRight.setInverted(true);
 
 
         //Zero the lift encoders
@@ -83,6 +87,7 @@ public class BaseOpMode extends CommandOpModeEx {
         claw = new SimpleServo(hardwareMap, "claw", 0, 180);
         arm = new SimpleServo(hardwareMap, "arm", 0, 255);
         pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
+        drone = new SimpleServo(hardwareMap, "drone", 0, 255);
 
 
         //Gamepads
@@ -93,12 +98,14 @@ public class BaseOpMode extends CommandOpModeEx {
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         intakeSubsystem = new IntakeSubsystem(intakeMotor);
         liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
+        droneSubsystem = new DroneSubsystem(drone);
 
 
 
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
         PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
 
 
         driveSubsystem.speedMultiplier = 1;

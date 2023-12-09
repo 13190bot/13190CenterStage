@@ -19,7 +19,7 @@ public class PIDLiftCommand extends CommandBase {
         if (power.getAsDouble() != 0) {
             liftSubsystem.lift(power.getAsDouble());
         } else {
-            liftSubsystem.stabilize();
+            liftSubsystem.moveLiftToTarget();
         }
         liftSubsystem.liftTelemetry();
 
