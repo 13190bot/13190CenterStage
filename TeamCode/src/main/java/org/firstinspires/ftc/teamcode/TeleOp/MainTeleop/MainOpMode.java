@@ -43,8 +43,8 @@ public class MainOpMode extends BaseOpMode {
 
 
     // AXON (ORIGINAL BEFORE 12/8/2023)
-    public double armMin = 0.3;
-    public double armMax = 0.89; // 0.88 when red tape
+    public double armMin = 0.4;
+    public double armMax = 0.92; // 0.88 when red tape
 
     // GOBILDA
 //    public static double armMin = 0.2;
@@ -54,7 +54,7 @@ public class MainOpMode extends BaseOpMode {
     public double pitchMax = 0.6;
 
     public double clawClosed = 0.17;
-    public double clawOpen = 0.1;
+    public double clawOpen = 0.08;
 
     public double manualArmIncrement = 0.0005;
 
@@ -152,7 +152,11 @@ public class MainOpMode extends BaseOpMode {
             }
         });
 
-        gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand());
+        gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand()
+                .andThen( new InstantCommand(() -> {
+                    telemetry.addData("drone", "launched");
+                    telemetry.update();
+                })));
 
 
         // Intake normal and reverse
