@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
@@ -68,6 +69,10 @@ public class DriveRobotOptimalCommand extends CommandBase {
             // Normal
             driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), gamepadEx1.getLeftY(), (gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)));
 //            driveSubsystem.driveRobotCentric(strafe, forward, rotate);
+        }
+
+        if (Recorder.recording) {
+            Recorder.record();
         }
     }
 }

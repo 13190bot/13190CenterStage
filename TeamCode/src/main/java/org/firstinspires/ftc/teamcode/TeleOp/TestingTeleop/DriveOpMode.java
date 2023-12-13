@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 @TeleOp(name = "DriveOpMode")
-
+@Disabled
 public class DriveOpMode extends BaseDriveOpMode{
     @Override
     public void initialize() {

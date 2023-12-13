@@ -3,6 +3,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
+@Disabled
 public class BaseDriveOpMode extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
@@ -65,7 +67,7 @@ public class BaseDriveOpMode extends CommandOpMode {
                 fl,fr,bl,br,
                 () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER),
                 () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER),
-                gamepadEx1::getLeftY,
+                gamepadEx1::getLeftY, //reverse fl and fr reverse
                 gamepadEx1::getRightY,
                 () -> gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).get(),
                 () -> gamepadEx1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).get()

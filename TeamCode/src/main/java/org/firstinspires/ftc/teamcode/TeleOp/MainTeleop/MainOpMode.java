@@ -4,7 +4,10 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
 /*
@@ -39,17 +42,23 @@ public class MainOpMode extends BaseOpMode {
 
 
 
-    public double armMin = 0.3;
-    public double armMax = 0.89; // 0.88 when red tape
+    // AXON (ORIGINAL BEFORE 12/8/2023)
+    public double armMin = 0.4;
+    public double armMax = 0.92; // 0.88 when red tape
 
-    public double pitchMin = 0.22; // 0.22 when red tape
+    // GOBILDA
+//    public static double armMin = 0.2;
+//    public static double armMax = 0.9;
+
+    public double pitchMin = 0.23; // 0.22 when red tape
     public double pitchMax = 0.6;
 
-    public double clawClosed = 0.4;
-    public double clawOpen = 0.26;
+    public double clawClosed = 0.17;
+    public double clawOpen = 0.08;
 
     public double manualArmIncrement = 0.0005;
 
+    public static double test = 250;
 
 
 //    public void setArmPosition(double targetArmPosition) {
@@ -95,7 +104,7 @@ public class MainOpMode extends BaseOpMode {
                 new SequentialCommandGroup(
                     // arm is mostly down: we do not want to move the pitch
                     new InstantCommand(() -> {
-                        pitch.setPosition(0.22); // ready to pick up
+                        pitch.setPosition(pitchMin); // ready to pick up
                         arm.setPosition(armPosition);
                     })
                 ),
@@ -143,6 +152,12 @@ public class MainOpMode extends BaseOpMode {
             }
         });
 
+        gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand()
+                .andThen( new InstantCommand(() -> {
+                    telemetry.addData("drone", "launched");
+                    telemetry.update();
+                })));
+
 
         // Intake normal and reverse
         gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
@@ -160,7 +175,7 @@ public class MainOpMode extends BaseOpMode {
                             new WaitCommand(250),
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm(),
-                            new WaitCommand(175),
+                            new WaitCommand(250),
                             new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
 
@@ -238,8 +253,14 @@ public class MainOpMode extends BaseOpMode {
                     if (armPickupStage == 1) {
                         new SequentialCommandGroup(
                             new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
+
+                            new InstantCommand(() -> {armPosition = 0.8;}),
+                            updateArm(),
+
                             new WaitCommand(200),
 
+
+                            // same as armPickupStage == 0 except pitchPosition
                             new InstantCommand(() -> {armPosition = 0.86;}),
                             updateArm(),
                             new WaitCommand(150),
@@ -251,7 +272,9 @@ public class MainOpMode extends BaseOpMode {
                             new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
                             new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm()
+                            updateArm(),
+//                            new WaitCommand(0),
+                            new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
                     }
                 }
@@ -291,7 +314,28 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-    liftSubsystem.setDefaultCommand(PIDLiftCommand);
+        liftSubsystem.setDefaultCommand(manualLiftCommand);
+
+        Recorder.init(hardwareMap, "test", telemetry);
+
+
+//        Recorder.startRecording();
+
+        gb1(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
+            Recorder.startRecording();
+            Recorder.recording = true;
+        });
+
+        gb1(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
+            Recorder.saveRecording();
+            Recorder.recording = false;
+        });
+
+        gb1(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> {
+            Recorder.startReplaying(Recorder.reverseData(Recorder.data), () -> {
+                return !gamepad1.dpad_down && opModeIsActive();
+            });
+        });
 
     }
 
@@ -373,7 +417,7 @@ public class MainOpMode extends BaseOpMode {
 //        driveRobotOptimalCommand.execute();
 
 
-
+        telemetry.addData("isRecording", Recorder.recording);
 
 
         telemetry.update();
