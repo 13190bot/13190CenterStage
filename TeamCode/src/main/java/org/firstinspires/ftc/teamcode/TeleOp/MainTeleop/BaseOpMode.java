@@ -20,7 +20,7 @@ public class BaseOpMode extends CommandOpModeEx {
     protected IntakeSubsystem intakeSubsystem;
     protected LiftSubsystem liftSubsystem;
     public MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
-    public SimpleServo arm,pitch,claw;
+    public SimpleServo arm,pitch,claw, launcher;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected GamepadEx gamepadEx1;
     protected GamepadEx gamepadEx2;
@@ -79,6 +79,9 @@ public class BaseOpMode extends CommandOpModeEx {
         claw = new SimpleServo(hardwareMap, "claw", 0, 180);
         arm = new SimpleServo(hardwareMap, "arm", 0, 255);
         pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
+
+        //launcher
+        launcher = new SimpleServo(hardwareMap, "launcher", 0, 180);
 
 
         //Gamepads
