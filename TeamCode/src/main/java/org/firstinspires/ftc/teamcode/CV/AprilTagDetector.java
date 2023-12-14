@@ -14,9 +14,10 @@ import java.util.List;
 
 public class AprilTagDetector {
 
-    private final static String webcamName = "Webcam 1";
-    private static AprilTagProcessor aprilTagProcessor;
-    public static VisionPortal visionPortal;
+    private final static String webcam1Name = "Webcam 1";
+    private final static String wecam2Name = "Webcam 2";
+    public static AprilTagProcessor aprilTagProcessor;
+    public static VisionPortal visionPortal1, visionPortal2;
 
     protected static List<AprilTagDetection> allCurrentDetections;
 
@@ -30,11 +31,15 @@ public class AprilTagDetector {
 
                 .build();
 
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, webcamName))
+        visionPortal1 = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, webcam1Name))
                 .addProcessor(aprilTagProcessor)
                 .build();
 
+        visionPortal2 = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, wecam2Name))
+                .addProcessor(aprilTagProcessor)
+                .build();
     }
 
     public static List<AprilTagDetection> getAllCurrentDetections(){

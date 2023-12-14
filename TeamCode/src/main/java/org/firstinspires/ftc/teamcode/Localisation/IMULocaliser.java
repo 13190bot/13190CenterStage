@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class IMULocaliser extends MyLocalizer{
-    public IMULocaliser () {
+    public IMULocaliser (BNO055IMUImpl imu) {
         computesHeading = true;
-
+        this.imu = imu;
         poseEstimate = new Pose2d();
     }
 
