@@ -28,8 +28,8 @@ public class BaseOpMode extends CommandOpModeEx {
     protected GamepadEx gamepadEx2;
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
-    protected PIDLiftCommand PIDLiftCommand;
-    protected ManualLiftCommand manualLiftCommand;
+//    protected PIDLiftCommand PIDLiftCommand;
+//    protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
 
@@ -106,8 +106,8 @@ public class BaseOpMode extends CommandOpModeEx {
 
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
-        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
-        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
+//        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+//        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
 
 
         driveSubsystem.speedMultiplier = 1;

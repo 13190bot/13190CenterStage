@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.DriveToAprilTagCommand;
 
-import static org.firstinspires.ftc.teamcode.CV.AprilTagDetector.visionPortal;
+//import static org.firstinspires.ftc.teamcode.CV.AprilTagDetector.visionPortal;
 
 @Disabled
 @TeleOp(name = "TestFollowAprilTagOpMode")
