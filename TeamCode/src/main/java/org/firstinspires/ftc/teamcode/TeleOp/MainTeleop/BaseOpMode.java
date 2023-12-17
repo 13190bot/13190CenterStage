@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.*;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -35,6 +36,7 @@ public class BaseOpMode extends CommandOpModeEx {
 
     @Override
     public void initialize() {
+        telemetry = new MultipleTelemetry(telemetry);
 
         //Timer to calculate time left in match
         beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);

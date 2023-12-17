@@ -5,17 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MechanumLocalizer extends MyLocalizer{
-    @NotNull
-    @Override
-    public Pose2d getPoseEstimate() {
-        return null;
-    }
-
-    @Override
-    public void setPoseEstimate(@NotNull Pose2d pose2d) {
-        poseEstimate = pose2d;
-    }
-
     @Nullable
     @Override
     public Pose2d getPoseVelocity() {
@@ -26,6 +15,4 @@ public class MechanumLocalizer extends MyLocalizer{
     public void update() {
         //
     }
-
-    Pose2d poseEstimate;
 }
