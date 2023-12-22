@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
-public final class Recorder {
+public class Recorder {
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
         telemetry = t;
         currentFile = file;
@@ -254,6 +254,7 @@ public final class Recorder {
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
         int length = data[0].size();
+        int motorsSize = motors.size();
         while (replaying.getAsBoolean()) {
             while ((long) data[0].get(i) > System.nanoTime() - replayingStartTime) {
                 // Busy loop
@@ -278,7 +279,10 @@ public final class Recorder {
 
             // Servos
             for (int i2 = 0; i2 < servos.size(); i2++) {
-                servos.get(i2).setPosition((double) data[i2 + motors.size() + 2].get(i));
+                double v = (double) data[i2 + motorsSize + 2].get(i);
+                if (!Double.isNaN(v)) {
+                    servos.get(i2).setPosition(v);
+                }
             }
 
             // Other code

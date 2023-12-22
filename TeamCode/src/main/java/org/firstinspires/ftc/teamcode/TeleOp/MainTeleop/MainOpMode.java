@@ -322,18 +322,32 @@ public class MainOpMode extends BaseOpMode {
 
 //        Recorder.startRecording();
 
+        // Start recording
         gb1(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
             Recorder.startRecording();
             Recorder.recording = true;
         });
 
-        gb1(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
-            Recorder.saveRecording();
-            Recorder.recording = false;
+        // Stop recording
+        gb1(GamepadKeys.Button.DPAD_DOWN).whenPressed(() -> {
+            if (Recorder.recording) {
+                Recorder.saveRecording();
+                Recorder.recording = false;
+            }
         });
 
+        // Start replaying forwards
+        gb1(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
+            Recorder.startReplaying(Recorder.data, () -> {
+                // Stop replaying
+                return !gamepad1.dpad_down && opModeIsActive();
+            });
+        });
+
+        // Start replaying backwards
         gb1(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> {
             Recorder.startReplaying(Recorder.reverseData(Recorder.data), () -> {
+                // Stop replaying
                 return !gamepad1.dpad_down && opModeIsActive();
             });
         });
@@ -420,6 +434,8 @@ public class MainOpMode extends BaseOpMode {
 
         telemetry.addData("isRecording", Recorder.recording);
 
+        // Test odometry and recording servo positions
+        telemetry.addData("armServoPosition", arm.getPosition());
 
         telemetry.update();
         super.run();
