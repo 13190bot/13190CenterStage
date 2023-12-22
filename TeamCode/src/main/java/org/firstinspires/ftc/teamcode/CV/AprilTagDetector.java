@@ -14,39 +14,33 @@ import java.util.List;
 
 public class AprilTagDetector {
 
-    private final static String webcam1Name = "Webcam 1";
-    private final static String wecam2Name = "Webcam 2";
-    public static AprilTagProcessor aprilTagProcessor;
-    public static VisionPortal visionPortal1, visionPortal2;
+//    private String webcamName = "Webcam 1";
+    public String webcamName;
+    public AprilTagProcessor aprilTagProcessor;
+    public VisionPortal visionPortal;
 
-    protected static List<AprilTagDetection> allCurrentDetections;
-
-
+    public List<AprilTagDetection> allCurrentDetections;
 
 
-
-    public static void initAprilTag(HardwareMap hardwareMap){
+    public AprilTagDetector(String webcamName, HardwareMap hardwareMap) {
+        this.webcamName = webcamName;
         aprilTagProcessor = new AprilTagProcessor.Builder()
                 //Set Calibration Here
 
                 .build();
 
-        visionPortal1 = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, webcam1Name))
-                .addProcessor(aprilTagProcessor)
-                .build();
-
-        visionPortal2 = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, wecam2Name))
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, webcamName))
                 .addProcessor(aprilTagProcessor)
                 .build();
     }
 
-    public static List<AprilTagDetection> getAllCurrentDetections(){
+
+    public List<AprilTagDetection> getAllCurrentDetections(){
         return allCurrentDetections;
     }
 
-    public static void updateAprilTagDetections(){
+    public void updateAprilTagDetections(){
         allCurrentDetections = aprilTagProcessor.getDetections();
 
     }
@@ -59,7 +53,7 @@ public class AprilTagDetector {
         return allCurrentDetections.size() > 0;
     }
 
-    public static AprilTagDetection getDetectionByID(int id){
+    public AprilTagDetection getDetectionByID(int id){
         for (AprilTagDetection detection : allCurrentDetections){
             if (id == detection.id){
                 return detection;
@@ -68,7 +62,7 @@ public class AprilTagDetector {
         return null;
     }
 
-    public static void aprilTagTelemetry(Telemetry telemetry){ // Stolen Code from samples but it works
+    public void aprilTagTelemetry(Telemetry telemetry){ // Stolen Code from samples but it works
         if (!(allCurrentDetections == null)) {
             telemetry.addData("# AprilTags Detected", allCurrentDetections.size());
 

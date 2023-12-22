@@ -28,9 +28,12 @@ public class AlignCommand extends CommandBase {
     public static double kd = 0.0001;
     public static double kf = 0;
 
-    public AlignCommand(DriveSubsystem driveSub, Telemetry telemetry) {
+    AprilTagDetector aprilTagDetector;
+
+    public AlignCommand(DriveSubsystem driveSub, Telemetry telemetry, AprilTagDetector aprilTagDetector) {
         this.driveSubsystem = driveSub;
         this.telemetry = telemetry;
+        this.aprilTagDetector = aprilTagDetector;
 
         // https://docs.ftclib.org/ftclib/features/controllers
         rotatePIDF = new PIDFController(0.07, 0, 0.0001, 0);
@@ -52,9 +55,9 @@ public class AlignCommand extends CommandBase {
 //        forwardPIDF.setPIDF(kp, ki, kd, kf);
 //        strafePIDF.setPIDF(kp, ki, kd, kf);
 
-        AprilTagDetector.updateAprilTagDetections();
+        aprilTagDetector.updateAprilTagDetections();
 
-        List allTags = AprilTagDetector.getAllCurrentDetections();
+        List allTags = aprilTagDetector.getAllCurrentDetections();
 
 
 
@@ -148,7 +151,7 @@ public class AlignCommand extends CommandBase {
         telemetry.addData("forward", forward);
         telemetry.addData("strafe", strafe);
 
-        AprilTagDetector.aprilTagTelemetry(telemetry);
+        aprilTagDetector.aprilTagTelemetry(telemetry);
 
 //        rotate = 0;
 //        strafe = 0;
