@@ -33,6 +33,8 @@ public class BaseOpMode extends CommandOpModeEx {
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
 
+    public AprilTagDetector aprilTagDetector1, aprilTagDetector2;
+
 
     @Override
     public void initialize() {
@@ -113,7 +115,8 @@ public class BaseOpMode extends CommandOpModeEx {
         driveSubsystem.speedMultiplier = 1;
 
         //Setup up April Tag Detector
-        AprilTagDetector.initAprilTag(hardwareMap);
+        aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
+        aprilTagDetector1 = new AprilTagDetector("Webcam 2", hardwareMap);
 
     }
 
