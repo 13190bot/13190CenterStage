@@ -1,3 +1,5 @@
+// NO ODO BTW
+
 /*
 TODO:
  - Use encoders and slow down / speed up depending on how it matches up
@@ -34,24 +36,21 @@ USE LOGICI NSTEAD OF BRUTE FORCE PLEASE HLEP
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.*;
-import org.checkerframework.checker.units.qual.A;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
-public class Recorder {
-
-    public static double kO = 1; // Odometry correcting coefficient
-
+public class RecorderOLD {
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
         telemetry = t;
         currentFile = file;
@@ -88,19 +87,14 @@ public class Recorder {
 
             motorNames = new ArrayList<>(Arrays.asList("frontLeft", "frontRight", "backLeft", "backRight"));
             servoNames = new ArrayList<>(Arrays.asList("arm", "pitch", "claw"));
-            odometryNames = new ArrayList<>(Arrays.asList("frontLeft", "backLeft"));
 
             motors = new ArrayList<>();
             servos = new ArrayList<>();
-            odometry = new ArrayList<>();
             for (int i = 0; i < motorNames.size(); i++) {
                 motors.add(hardwareMap.get(DcMotor.class, motorNames.get(i)));
             }
             for (int i = 0; i < servoNames.size(); i++) {
                 servos.add(hardwareMap.get(Servo.class, servoNames.get(i)));
-            }
-            for (int i = 0; i < odometryNames.size(); i++) {
-                odometry.add(hardwareMap.get(DcMotor.class, odometryNames.get(i)));
             }
 
 
@@ -117,10 +111,10 @@ public class Recorder {
     }
 
     public static void clearRecording() {
-        data = new ArrayList[2 + motors.size() + servos.size() + odometry.size()];
+        data = new ArrayList[motors.size() + servos.size() + 2];
         data[0] = new ArrayList();
         data[1] = new ArrayList();
-        for (int i = 2; i < 2 + motors.size() + servos.size() + odometry.size(); i++) data[i] = new ArrayList<Double>();
+        for (int i = 2; i < motors.size() + servos.size() + 2; ++i) data[i] = new ArrayList<Double>();
     }
 
     public static void startRecording () {
@@ -134,19 +128,12 @@ public class Recorder {
         data[0].add(System.nanoTime() - recordingStartTime);
         data[1].add(voltageSensor.getVoltage());
 
-        for (int i = 0; i < motors.size(); i++) {
-            data[2 + i].add(motors.get(i).getPower());
+        int motorsLength = motors.size();
+        for (int i = 0; i < motorsLength; i++) {
+            data[i + 2].add(motors.get(i).getPower());
         }
         for (int i = 0; i < servos.size(); i++) {
-            Servo servo = servos.get(i);
-            if (((ServoImplEx) servo).isPwmEnabled()) {
-                data[2 + motors.size() + i].add(servo.getPosition());
-            } else {
-                data[2 + motors.size() + i].add(Double.NaN);
-            }
-        }
-        for (int i = 0; i < odometry.size(); i++) {
-            data[2 + motors.size() + servos.size() + i].add(odometry.get(i).getCurrentPosition());
+            data[i + motorsLength + 2].add(servos.get(i).getPosition());
         }
     }
 
@@ -286,23 +273,12 @@ public class Recorder {
                 "}\n";
     }
 
-    /*
-    Optimization Ideas:
-    - Only update if value changes (or maybe not since it already does internal check? idk)
-    - Benchmark
-     */
     public static void startReplaying(ArrayList[] data, BooleanSupplier replaying) {
-        // Reset encoders
-        for (int i = 0; i < odometry.size(); i++) {
-            DcMotor motor = odometry.get(i);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-
         double replayingStartTime = System.nanoTime();
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
         int length = data[0].size();
+        int motorsSize = motors.size();
         while (replaying.getAsBoolean()) {
             while ((long) data[0].get(i) > System.nanoTime() - replayingStartTime) {
                 // Busy loop
@@ -320,41 +296,17 @@ public class Recorder {
 //                telemetry.addData("a", (double) data[i2 + 2].get(i) * powerMultiplier);
 //            }
 
-
-
-            if (i != length - 1) {
-                // If needed for (more) accuracy, factor in odometry
-                double powerMultipler = 0;
-                for (int i2 = 0; i2 < odometry.size(); i2++) {
-//                    double lastV = (double) data[2 + motors.size() + servos.size() + i2].get(i - 1);
-                    double currentV = (double) data[2 + motors.size() + servos.size() + i2].get(i);
-                    double nextV = (double) data[2 + motors.size() + servos.size() + i2].get(i + 1);
-                    powerMultipler = powerMultipler + (1 + kO * ((nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition())));
-                }
-                double powerMultiplier = powerMultipler / odometry.size();
-                for (int i2 = 0; i2 < motors.size(); i2++) {
-                    motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier);
-                }
-
-            } else {
-                // Don't factor in anything (TESTED)
-                for (int i2 = 0; i2 < motors.size(); i2++) {
-                    motors.get(i2).setPower((double) data[2 + i2].get(i));
-                }
+            // Don't factor in voltage (TESTED)
+            for (int i2 = 0; i2 < motors.size(); i2++) {
+                motors.get(i2).setPower((double) data[i2 + 2].get(i));
             }
-
 
             // Servos
             for (int i2 = 0; i2 < servos.size(); i2++) {
-                double v = (double) data[2 + motors.size() + i2].get(i);
-
-                if (i == 0 || ((double) data[2 + motors.size() + i2].get(i - 1) != v)) {
-                    if (Double.isNaN(v)) {
-                        ((ServoImplEx) servos.get(i2)).setPwmDisable();
-                    } else {
-                        ((ServoImplEx) servos.get(i2)).setPwmEnable();
-                        servos.get(i2).setPosition(v);
-                    }
+                double v = (double) data[i2 + motorsSize + 2].get(i);
+//                if (!Double.isNaN(v)) {
+                if (servos.get(i2).getPosition() != v) { // TEMP SOLUTION (WILL NOT SET POSITION IF SERVO IS NOT INITTED) DOESN'T WORK IF SERVO IS INITTED AFTER RECORDING STARTS
+                    servos.get(i2).setPosition(v);
                 }
             }
 
@@ -409,24 +361,13 @@ public class Recorder {
             }
         }
 
-        // servos
+        // servos: todo
         for (int i = 2 + motors.size(); i < 2 + motors.size() + servos.size(); i++) {
             ArrayList row = data[i];
             out[i] = new ArrayList();
             ArrayList rowOut = out[i];
             for (int i2 = row.size() - 1; i2 > -1; i2--) {
                 rowOut.add(row.get(i2));
-            }
-        }
-
-        // odometry
-        for (int i = 2 + motors.size() + servos.size(); i < 2 + motors.size() + servos.size() + odometry.size(); i++) {
-            ArrayList row = data[i];
-            out[i] = new ArrayList();
-            ArrayList rowOut = out[i];
-            double rowLastV = (double) row.get(row.size() - 1);
-            for (int i2 = row.size() - 1; i2 > -1; i2--) {
-                rowOut.add(rowLastV - (double) row.get(i2));
             }
         }
 
@@ -461,12 +402,10 @@ public class Recorder {
 
     static ArrayList<DcMotor> motors;
     static ArrayList<Servo> servos;
-    static ArrayList<DcMotor> odometry;
     static VoltageSensor voltageSensor;
 
     static ArrayList<String> motorNames;
     static ArrayList<String> servoNames;
-    static ArrayList<String> odometryNames;
 
     static String currentFile;
     public static final String DIRPATH = "/sdcard/FIRST/Recorder";
