@@ -83,9 +83,25 @@ public class BaseOpMode extends CommandOpModeEx {
         bl.setInverted(true);
         fl.setInverted(true);
         br.setInverted(true);
-        fr.setInverted(true);
+        fr.setInverted(false);
 
        // pitch.setPosition(0.5);
+
+
+
+
+        // ODOMETRY ENCODERS
+        bl.stopAndResetEncoder();
+        fl.stopAndResetEncoder();
+//        bl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        fl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+
+
+
+
 
         //Servos
         claw = new SimpleServo(hardwareMap, "claw", 0, 180);
@@ -116,7 +132,7 @@ public class BaseOpMode extends CommandOpModeEx {
 
         //Setup up April Tag Detector
         aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
-        aprilTagDetector1 = new AprilTagDetector("Webcam 2", hardwareMap);
+//        aprilTagDetector2 = new AprilTagDetector("Webcam 2", hardwareMap);
 
     }
 

@@ -280,7 +280,8 @@ public class Recorder {
             // Servos
             for (int i2 = 0; i2 < servos.size(); i2++) {
                 double v = (double) data[i2 + motorsSize + 2].get(i);
-                if (!Double.isNaN(v)) {
+//                if (!Double.isNaN(v)) {
+                if (servos.get(i2).getPosition() != v) { // TEMP SOLUTION (WILL NOT SET POSITION IF SERVO IS NOT INITTED) DOESN'T WORK IF SERVO IS INITTED AFTER RECORDING STARTS
                     servos.get(i2).setPosition(v);
                 }
             }

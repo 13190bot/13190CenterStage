@@ -436,6 +436,8 @@ public class MainOpMode extends BaseOpMode {
 
         // Test odometry and recording servo positions
         telemetry.addData("armServoPosition", arm.getPosition());
+        telemetry.addData("backLeft", bl.motor.getCurrentPosition());
+        telemetry.addData("frontLeft", fl.motor.getCurrentPosition());
 
         telemetry.update();
         super.run();
