@@ -304,8 +304,10 @@ public class Recorder {
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
         int length = data[0].size();
         while (replaying.getAsBoolean()) {
+            boolean loopedAtLeastOnce = false; // TODO FOR DEBUG, REMOVE
             while ((long) data[0].get(i) > System.nanoTime() - replayingStartTime) {
                 // Busy loop
+                loopedAtLeastOnce = true; // TODO FOR DEBUG, REMOVE
             }
 
 
@@ -329,7 +331,9 @@ public class Recorder {
 //                    double lastV = (double) data[2 + motors.size() + servos.size() + i2].get(i - 1);
                     double currentV = (double) data[2 + motors.size() + servos.size() + i2].get(i);
                     double nextV = (double) data[2 + motors.size() + servos.size() + i2].get(i + 1);
-                    powerMultipler = powerMultipler + (1 + kO * ((nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition())));
+                    long currentT = (long) data[0].get(i);
+                    long nextT = (long) data[0].get(i + 1);
+                    powerMultipler = powerMultipler + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry.get(i2).getCurrentPosition())));
                 }
                 double powerMultiplier = powerMultipler / odometry.size();
                 for (int i2 = 0; i2 < motors.size(); i2++) {
@@ -373,6 +377,7 @@ public class Recorder {
 
             // telemetry shit
             telemetry.addData("REPLAYING", i + "/" + length);
+            telemetry.addData("KEEPING UP WITH RECORDED", loopedAtLeastOnce);
             telemetry.update();
         }
     }
