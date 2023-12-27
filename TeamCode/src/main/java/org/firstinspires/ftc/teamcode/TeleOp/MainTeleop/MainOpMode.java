@@ -369,6 +369,7 @@ public class MainOpMode extends BaseOpMode {
     private boolean lastTouchpad = false;
     public void run()
     {
+        encoderDisconnectDetect.recordEncoderValues();
 
         telemetry.addData("Time left", beforeMatchEnd.remainingTime());
 
