@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.*;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.util.CommandOpModeEx;
+import org.firstinspires.ftc.teamcode.util.librarys.WireMannager.EncoderDisconnectDetect;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,12 +30,15 @@ public class BaseOpMode extends CommandOpModeEx {
     protected GamepadEx gamepadEx2;
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
-//    protected PIDLiftCommand PIDLiftCommand;
-//    protected ManualLiftCommand manualLiftCommand;
+    protected PIDLiftCommand PIDLiftCommand;
+    protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
 
     public AprilTagDetector aprilTagDetector1, aprilTagDetector2;
+
+    protected EncoderDisconnectDetect encoderDisconnectDetect;
+    protected Trigger encoderOffTrigger;
 
 
     @Override
@@ -124,8 +129,8 @@ public class BaseOpMode extends CommandOpModeEx {
 
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
-//        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
-//        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
+        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
 
 
         driveSubsystem.speedMultiplier = 1;
@@ -133,6 +138,10 @@ public class BaseOpMode extends CommandOpModeEx {
         //Setup up April Tag Detector
         aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
 //        aprilTagDetector2 = new AprilTagDetector("Webcam 2", hardwareMap);
+
+         encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
+         encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
+
 
     }
 

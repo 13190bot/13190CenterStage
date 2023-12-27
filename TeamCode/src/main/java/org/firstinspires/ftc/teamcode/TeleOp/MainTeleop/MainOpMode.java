@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Commands.ManualLiftCommand;
 import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
@@ -306,6 +307,7 @@ public class MainOpMode extends BaseOpMode {
 
 
 
+
 //        gb2(PlaystationAliases)
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
@@ -315,7 +317,13 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-//        liftSubsystem.setDefaultCommand(manualLiftCommand);
+        liftSubsystem.setDefaultCommand(PIDLiftCommand);
+
+        encoderOffTrigger.whenActive(manualLiftCommand);
+
+        telemetry.addData("Manual Lift",manualLiftCommand.isScheduled());
+        telemetry.addData("PID Lift",PIDLiftCommand.isScheduled());
+        telemetry.addData("Encoder Off Detector",encoderOffTrigger.get());
 
         Recorder.init(hardwareMap, "test", telemetry);
 
@@ -408,18 +416,20 @@ public class MainOpMode extends BaseOpMode {
 
         // Manual lift, Not used for now
 
-        double power = -gamepad2.left_stick_y;
-
-        if (gamepad2.dpad_up) {
-            power = power + 1;
-        }
-        if (gamepad2.dpad_down) {
-            power = power - 1;
-        }
-
-        telemetry.addData("power", power);
-        liftLeft.motor.setPower(-power);
-        liftRight.motor.setPower(-power);
+//        double power = -gamepad2.left_stick_y;
+//
+//        if (gamepad2.dpad_up) {
+//            power = power + 1;
+//        }
+//        if (gamepad2.dpad_down) {
+//            power = power - 1;
+//        }
+//
+//
+//
+//        telemetry.addData("power", power);
+//        liftLeft.motor.setPower(-power);
+//        liftRight.motor.setPower(-power);
 
 
 //        telemetry.addData("armPickupStage", armPickupStage);
