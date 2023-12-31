@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Commands.ManualLiftCommand;
 import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
@@ -127,12 +128,13 @@ public class MainOpMode extends BaseOpMode {
     @Override
     public void initialize() {
         super.initialize();
+//        register(driveSubsystem, intakeSubsystem);
         register(driveSubsystem, intakeSubsystem, liftSubsystem);
 
 
         //Reset Lift
         gb2(PlaystationAliases.SHARE).whenPressed(() -> {
-            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
+//            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
         });
 
 
@@ -305,6 +307,7 @@ public class MainOpMode extends BaseOpMode {
 
 
 
+
 //        gb2(PlaystationAliases)
 
 //        gb1(GamepadKeys.Button.A).toggleWhenPressed(armSubsystem.moveArm(ArmSubsystem.armPosHome), armSubsystem.moveArm(ArmSubsystem.armPosAway));
@@ -314,25 +317,45 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-        liftSubsystem.setDefaultCommand(manualLiftCommand);
+        liftSubsystem.setDefaultCommand(PIDLiftCommand);
+
+        encoderOffTrigger.whenActive(manualLiftCommand);
+
+        telemetry.addData("Manual Lift",manualLiftCommand.isScheduled());
+        telemetry.addData("PID Lift",PIDLiftCommand.isScheduled());
+        telemetry.addData("Encoder Off Detector",encoderOffTrigger.get());
 
         Recorder.init(hardwareMap, "test", telemetry);
 
 
 //        Recorder.startRecording();
 
+        // Start recording
         gb1(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
             Recorder.startRecording();
             Recorder.recording = true;
         });
 
-        gb1(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
-            Recorder.saveRecording();
-            Recorder.recording = false;
+        // Stop recording
+        gb1(GamepadKeys.Button.DPAD_DOWN).whenPressed(() -> {
+            if (Recorder.recording) {
+                Recorder.saveRecording();
+                Recorder.recording = false;
+            }
         });
 
+        // Start replaying forwards
+        gb1(GamepadKeys.Button.DPAD_UP).whenPressed(() -> {
+            Recorder.startReplaying(Recorder.data, () -> {
+                // Stop replaying
+                return !gamepad1.dpad_down && opModeIsActive();
+            });
+        });
+
+        // Start replaying backwards
         gb1(GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> {
             Recorder.startReplaying(Recorder.reverseData(Recorder.data), () -> {
+                // Stop replaying
                 return !gamepad1.dpad_down && opModeIsActive();
             });
         });
@@ -346,6 +369,7 @@ public class MainOpMode extends BaseOpMode {
     private boolean lastTouchpad = false;
     public void run()
     {
+        encoderDisconnectDetect.recordEncoderValues();
 
         telemetry.addData("Time left", beforeMatchEnd.remainingTime());
 
@@ -402,6 +426,8 @@ public class MainOpMode extends BaseOpMode {
 //            power = power - 1;
 //        }
 //
+//
+//
 //        telemetry.addData("power", power);
 //        liftLeft.motor.setPower(-power);
 //        liftRight.motor.setPower(-power);
@@ -419,6 +445,10 @@ public class MainOpMode extends BaseOpMode {
 
         telemetry.addData("isRecording", Recorder.recording);
 
+        // Test odometry and recording servo positions
+        telemetry.addData("armServoPosition", arm.getPosition());
+        telemetry.addData("backLeft", bl.motor.getCurrentPosition());
+        telemetry.addData("frontLeft", fl.motor.getCurrentPosition());
 
         telemetry.update();
         super.run();

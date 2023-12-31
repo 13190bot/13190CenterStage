@@ -15,7 +15,7 @@ import java.util.Set;
 public class IntakeSubsystem extends SubsystemBase {
 
     private MotorEx intakeMotor;
-    public static double intakeSpeed = 0.75; // 0.6 og val
+    public static double intakeSpeed = 0.5;
 
     public IntakeSubsystem(MotorEx intakeMotor) {
         this.intakeMotor = intakeMotor;

@@ -30,17 +30,6 @@ public class CompositeLocalizer extends MyLocalizer {
         computesHeading = true;
     }
 
-    @NotNull
-    @Override
-    public Pose2d getPoseEstimate() {
-        return poseEstimate;
-    }
-
-    @Override
-    public void setPoseEstimate(@NotNull Pose2d pose2d) {
-        poseEstimate = pose2d;
-    }
-
     @Nullable
     @Override
     public Pose2d getPoseVelocity() {
@@ -55,6 +44,8 @@ public class CompositeLocalizer extends MyLocalizer {
                avgH = 0;
 
         for (MyLocalizer localizer : localizers) {
+            localizer.setPoseEstimate(poseEstimate);
+
             localizer.update();
 
             avgX += localizer.getPoseEstimate().getX();
@@ -76,6 +67,5 @@ public class CompositeLocalizer extends MyLocalizer {
         }
     }
 
-    Pose2d poseEstimate;
     MyLocalizer[] localizers;
 }

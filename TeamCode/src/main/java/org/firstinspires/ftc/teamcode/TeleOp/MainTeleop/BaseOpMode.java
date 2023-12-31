@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.*;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.util.CommandOpModeEx;
+import org.firstinspires.ftc.teamcode.util.librarys.WireMannager.EncoderDisconnectDetect;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +34,11 @@ public class BaseOpMode extends CommandOpModeEx {
     protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
+
+    public AprilTagDetector aprilTagDetector1, aprilTagDetector2;
+
+    protected EncoderDisconnectDetect encoderDisconnectDetect;
+    protected Trigger encoderOffTrigger;
 
 
     @Override
@@ -81,9 +88,25 @@ public class BaseOpMode extends CommandOpModeEx {
         bl.setInverted(true);
         fl.setInverted(true);
         br.setInverted(true);
-        fr.setInverted(true);
+        fr.setInverted(false);
 
        // pitch.setPosition(0.5);
+
+
+
+
+        // ODOMETRY ENCODERS
+        bl.stopAndResetEncoder();
+        fl.stopAndResetEncoder();
+//        bl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        fl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+
+
+
+
 
         //Servos
         claw = new SimpleServo(hardwareMap, "claw", 0, 180);
@@ -113,7 +136,12 @@ public class BaseOpMode extends CommandOpModeEx {
         driveSubsystem.speedMultiplier = 1;
 
         //Setup up April Tag Detector
-        AprilTagDetector.initAprilTag(hardwareMap);
+        aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
+//        aprilTagDetector2 = new AprilTagDetector("Webcam 2", hardwareMap);
+
+         encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
+         encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
+
 
     }
 

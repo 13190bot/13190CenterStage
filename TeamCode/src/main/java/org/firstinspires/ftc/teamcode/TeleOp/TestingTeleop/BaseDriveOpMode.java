@@ -22,7 +22,7 @@ public class BaseDriveOpMode extends CommandOpMode {
     protected DriveRobotCentricCommand driveRobotCentricCommand;
     protected DriveRobotCentricSlowModeCommand driveRobotCentricSlowModeCommand;
 
-    protected DriveToAprilTagCommand driveToAprilTagCommand;
+//    protected DriveToAprilTagCommand driveToAprilTagCommand;
     protected IndividualMotorTestCommand individualMotorTestCommand;
 
 
@@ -80,13 +80,13 @@ public class BaseDriveOpMode extends CommandOpMode {
         driveRobotCentricSlowModeCommand = new DriveRobotCentricSlowModeCommand(driveSubsystem, gamepadEx1::getLeftY, gamepadEx1::getLeftX, gamepadEx1::getRightX);
 
 
-        AprilTagDetector.initAprilTag(hardwareMap);
+//        AprilTagDetector.initAprilTag(hardwareMap);
     }
 
     @Override
     public void run() {
         super.run();
-       AprilTagDetector.updateAprilTagDetections();
+//       AprilTagDetector.updateAprilTagDetections();
     }
 
 

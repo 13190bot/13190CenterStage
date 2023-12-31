@@ -1,30 +1,5 @@
 // 1 player, made from MainOpMode.java
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
