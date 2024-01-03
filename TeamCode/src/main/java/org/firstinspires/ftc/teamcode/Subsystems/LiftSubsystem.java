@@ -16,8 +16,8 @@ public class LiftSubsystem extends SubsystemBase {
     public static double kI = 0.00001;
     public static double kD = 0.0001;  //0.0003
     public static double kG = 0.001;
-    public static double maxVelocity = 4000;
-    public static double maxAcceleration = 4000;
+    public static double maxVelocity = 4000; // 4000
+    public static double maxAcceleration = 4000; // 4000
     public static int tolerance = 2;
     public static final int lowerLimit = 0;
     public static final int upperLimit = 4700;
@@ -39,10 +39,10 @@ public class LiftSubsystem extends SubsystemBase {
 
 
 
-    public static double manualPower = 300; //these are in ticks
+    public static double manualPower = 300; //these are in ticks, 300
 
 
-    public LiftSubsystem(MotorEx liftRight, MotorEx liftLeft,Telemetry telemetry) {
+    public LiftSubsystem(MotorEx liftRight, MotorEx liftLeft, Telemetry telemetry) {
         this.liftRight = liftRight;
         this.liftLeft = liftLeft;
         this.telemetry = telemetry;
@@ -51,21 +51,27 @@ public class LiftSubsystem extends SubsystemBase {
         controllerRight.setTolerance(tolerance);
     }
 
-    public void moveLiftToTarget() {
-        controllerRight.setGoal(goalRight);
-        controllerLeft.setGoal(goalLeft);
+//    public void moveLiftToTarget() {
+//        controllerRight.setGoal(goalRight);
+//        controllerLeft.setGoal(goalLeft);
+//
+//        //Calculate PID ouput
+//        double rightPower = -controllerRight.calculate(liftRight.getCurrentPosition()) + kG;
+//        double leftPower = -controllerLeft.calculate(liftLeft.getCurrentPosition()) + kG;
+//
+//        //Check if the tolerance is met
+//        if (controllerRight.atGoal()) rightPower = 0;
+//        if (controllerLeft.atGoal()) leftPower = 0;
+//
+//        //Set power based on PID output
+//        liftRight.set(leftPower);
+//        liftLeft.set(leftPower);
+//    }
 
-        //Calculate PID ouput
-        double rightPower = -controllerRight.calculate(liftRight.getCurrentPosition()) + kG;
-        double leftPower = -controllerLeft.calculate(liftLeft.getCurrentPosition()) + kG;
-
-        //Check if the tolerance is met
-        if (controllerRight.atGoal()) rightPower = 0;
-        if (controllerLeft.atGoal()) leftPower = 0;
-
-        //Set power based on PID output
-        liftRight.set(leftPower);
-        liftLeft.set(leftPower);
+    //so we dont have to deal with integration
+    public void moveLiftToTarget (double power) {
+        liftRight.set(power);
+        liftLeft.set(power);
     }
 
     public static void setLiftGoal(int goal){
@@ -97,9 +103,11 @@ public class LiftSubsystem extends SubsystemBase {
                 //Set PID Goal
                 goalRight = inputPower * manualPower + liftRight.getCurrentPosition();
                 goalLeft = inputPower * manualPower + liftLeft.getCurrentPosition();
-                moveLiftToTarget();
+                moveLiftToTarget(inputPower);
+//                moveLiftToTarget();
         } else {
-            moveLiftToTarget();
+            moveLiftToTarget(inputPower);
+//            moveLiftToTarget();
         }
 
 

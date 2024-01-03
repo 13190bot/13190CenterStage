@@ -60,6 +60,9 @@ public class BaseOpMode extends CommandOpModeEx {
         liftLeft = new MotorEx(hardwareMap, "liftLeft");
         liftRight = new MotorEx(hardwareMap, "liftRight");
 
+//        liftLeft.stopAndResetEncoder();
+//        liftRight.stopAndResetEncoder();
+
 
         //Prevent Drift
         fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

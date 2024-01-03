@@ -144,6 +144,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
 
         KeyPoint[] keyPoints = findBlobsOutput.toArray();
+        if (keyPoints.length == 0) return outputImage;
 
         // Average size and filter out "noise" (non-pixel blobs)
         double sizeSum = 0;
