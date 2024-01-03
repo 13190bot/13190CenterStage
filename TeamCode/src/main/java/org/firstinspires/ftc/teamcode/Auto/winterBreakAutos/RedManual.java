@@ -2,21 +2,22 @@ package org.firstinspires.ftc.teamcode.Auto.winterBreakAutos;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ServoImpl;
 import org.firstinspires.ftc.teamcode.Localisation.*;
 
-//@Autonomous()
+import static org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode.*;
+
+@Autonomous()
 public class RedManual extends LinearOpMode {
     CompositeLocalizer localizer;
     int spike; //0 for no turn, 1 for turn 90, 2 for turn 180
 
     DcMotor lf, lb, rf, rb, intake;
+    ServoImpl claw, arm, pitch;
     BNO055IMUImpl cHubImu, eHubImu;
 
 
@@ -30,6 +31,11 @@ public class RedManual extends LinearOpMode {
         rb = hardwareMap.dcMotor.get("backRight");
 
         intake = hardwareMap.dcMotor.get("intakeMotor");
+
+        claw = hardwareMap.get(ServoImpl.class, "claw");
+        arm = hardwareMap.get(ServoImpl.class, "arm");
+        pitch = hardwareMap.get(ServoImpl.class, "pitch");
+
 
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -122,6 +128,12 @@ public class RedManual extends LinearOpMode {
         rf.setPower(0);
         rb.setPower(0);
 
+        //grab pixel
+        arm.setPosition(armMax);
+        sleep(500);
+        pitch.setPosition(pitchMax);
+        sleep(100);
+
         //deposit pixel
         claw.setPosition(clawClosed); // Close claw
         sleep(250);
@@ -140,7 +152,7 @@ public class RedManual extends LinearOpMode {
         pitch.setPosition(pitch.getPosition() - 0.1);
         sleep(600);
 
-                // Move arm back
+        // Move arm back
         arm.setPosition(0.6);
 
         //while the x position is less than the position in which the robot may park - the x tolerance:

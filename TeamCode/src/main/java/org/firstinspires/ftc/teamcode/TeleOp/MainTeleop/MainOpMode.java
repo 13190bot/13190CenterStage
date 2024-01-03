@@ -48,18 +48,18 @@ public class MainOpMode extends BaseOpMode {
 //    public double armMax = 0.92; // 0.88 when red tape
 
     // Axon max 12/26/2023
-    public static double armMin = 0.15;
-    public static double armMax = 0.725;
+    public final static double armMin = 0.15;
+    public final static double armMax = 0.725;
 
-    public static double pitchMin = 0.2; // 0.22 when red tape
-    public double pitchMax = 0.75;
+    public final static double pitchMin = 0.2; // 0.22 when red tape
+    public final static double pitchMax = 0.75;
 
-    public double clawClosed = 0.17;
-    public double clawOpen = 0.08;
+    public final static double clawClosed = 0.17;
+    public final static double clawOpen = 0.08;
 
-    public double manualArmIncrement = 0.0005;
+    public final static double manualArmIncrement = 0.0005;
 
-    public static double test = 250;
+    public double test = 250;
 
 
 //    public void setArmPosition(double targetArmPosition) {
