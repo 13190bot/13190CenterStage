@@ -44,15 +44,15 @@ public class MainOpMode extends BaseOpMode {
 
 
     // AXON (ORIGINAL BEFORE 12/8/2023)
-    public double armMin = 0.3;
-    public double armMax = 0.89; // 0.88 when red tape
+//    public double armMin = 0.4;
+//    public double armMax = 0.92; // 0.88 when red tape
 
-    // GOBILDA
-//    public static double armMin = 0.2;
-//    public static double armMax = 0.9;
+    // Axon max 12/26/2023
+    public static double armMin = 0.15;
+    public static double armMax = 0.725;
 
-    public double pitchMin = 0.23; // 0.22 when red tape
-    public double pitchMax = 0.6;
+    public static double pitchMin = 0.2; // 0.22 when red tape
+    public double pitchMax = 0.75;
 
     public double clawClosed = 0.17;
     public double clawOpen = 0.08;
@@ -89,15 +89,15 @@ public class MainOpMode extends BaseOpMode {
                 new SequentialCommandGroup(
                     // arm is mostly up: adjust pitch so that pitch/claw is perpendicular against wall
                     new InstantCommand(() -> {
-                        arm.setPosition(armPosition - 0.09);
+                        arm.setPosition(armPosition);
                     }),
 //                    new WaitCommand(500),
 //                    new WaitCommand(noPitchDelayForNext ? 0 : (500 - (axonInitialized ? 200 : 0))),
-                    new WaitCommand(axonInitialized ? (noPitchDelayForNext ? 0 : 300 + 200) : 500 + 200),
+                    new WaitCommand(axonInitialized ? (noPitchDelayForNext ? 0 : 300) : 500),
                     new InstantCommand(() -> {
                         double pitchPercent = (0.5 - armPercent) / (0.5);
                         // pitchPercent * 1 - (1 - pitchPercent) * 0.65
-                        pitch.setPosition((1 - pitchPercent) * (1 - 0.65) + 0.65 + 0.05); // perpendicular to board
+                        pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax); // perpendicular to board
                         axonInitialized = true;
                         noPitchDelayForNext = false;
                     })
@@ -105,8 +105,8 @@ public class MainOpMode extends BaseOpMode {
                 new SequentialCommandGroup(
                     // arm is mostly down: we do not want to move the pitch
                     new InstantCommand(() -> {
-                        pitch.setPosition(pitchMin - 0.015); // ready to pick up
-                        arm.setPosition(armPosition - 0.09);
+                        pitch.setPosition(pitchMin); // ready to pick up
+                        arm.setPosition(armPosition);
                     })
                 ),
                 () -> armPercent < 0.5
@@ -175,10 +175,10 @@ public class MainOpMode extends BaseOpMode {
                         new SequentialCommandGroup(
                             new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(250),
-                            new InstantCommand(() -> {armPosition = 0.8;}),
+                            new InstantCommand(() -> {armPosition = 0.66;}),
                             updateArm(),
                             new WaitCommand(250),
-                            new InstantCommand(() -> {pitch.setPosition(0.15 + 0.05);})
+                            new InstantCommand(() -> {pitch.setPosition(0.168);})
                         ).schedule();
 
                         armPickupStage = 1;
@@ -187,7 +187,7 @@ public class MainOpMode extends BaseOpMode {
                         // Arm is currently hovering over dustpan
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> {armPosition = 0.86;}),
+                            new InstantCommand(() -> {armPosition = 0.66;}),
                             updateArm(),
                             new WaitCommand(150),
 
@@ -197,10 +197,10 @@ public class MainOpMode extends BaseOpMode {
 
                             new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
                             new WaitCommand(200),
-                            new InstantCommand(() -> {armPosition = 0.8;}),
+                            new InstantCommand(() -> {armPosition = 0.66;}),
                             updateArm(),
 //                            new WaitCommand(0),
-                            new InstantCommand(() -> {pitch.setPosition(0.15);})
+                            new InstantCommand(() -> {pitch.setPosition(0.168);})
                         ).schedule();
 
                         armPickupStage = 1;
@@ -210,7 +210,7 @@ public class MainOpMode extends BaseOpMode {
 
                         new SequentialCommandGroup(
 //                            new InstantCommand(() -> {armPosition = 0.3;}), // Default
-                            new InstantCommand(() -> {armPosition = 0.33;}), // Slightly above pixel bottom
+                            new InstantCommand(() -> {armPosition = armMin;}), // Slightly above pixel bottom
                             updateArm()
                         ).schedule();
 
@@ -232,7 +232,7 @@ public class MainOpMode extends BaseOpMode {
                             new WaitCommand(500),
 
                             // Move arm back
-                            new InstantCommand(() -> {armPosition = 0.8;}),
+                            new InstantCommand(() -> {armPosition = 0.6;}),
                             updateArm()
                         ).schedule();
 
@@ -276,7 +276,7 @@ public class MainOpMode extends BaseOpMode {
                             new InstantCommand(() -> {armPosition = 0.8;}),
                             updateArm(),
 //                            new WaitCommand(0),
-                            new InstantCommand(() -> {pitch.setPosition(0.15 + 0.05);})
+                            new InstantCommand(() -> {pitch.setPosition(0.15);})
                         ).schedule();
                     }
                 }
