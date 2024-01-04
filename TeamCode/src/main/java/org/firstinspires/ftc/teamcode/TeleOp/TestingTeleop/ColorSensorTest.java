@@ -3,6 +3,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +15,9 @@ public class ColorSensorTest extends LinearOpMode {
     // defining the color sensors
     ColorSensor leftColorSensor, rightColorSensor;
 
+    boolean isLedOn = true;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         // TODO: fix the name of color sensors
@@ -22,7 +26,6 @@ public class ColorSensorTest extends LinearOpMode {
         telemetry.addData("Initialization:", "Initialized, variables defined.");
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
-        boolean isLedOn = true;
         telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
         telemetry.update();
 
@@ -46,10 +49,10 @@ public class ColorSensorTest extends LinearOpMode {
             rightValues[1] = rightColorSensor.green();
             rightValues[2] = rightColorSensor.blue();
 
-            if (gamepad1.wasJustPressed(GamepadKeys.Button.A)) {
+            if (gamepad1.circle) {
                 leftColorSensor.enableLed(!isLedOn);
                 rightColorSensor.enableLed(!isLedOn);
-                isLedOn = false;
+                isLedOn = !isLedOn;
             }
 
             telemetry.addData("left info ", "\n Red: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
