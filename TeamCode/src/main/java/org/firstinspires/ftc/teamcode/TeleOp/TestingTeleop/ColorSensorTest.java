@@ -15,8 +15,6 @@ public class ColorSensorTest extends LinearOpMode {
     // defining the color sensors
     ColorSensor leftColorSensor, rightColorSensor;
 
-    boolean isLedOn = true;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,6 +22,7 @@ public class ColorSensorTest extends LinearOpMode {
         leftColorSensor = hardwareMap.get(ColorSensor.class, "leftSensor");
         rightColorSensor = hardwareMap.get(ColorSensor.class, "rightSensor");
         telemetry.addData("Initialization:", "Initialized, variables defined.");
+        leftColorSensor.enableLed(false);
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
         telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
@@ -49,11 +48,6 @@ public class ColorSensorTest extends LinearOpMode {
             rightValues[1] = rightColorSensor.green();
             rightValues[2] = rightColorSensor.blue();
 
-            if (gamepad1.circle) {
-                leftColorSensor.enableLed(!isLedOn);
-                rightColorSensor.enableLed(!isLedOn);
-                isLedOn = !isLedOn;
-            }
 
             telemetry.addData("left info ", "\n Red: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
             telemetry.addData("right info ", "Red: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2]);
