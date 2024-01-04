@@ -1,10 +1,13 @@
 // for testing color sensors
 
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 @TeleOp(name = "Color Sensor Testing")
 public class ColorSensorTest extends LinearOpMode {
