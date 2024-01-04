@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.*;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -43,7 +44,8 @@ public class BaseOpMode extends CommandOpModeEx {
 
     @Override
     public void initialize() {
-        telemetry = new MultipleTelemetry(telemetry);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
 
         //Timer to calculate time left in match
         beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);
@@ -74,7 +76,7 @@ public class BaseOpMode extends CommandOpModeEx {
         liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftRight.setInverted(true);
-        liftLeft.setInverted(true);
+//        liftLeft.setInverted(true);
 
 
         //Zero the lift encoders

@@ -124,6 +124,12 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        // Rotate input since camera is rotated
+        Core.rotate(input, outputImage, Core.ROTATE_90_CLOCKWISE);
+        input = outputImage.clone();
+
+
+
         //testing
         if (testing) {
             if (blur > 0 && blur % 2 == 1) {
@@ -141,7 +147,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         blobDetector.detect(input, findBlobsOutput);
 
         // draw
-        outputImage = input.clone();
+//        outputImage = input.clone(); // cloned above earlier
 
 
         KeyPoint[] keyPoints = findBlobsOutput.toArray();

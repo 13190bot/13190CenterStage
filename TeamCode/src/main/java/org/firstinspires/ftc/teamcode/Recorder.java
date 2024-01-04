@@ -123,9 +123,19 @@ public class Recorder {
         for (int i = 2; i < 2 + motors.size() + servos.size() + odometry.size(); i++) data[i] = new ArrayList<Double>();
     }
 
+    public static void resetOdometry() {
+        for (int i = 0; i < odometry.size(); i++) {
+            DcMotor motor = odometry.get(i);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+
     public static void startRecording () {
         // clear data
         clearRecording();
+
+        resetOdometry();
 
         recordingStartTime = System.nanoTime();
     }
@@ -293,11 +303,7 @@ public class Recorder {
      */
     public static void startReplaying(ArrayList[] data, BooleanSupplier replaying) {
         // Reset encoders
-        for (int i = 0; i < odometry.size(); i++) {
-            DcMotor motor = odometry.get(i);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        resetOdometry();
 
         double replayingStartTime = System.nanoTime();
         int i = 0;
@@ -326,16 +332,19 @@ public class Recorder {
 
             if (i != length - 1) {
                 // If needed for (more) accuracy, factor in odometry
-                double powerMultipler = 0;
+                double powerMultiplier = 0;
                 for (int i2 = 0; i2 < odometry.size(); i2++) {
 //                    double lastV = (double) data[2 + motors.size() + servos.size() + i2].get(i - 1);
-                    double currentV = (double) data[2 + motors.size() + servos.size() + i2].get(i);
-                    double nextV = (double) data[2 + motors.size() + servos.size() + i2].get(i + 1);
-                    long currentT = (long) data[0].get(i);
-                    long nextT = (long) data[0].get(i + 1);
-                    powerMultipler = powerMultipler + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry.get(i2).getCurrentPosition())));
+                    double currentV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i);
+                    double nextV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i + 1);
+                    double currentT = (double) (long) data[0].get(i);
+                    double nextT = (double) (long) data[0].get(i + 1);
+                    telemetry.addLine("Encoder " + odometryNames.get(i2) + "(" + i2 + ")");
+                    telemetry.addData("Difference (recorded - measured): ", currentV - odometry.get(i2).getCurrentPosition());
+                    powerMultiplier = powerMultiplier + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry.get(i2).getCurrentPosition())));
                 }
-                double powerMultiplier = powerMultipler / odometry.size();
+                powerMultiplier = powerMultiplier / odometry.size();
+                telemetry.addData("powerMultiplier", powerMultiplier);
                 for (int i2 = 0; i2 < motors.size(); i2++) {
                     motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier);
                 }
@@ -429,9 +438,12 @@ public class Recorder {
             ArrayList row = data[i];
             out[i] = new ArrayList();
             ArrayList rowOut = out[i];
-            double rowLastV = (double) row.get(row.size() - 1);
+//            int rowLastV = (int) row.get(row.size() - 1);
+//            for (int i2 = row.size() - 1; i2 > -1; i2--) {
+//                rowOut.add(rowLastV - (int) row.get(i2));
+//            }
             for (int i2 = row.size() - 1; i2 > -1; i2--) {
-                rowOut.add(rowLastV - (double) row.get(i2));
+                rowOut.add(row.get(i2));
             }
         }
 

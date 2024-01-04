@@ -317,9 +317,9 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-        liftSubsystem.setDefaultCommand(PIDLiftCommand);
+//        liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
-        encoderOffTrigger.whenActive(manualLiftCommand);
+//        encoderOffTrigger.whenActive(manualLiftCommand);
 
         telemetry.addData("Manual Lift",manualLiftCommand.isScheduled());
         telemetry.addData("PID Lift",PIDLiftCommand.isScheduled());
@@ -417,20 +417,20 @@ public class MainOpMode extends BaseOpMode {
 
         // Manual lift, Not used for now
 
-//        double power = -gamepad2.left_stick_y;
-//
-//        if (gamepad2.dpad_up) {
-//            power = power + 1;
-//        }
-//        if (gamepad2.dpad_down) {
-//            power = power - 1;
-//        }
-//
-//
-//
-//        telemetry.addData("power", power);
-//        liftLeft.motor.setPower(-power);
-//        liftRight.motor.setPower(-power);
+        double power = -gamepad2.left_stick_y;
+
+        if (gamepad2.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad2.dpad_down) {
+            power = power - 1;
+        }
+
+
+
+        telemetry.addData("power", power);
+        liftLeft.motor.setPower(-power);
+        liftRight.motor.setPower(-power);
 
 
 //        telemetry.addData("armPickupStage", armPickupStage);
@@ -449,6 +449,8 @@ public class MainOpMode extends BaseOpMode {
         telemetry.addData("armServoPosition", arm.getPosition());
         telemetry.addData("backLeft", bl.motor.getCurrentPosition());
         telemetry.addData("frontLeft", fl.motor.getCurrentPosition());
+
+        telemetry.addData("Difference (recorded - measured): ", -1);
 
         telemetry.update();
         super.run();
