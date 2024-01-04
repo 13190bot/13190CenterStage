@@ -4,6 +4,9 @@ TODO:
  - Use replayer function in Replayer.java instead of hardcoding
  - Multiple recorded data
  - Test saving
+
+ - Play around with motor powers to see if odometry correction works (or set motor to 0 and replay and look at powerMultiplier)
+ - Get recorded data from telemetry
  */
 
 
@@ -13,23 +16,6 @@ frontLeft Encoder = left (positive = backward, negative = forward)
 backLeft Encoder = back (positive = right, negative = left)
 
 
-left    back    fl  fr  bl  br
-1       0       -1  -1  -1  -1
-0       0       0   0   0   0
--1      0       1   1   1   1
-
-0       1       1   -1  -1  1
-0       0       0   0   0   0
-0       -1      -1  1   1   -1
-
-1       0       -1  -1  -1  -1
--1      -1      1   -1  1   -1
-1       1       -1  1   -1  1
--1
-
-????
-
-USE LOGICI NSTEAD OF BRUTE FORCE PLEASE HLEP
  */
 
 package org.firstinspires.ftc.teamcode;
@@ -331,6 +317,7 @@ public class Recorder {
 
             // Motors
 
+            // DOESN'T WORK
             // If needed for (more) accuracy, factor in voltage difference (UNTESTED)
 //            double startVoltage = voltageSensor.getVoltage();
 //            double powerMultiplier = (double) data[1].get(i) / startVoltage; // assumes linear model
