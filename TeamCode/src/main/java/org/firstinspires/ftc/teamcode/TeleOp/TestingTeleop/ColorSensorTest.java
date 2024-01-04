@@ -22,6 +22,7 @@ public class ColorSensorTest extends LinearOpMode {
         telemetry.addData("Initialization:", "Initialized, variables defined.");
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
+        boolean isLedOn = true;
         telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
         telemetry.update();
 
@@ -33,6 +34,8 @@ public class ColorSensorTest extends LinearOpMode {
             int[] leftValues = new int[3];
             int[] rightValues = new int[3];
 
+
+
             // defining R, G, and B values of left
             leftValues[0] = leftColorSensor.red();
             leftValues[1] = leftColorSensor.green();
@@ -43,8 +46,14 @@ public class ColorSensorTest extends LinearOpMode {
             rightValues[1] = rightColorSensor.green();
             rightValues[2] = rightColorSensor.blue();
 
-            telemetry.addData("left info: ", "Red: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
-            telemetry.addData("right info: ", "Red: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2]);
+            if (gamepad1.circle) {
+                leftColorSensor.enableLed(!isLedOn);
+                rightColorSensor.enableLed(!isLedOn);
+                isLedOn = false;
+            }
+
+            telemetry.addData("left info ", "\n Red: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
+            telemetry.addData("right info ", "Red: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2]);
             telemetry.update();
             sleep(100);
 
