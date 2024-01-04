@@ -46,7 +46,7 @@ public class ColorSensorTest extends LinearOpMode {
             rightValues[1] = rightColorSensor.green();
             rightValues[2] = rightColorSensor.blue();
 
-            if (gamepad1.circle) {
+            if (gamepad1.a) {
                 leftColorSensor.enableLed(!isLedOn);
                 rightColorSensor.enableLed(!isLedOn);
                 isLedOn = false;
