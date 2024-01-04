@@ -17,8 +17,8 @@ public class ColorSensorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // TODO: fix the name of color sensors
-        leftColorSensor = hardwareMap.get(ColorSensor.class, "left");
-        rightColorSensor = hardwareMap.get(ColorSensor.class, "right");
+        leftColorSensor = hardwareMap.get(ColorSensor.class, "leftSensor");
+        rightColorSensor = hardwareMap.get(ColorSensor.class, "rightSensor");
         telemetry.addData("Initialization:", "Initialized, variables defined.");
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
