@@ -34,6 +34,7 @@ USE LOGICI NSTEAD OF BRUTE FORCE PLEASE HLEP
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.*;
 import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -48,9 +49,10 @@ import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
+@Config
 public class Recorder {
 
-    public static double kO = 1; // Odometry correcting coefficient
+    public static double kO = 0.001; // Odometry correcting coefficient
 
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
         telemetry = t;
@@ -438,12 +440,9 @@ public class Recorder {
             ArrayList row = data[i];
             out[i] = new ArrayList();
             ArrayList rowOut = out[i];
-//            int rowLastV = (int) row.get(row.size() - 1);
-//            for (int i2 = row.size() - 1; i2 > -1; i2--) {
-//                rowOut.add(rowLastV - (int) row.get(i2));
-//            }
+            int rowLastV = (int) row.get(row.size() - 1);
             for (int i2 = row.size() - 1; i2 > -1; i2--) {
-                rowOut.add(row.get(i2));
+                rowOut.add((int) row.get(i2) - rowLastV);
             }
         }
 
