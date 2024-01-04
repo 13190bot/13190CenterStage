@@ -42,6 +42,8 @@ public class IndividualWheelTest extends LinearOpMode {
             } else {
                 hardwareMap.dcMotor.get(MOTOR_NAME).setPower(0);
             }
+
+
             telemetry.addData("motor", MOTOR_NAME);
             telemetry.update();
         }
