@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class ColorSensorTest extends LinearOpMode {
     // defining the color sensors
     // TODO: fix the name of color sensors
-    leftColorSensor = new ColorSensor(hardwareMap, "leftSensor");
+    leftColorSensor = hardwareMap.get(ColorSensor.class, "left");
 
-    rightColorSensor = new ColorSensor(hardwareMap, "rightSensor");
+    rightColorSensor = hardwareMap.get(ColorSensor.class, "right");
 
     @Override
     public void runOpMode() throws InterruptedException {
