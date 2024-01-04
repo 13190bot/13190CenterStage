@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="PixelDetectionTest")
+@Autonomous(name = "Pixel Detection Test")
 public class PixelDetectionTest extends LinearOpMode {
 
     private OpenCvCamera camera;
@@ -67,7 +67,6 @@ public class PixelDetectionTest extends LinearOpMode {
         sleep(2000);
 
         while (!isStarted()) {
-//            telemetry.addData("Current Position: ", colorDetectionYCBCRPipeline.getPosition());
             telemetry.update();
         }
 
