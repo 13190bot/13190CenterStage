@@ -201,7 +201,7 @@ public class Recorder {
 
     public static String hardwareToCode() {
         // WARNING: GENERATES A PRIMITIVE ARRAY WHILE THIS LIBRARY USES ARRAYLIST
-        return "String[]motorNames={" + String.join(",", motorNames) + "};\nString[]servoNames={" + String.join(",", servoNames) + "};";
+        return "String[]motorNames={" + String.join(",", motorNames) + "};\nString[]servoNames={" + String.join(",", servoNames) + "};\nString[]odometryNames={" + String.join(",", odometryNames) + "};";
     }
 
     public static String generateAuto() {
@@ -296,6 +296,16 @@ public class Recorder {
                 "        }\n" +
                 "    }\n" +
                 "}\n";
+    }
+
+    public static void stopRecording() {
+        // Just prints data out to telemetry
+
+        telemetry.clear();
+
+        telemetry.addLine(hardwareToCode() + "\n\n" + dataToCode());
+
+        telemetry.update();
     }
 
     /*

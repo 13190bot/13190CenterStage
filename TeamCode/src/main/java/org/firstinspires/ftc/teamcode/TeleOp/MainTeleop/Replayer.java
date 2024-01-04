@@ -13,12 +13,14 @@ public class Replayer extends LinearOpMode {
     double[][] data = {{}, {}};
     String[] motorNames = {""};
     String[] servoNames = {""};
+    String[] odometryNames = {""};
 
 
 
 
     DcMotor[] motors = new DcMotor[motorNames.length];
     Servo[] servos = new Servo[servoNames.length];
+    DcMotor[] odometry = new DcMotor[odometryNames.length];
     @Override
     public void runOpMode() throws InterruptedException {
         for (int i = 0; i < motorNames.length; i++) {
@@ -27,15 +29,28 @@ public class Replayer extends LinearOpMode {
         for (int i = 0; i < servoNames.length; i++) {
             servos[i] = hardwareMap.get(Servo.class, servoNames[i]);
         }
+        for (int i = 0; i < odometryNames.length; i++) {
+            odometry[i] = hardwareMap.get(DcMotor.class, odometryNames[i]);
+        }
 
         waitForStart();
 
         replay(data);
     }
 
+    public void resetOdometry() {
+        for (int i = 0; i < odometry.length; i++) {
+            DcMotor motor = odometry[i];
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
 
     // Yields, synchronous
     public void replay(double[][] data) {
+        // Reset encoders
+        resetOdometry();
+
         long replayingStartTime = System.nanoTime();
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
