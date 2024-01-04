@@ -46,7 +46,7 @@ public class ColorSensorTest extends LinearOpMode {
             telemetry.addData("left info: ", "Red: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
             telemetry.addData("right info: ", "Red: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2]);
             telemetry.update();
-            Thread.sleep(100);
+            sleep(100);
 
 
         }
