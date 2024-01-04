@@ -12,16 +12,16 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 @TeleOp(name = "Color Sensor Testing")
 public class ColorSensorTest extends LinearOpMode {
     // defining the color sensors
-    // TODO: fix the name of color sensors
-    leftColorSensor = hardwareMap.get(ColorSensor.class, "left");
-
-    rightColorSensor = hardwareMap.get(ColorSensor.class, "right");
+    ColorSensor leftColorSensor, rightColorSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // TODO: fix the name of color sensors
+        leftColorSensor = hardwareMap.get(ColorSensor.class, "left");
+        rightColorSensor = hardwareMap.get(ColorSensor.class, "right");
         telemetry.addData("Initialization:", "Initialized, variables defined.");
-        leftLight = leftColorSensor.alpha();
-        rightLight = rightColorSensor.alpha();
+        int leftLight = leftColorSensor.alpha();
+        int rightLight = rightColorSensor.alpha();
         telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
         telemetry.update();
 
