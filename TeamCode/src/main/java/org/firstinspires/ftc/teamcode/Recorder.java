@@ -15,7 +15,8 @@ NOTES ABOUT ODOMETRY:
 frontLeft Encoder = left (positive = backward, negative = forward)
 backLeft Encoder = back (positive = right, negative = left)
 
-
+kO: high speed: 1000
+kO: low speed: 0.0001
  */
 
 package org.firstinspires.ftc.teamcode;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 public class Recorder {
 
     public static double kO = 0.001; // Odometry correcting coefficient
+    public static double kM = 1; // ecMotor power TESTING correcting coefficient
 
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
         telemetry = t;
@@ -294,6 +296,16 @@ public class Recorder {
         telemetry.update();
     }
 
+    public static double getSign(double n) {
+        if (n > 0) {
+            return 1;
+        } else if (n < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
     /*
     Optimization Ideas:
     - Only update if value changes (or maybe not since it already does internal check? idk)
@@ -338,14 +350,17 @@ public class Recorder {
                     double nextV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i + 1);
                     double currentT = (double) (long) data[0].get(i);
                     double nextT = (double) (long) data[0].get(i + 1);
-                    telemetry.addLine("Encoder " + odometryNames.get(i2) + "(" + i2 + ")");
-                    telemetry.addData("Difference (recorded - measured): ", currentV - odometry.get(i2).getCurrentPosition());
-                    powerMultiplier = powerMultiplier + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry.get(i2).getCurrentPosition())));
+                    telemetry.addData("Encoder " + odometryNames.get(i2) + "(" + i2 + ") recorded: ", currentV);
+                    telemetry.addData("Encoder " + odometryNames.get(i2) + "(" + i2 + ") measured: ", odometry.get(i2).getCurrentPosition());
+                    telemetry.addData("Difference " + i2 + " (recorded - measured): ", currentV - odometry.get(i2).getCurrentPosition());
+//                    powerMultiplier = powerMultiplier + (1 + kO * (nextV - currentV) / (nextT - currentT) * (currentV - odometry.get(i2).getCurrentPosition())));
+//                    powerMultiplier = powerMultiplier + (1 + kO * (getSign(nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition())));
+                    powerMultiplier = powerMultiplier + (1 + kO * (nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition()));
                 }
                 powerMultiplier = powerMultiplier / odometry.size();
                 telemetry.addData("powerMultiplier", powerMultiplier);
                 for (int i2 = 0; i2 < motors.size(); i2++) {
-                    motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier);
+                    motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier * kM);
                 }
 
             } else {

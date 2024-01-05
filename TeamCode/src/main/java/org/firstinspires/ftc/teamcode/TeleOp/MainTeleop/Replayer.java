@@ -91,7 +91,7 @@ public class Replayer extends LinearOpMode {
                     double nextV = data[2 + motors.length + servos.length + i2][i + 1];
                     double currentT = data[0][i];
                     double nextT = data[0][i + 1];
-                    telemetry.addLine("Encoder " + odometryNames[i2] + "(" + i2 + ")");
+                    telemetry.addData("Encoder " + odometryNames[i2] + "(" + i2 + "): ", odometry[i2].getCurrentPosition());
                     telemetry.addData("Difference (recorded - measured): ", currentV - odometry[i2].getCurrentPosition());
                     powerMultiplier = powerMultiplier + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry[i2].getCurrentPosition())));
                 }

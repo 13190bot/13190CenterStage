@@ -450,7 +450,6 @@ public class MainOpMode extends BaseOpMode {
         telemetry.addData("backLeft", bl.motor.getCurrentPosition());
         telemetry.addData("frontLeft", fl.motor.getCurrentPosition());
 
-        telemetry.addData("Difference (recorded - measured): ", -1);
 
         telemetry.update();
         super.run();
