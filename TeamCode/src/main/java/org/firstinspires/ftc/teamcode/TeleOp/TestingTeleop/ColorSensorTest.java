@@ -27,7 +27,7 @@ public class ColorSensorTest extends LinearOpMode {
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
 
-        const int SCALE = 256;
+        final int SCALE = 256;
 
         telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
         telemetry.update();
