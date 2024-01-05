@@ -55,9 +55,6 @@ public class ColorSensorTest extends LinearOpMode {
             rightValues[1] = rightColorSensor.green()/SCALE;
             rightValues[2] = rightColorSensor.blue()/SCALE;
 
-            if (leftValues[0] ) {
-
-            }
 
 
             telemetry.addData("left info", "\nRed: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
