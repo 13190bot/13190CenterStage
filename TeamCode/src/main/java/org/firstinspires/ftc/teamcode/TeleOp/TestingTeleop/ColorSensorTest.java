@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -20,8 +21,8 @@ public class ColorSensorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // TODO: fix the name of color sensors
-        leftColorSensor = hardwareMap.get(ColorSensor.class, "leftSensor");
-        rightColorSensor = hardwareMap.get(ColorSensor.class, "rightSensor");
+        leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "leftSensor");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "rightSensor");
 
         telemetry.addData("Initialization:", "Initialized, variables defined.");
 
