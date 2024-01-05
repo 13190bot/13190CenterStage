@@ -21,12 +21,16 @@ public class ColorSensorTest extends LinearOpMode {
         // TODO: fix the name of color sensors
         leftColorSensor = hardwareMap.get(ColorSensor.class, "leftSensor");
         rightColorSensor = hardwareMap.get(ColorSensor.class, "rightSensor");
+
         telemetry.addData("Initialization:", "Initialized, variables defined.");
-//        leftColorSensor.enableLed(false);
-//        int leftLight = leftColorSensor.alpha();
-//        int rightLight = rightColorSensor.alpha();
-//        telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
-//        telemetry.update();
+
+        int leftLight = leftColorSensor.alpha();
+        int rightLight = rightColorSensor.alpha();
+
+        const int SCALE = 256;
+
+        telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
+        telemetry.update();
 
 
         waitForStart();
@@ -34,30 +38,32 @@ public class ColorSensorTest extends LinearOpMode {
         while (opModeIsActive()) {
             // RGB Values of the left and right color sensors
             // TODO: test hue instead of RGB individually. hue() returns 0-360, which is degree on hue wheel.
-//            int[] leftValues = new int[3];
-//            int[] rightValues = new int[3];
+              int[] leftValues = new int[3];
+              int[] rightValues = new int[3];
               int leftHue = leftColorSensor.argb();
               int rightHue = rightColorSensor.argb();
-//
-//
-//
-//            // defining R, G, and B values of left
-//            leftValues[0] = leftColorSensor.red();
-//            leftValues[1] = leftColorSensor.green();
-//            leftValues[2] = leftColorSensor.blue();
-//
-//            // same w right
-//            rightValues[0] = rightColorSensor.red();
-//            rightValues[1] = rightColorSensor.green();
-//            rightValues[2] = rightColorSensor.blue();
-//
-//
-//            telemetry.addData("left info", "\nRed: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
-//            telemetry.addData("right info", "\nRed: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2]);
-              telemetry.addData("Right Hue: ", rightHue);
-              telemetry.addData("Left Hue: ", leftHue);
-              telemetry.update();
-              sleep(100);
+
+
+
+            // defining R, G, and B values of left, scaled to 0-255
+            leftValues[0] = leftColorSensor.red()/SCALE;
+            leftValues[1] = leftColorSensor.green()/SCALE;
+            leftValues[2] = leftColorSensor.blue()/SCALE;
+
+            // same w right
+            rightValues[0] = rightColorSensor.red()/SCALE;
+            rightValues[1] = rightColorSensor.green()/SCALE;
+            rightValues[2] = rightColorSensor.blue()/SCALE;
+
+            if (leftValues[0] ) {
+
+            }
+
+
+            telemetry.addData("left info", "\nRed: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2]);
+            telemetry.addData("right info", "\nRed: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2]);
+            telemetry.update();
+            sleep(100);
 
 
         }
