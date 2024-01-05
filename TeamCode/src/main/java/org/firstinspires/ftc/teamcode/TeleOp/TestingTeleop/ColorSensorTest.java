@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-
+@Config
 @TeleOp(name = "Color Sensor Testing")
 public class ColorSensorTest extends LinearOpMode {
     // defining the color sensors
     ColorSensor leftColorSensor, rightColorSensor;
 
+    public static int SCALE = 256;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,7 +28,7 @@ public class ColorSensorTest extends LinearOpMode {
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
 
-        final int SCALE = 256;
+
 
         telemetry.addData("Light Levels: ", "Left Color Sensor: " + leftLight + "\n" + "Right Color Sensor: " + rightLight);
         telemetry.update();
