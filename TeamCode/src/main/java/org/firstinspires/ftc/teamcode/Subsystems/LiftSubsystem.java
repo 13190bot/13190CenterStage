@@ -51,28 +51,24 @@ public class LiftSubsystem extends SubsystemBase {
         controllerRight.setTolerance(tolerance);
     }
 
-//    public void moveLiftToTarget() {
-//        controllerRight.setGoal(goalRight);
-//        controllerLeft.setGoal(goalLeft);
-//
-//        //Calculate PID ouput
-//        double rightPower = -controllerRight.calculate(liftRight.getCurrentPosition()) + kG;
-//        double leftPower = -controllerLeft.calculate(liftLeft.getCurrentPosition()) + kG;
-//
-//        //Check if the tolerance is met
-//        if (controllerRight.atGoal()) rightPower = 0;
-//        if (controllerLeft.atGoal()) leftPower = 0;
-//
-//        //Set power based on PID output
-//        liftRight.set(leftPower);
-//        liftLeft.set(leftPower);
-//    }
+    public void moveLiftToTarget() {
+        controllerRight.setGoal(goalRight);
+        controllerLeft.setGoal(goalLeft);
 
-    //so we dont have to deal with integration
-    public void moveLiftToTarget (double power) {
-        liftRight.set(power);
-        liftLeft.set(power);
+        //Calculate PID ouput
+        double rightPower = -controllerRight.calculate(liftRight.getCurrentPosition()) + kG;
+        double leftPower = -controllerLeft.calculate(liftLeft.getCurrentPosition()) + kG;
+
+        //Check if the tolerance is met
+        if (controllerRight.atGoal()) rightPower = 0;
+        if (controllerLeft.atGoal()) leftPower = 0;
+
+        //Set power based on PID output
+        liftRight.set(leftPower);
+        liftLeft.set(leftPower);
     }
+
+
 
     public static void setLiftGoal(int goal){
         goalRight = goal;
@@ -103,11 +99,9 @@ public class LiftSubsystem extends SubsystemBase {
                 //Set PID Goal
                 goalRight = inputPower * manualPower + liftRight.getCurrentPosition();
                 goalLeft = inputPower * manualPower + liftLeft.getCurrentPosition();
-                moveLiftToTarget(inputPower);
-//                moveLiftToTarget();
+                moveLiftToTarget();
         } else {
-            moveLiftToTarget(inputPower);
-//            moveLiftToTarget();
+            moveLiftToTarget();
         }
 
 
