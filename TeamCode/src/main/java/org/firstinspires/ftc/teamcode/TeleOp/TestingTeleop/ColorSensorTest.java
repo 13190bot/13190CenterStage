@@ -1,5 +1,3 @@
-// for testing color sensors
-
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
 import android.graphics.Color;
@@ -27,6 +25,7 @@ public class ColorSensorTest extends LinearOpMode {
 
         int leftLight = leftColorSensor.alpha();
         int rightLight = rightColorSensor.alpha();
+
         float[] lhsvValues = {0F, 0F, 0F};
         float[] rhsvValues = {0F, 0F, 0F};
 
@@ -59,6 +58,12 @@ public class ColorSensorTest extends LinearOpMode {
 
             telemetry.addData("left info", "\nRed: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2] + "\nHue: " + lhsvValues[0]);
             telemetry.addData("right info", "\nRed: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2] + "\nHue: " + rhsvValues[0]);
+
+
+            // what are the other values
+            telemetry.addData("testing values", "left: \n" + lhsvValues[1] + "\n" + lhsvValues[2]);
+            telemetry.addData("testing values", "left: \n" + rhsvValues[1] + "\n" + rhsvValues[2]);
+
             telemetry.update();
             sleep(100);
 
