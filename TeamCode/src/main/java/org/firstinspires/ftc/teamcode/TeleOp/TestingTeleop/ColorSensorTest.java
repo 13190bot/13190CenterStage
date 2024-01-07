@@ -59,9 +59,9 @@ public class ColorSensorTest extends LinearOpMode {
 
             telemetry.addData("left info", "\nRed: " + leftValues[0] + "\n" + "Green: " + leftValues[1] + "\n" + "Blue: " + leftValues[2] + "\nHue: " + lhsvValues[0]);
             telemetry.addData("right info", "\nRed: " + rightValues[0] + "\n" + "Green: " + rightValues[1] + "\n" + "Blue: " + rightValues[2] + "\nHue: " + rhsvValues[0]);
-
-
-            // what are the other values
+//
+//
+//            // what are the other values
             telemetry.addData("testing values", "left: \n" + lhsvValues[1] + "\n" + lhsvValues[2]);
             telemetry.addData("testing values", "left: \n" + rhsvValues[1] + "\n" + rhsvValues[2]);
 
