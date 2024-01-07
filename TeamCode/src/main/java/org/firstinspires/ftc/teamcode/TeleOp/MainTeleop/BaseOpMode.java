@@ -18,7 +18,10 @@ import org.firstinspires.ftc.teamcode.util.librarys.WireMannager.EncoderDisconne
 
 import java.util.concurrent.TimeUnit;
 
+
 public class BaseOpMode extends CommandOpModeEx {
+    public static boolean USINGREALBOT = true; // true on real bot, false on test chassis
+
     protected DroneSubsystem droneSubsystem;
 
     protected DriveSubsystem driveSubsystem;
@@ -51,19 +54,42 @@ public class BaseOpMode extends CommandOpModeEx {
         beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);
 
         //Motors
-        fl = new MotorEx(hardwareMap, "frontLeft");
-        fr = new MotorEx(hardwareMap, "frontRight");
-        bl = new MotorEx(hardwareMap, "backLeft");
-        br = new MotorEx(hardwareMap, "backRight");
+        if (USINGREALBOT) {
+            fl = new MotorEx(hardwareMap, "frontLeft");
+            fr = new MotorEx(hardwareMap, "frontRight");
+            bl = new MotorEx(hardwareMap, "backLeft");
+            br = new MotorEx(hardwareMap, "backRight");
 
-        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+            bl.setInverted(true);
+            fl.setInverted(true);
+            br.setInverted(true);
+            fr.setInverted(false);
+        } else {
+            fl = new MotorEx(hardwareMap, "frontRight");
+            fr = new MotorEx(hardwareMap, "frontLeft");
+            bl = new MotorEx(hardwareMap, "backRight");
+            br = new MotorEx(hardwareMap, "backLeft");
 
+            bl.setInverted(false);
+            fl.setInverted(false);
+            br.setInverted(false);
+            fr.setInverted(false);
+        }
 
-        liftLeft = new MotorEx(hardwareMap, "liftLeft");
-        liftRight = new MotorEx(hardwareMap, "liftRight");
+        if (USINGREALBOT) {
+            intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+            liftLeft = new MotorEx(hardwareMap, "liftLeft");
+            liftRight = new MotorEx(hardwareMap, "liftRight");
 
-//        liftLeft.stopAndResetEncoder();
-//        liftRight.stopAndResetEncoder();
+            //ONLY USE IF NOT USING LIFT PID
+            liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            liftRight.setInverted(true);
+
+            //Zero the lift encoders
+            liftRight.resetEncoder();
+            liftLeft.resetEncoder();
+        }
 
 
         //Prevent Drift
@@ -72,31 +98,13 @@ public class BaseOpMode extends CommandOpModeEx {
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //ONLY USE IF NOT USING LIFT PID
-        liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftRight.setInverted(true);
-//        liftLeft.setInverted(true);
-
-
-        //Zero the lift encoders
-
-        liftRight.resetEncoder();
-        liftLeft.resetEncoder();
 
 
 
-        //Reverse Motors
-//        fl.setInverted(true);
-//        fr.setInverted(true);
-//        br.setInverted(true);
 
-        bl.setInverted(true);
-        fl.setInverted(true);
-        br.setInverted(true);
-        fr.setInverted(false);
 
-       // pitch.setPosition(0.5);
+
+
 
 
 
@@ -115,11 +123,12 @@ public class BaseOpMode extends CommandOpModeEx {
 
 
         //Servos
-        claw = new SimpleServo(hardwareMap, "claw", 0, 180);
-        arm = new SimpleServo(hardwareMap, "arm", 0, 255);
-        pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
-        drone = new SimpleServo(hardwareMap, "drone", 0, 255);
-
+        if (USINGREALBOT) {
+            claw = new SimpleServo(hardwareMap, "claw", 0, 180);
+            arm = new SimpleServo(hardwareMap, "arm", 0, 255);
+            pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
+            drone = new SimpleServo(hardwareMap, "drone", 0, 255);
+        }
 
         //Gamepads
         gamepadEx1 = new GamepadEx(gamepad1);
@@ -127,26 +136,32 @@ public class BaseOpMode extends CommandOpModeEx {
 
         //Subsystems
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        intakeSubsystem = new IntakeSubsystem(intakeMotor);
-        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
+        if (USINGREALBOT) {
+            intakeSubsystem = new IntakeSubsystem(intakeMotor);
+            liftSubsystem = new LiftSubsystem(liftRight, liftLeft, telemetry);
+        }
         droneSubsystem = new DroneSubsystem(drone);
 
 
 
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
-        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
-        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
-
+        if (USINGREALBOT) {
+            PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+            manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
+            encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
+            encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
+        }
 
         driveSubsystem.speedMultiplier = 1;
 
         //Setup up April Tag Detector
-        aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
+        if (USINGREALBOT) {
+            aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
+        }
 //        aprilTagDetector2 = new AprilTagDetector("Webcam 2", hardwareMap);
 
-         encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
-         encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
+
 
 
     }

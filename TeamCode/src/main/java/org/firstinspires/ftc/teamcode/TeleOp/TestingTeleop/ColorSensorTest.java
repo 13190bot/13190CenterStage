@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 import android.graphics.Color;
 import com.acmerobotics.dashboard.config.Config;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,15 +12,15 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 @TeleOp(name = "Color Sensor Testing")
 public class ColorSensorTest extends LinearOpMode {
     // defining the color sensors
-    ColorSensor leftColorSensor, rightColorSensor;
+    RevColorSensorV3 leftColorSensor, rightColorSensor;
 
     public static int SCALE = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
         // TODO: fix the name of color sensors
-        leftColorSensor = hardwareMap.get(ColorSensor.class, "leftSensor");
-        rightColorSensor = hardwareMap.get(ColorSensor.class, "rightSensor");
+        leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "leftSensor");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "rightSensor");
 
         telemetry.addData("Initialization:", "Initialized, variables defined.");
 

@@ -4,10 +4,8 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Commands.ManualLiftCommand;
 import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
@@ -129,7 +127,10 @@ public class MainOpMode extends BaseOpMode {
     public void initialize() {
         super.initialize();
 //        register(driveSubsystem, intakeSubsystem);
-        register(driveSubsystem, intakeSubsystem, liftSubsystem);
+        register(driveSubsystem);
+        if (USINGREALBOT) {
+            register(liftSubsystem, intakeSubsystem);
+        }
 
 
         //Reset Lift
@@ -162,8 +163,10 @@ public class MainOpMode extends BaseOpMode {
 
 
         // Intake normal and reverse
-        //gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
-        //gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
+        if (USINGREALBOT) {
+            gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
+            gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
+        }
 
         // Arm pickup stages
         armPickup =
@@ -321,9 +324,11 @@ public class MainOpMode extends BaseOpMode {
 
 //        encoderOffTrigger.whenActive(manualLiftCommand);
 
-        telemetry.addData("Manual Lift",manualLiftCommand.isScheduled());
-        telemetry.addData("PID Lift",PIDLiftCommand.isScheduled());
-        telemetry.addData("Encoder Off Detector",encoderOffTrigger.get());
+        if (USINGREALBOT) {
+            telemetry.addData("Manual Lift", manualLiftCommand.isScheduled());
+            telemetry.addData("PID Lift", PIDLiftCommand.isScheduled());
+            telemetry.addData("Encoder Off Detector", encoderOffTrigger.get());
+        }
 
         Recorder.init(hardwareMap, "test", telemetry);
 
@@ -339,7 +344,14 @@ public class MainOpMode extends BaseOpMode {
         // Stop recording
         gb1(GamepadKeys.Button.DPAD_DOWN).whenPressed(() -> {
             if (Recorder.recording) {
-                Recorder.saveRecording();
+//                Recorder.saveRecording();
+                try {
+                    Recorder.stopRecording(() -> {
+                        return gamepad1.a;
+                    });
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 Recorder.recording = false;
             }
         });
@@ -369,14 +381,9 @@ public class MainOpMode extends BaseOpMode {
     private boolean lastTouchpad = false;
     public void run()
     {
-        if (gamepad2.y){
-            intakeMotor.set(-0.5);
-        } else if (gamepad2.a) {
-            intakeMotor.set(0.5);
-        } else {
-            intakeMotor.set(0);
+        if (USINGREALBOT) {
+            encoderDisconnectDetect.recordEncoderValues();
         }
-        encoderDisconnectDetect.recordEncoderValues();
 
         telemetry.addData("Time left", beforeMatchEnd.remainingTime());
 
@@ -436,9 +443,10 @@ public class MainOpMode extends BaseOpMode {
 
 
         telemetry.addData("power", power);
-        liftLeft.motor.setPower(-power);
-        liftRight.motor.setPower(-power);
-
+        if (USINGREALBOT) {
+            liftLeft.motor.setPower(-power);
+            liftRight.motor.setPower(-power);
+        }
 
 //        telemetry.addData("armPickupStage", armPickupStage);
 //        telemetry.addData("armPosition", armPosition);
@@ -451,9 +459,12 @@ public class MainOpMode extends BaseOpMode {
 
 
         telemetry.addData("isRecording", Recorder.recording);
+        if (Recorder.recording) {
+            driveSubsystem.speedMultiplier = 0.5;
+        }
 
         // Test odometry and recording servo positions
-        telemetry.addData("armServoPosition", arm.getPosition());
+//        telemetry.addData("armServoPosition", arm.getPosition());
         telemetry.addData("backLeft", bl.motor.getCurrentPosition());
         telemetry.addData("frontLeft", fl.motor.getCurrentPosition());
 
