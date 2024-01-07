@@ -162,8 +162,8 @@ public class MainOpMode extends BaseOpMode {
 
 
         // Intake normal and reverse
-        gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
-        gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
+        //gb2(PlaystationAliases.CROSS).whileHeld(intakeSubsystem.startIntakeCommand());
+        //gb2(PlaystationAliases.TRIANGLE).whileHeld(intakeSubsystem.reverseIntakeCommand());
 
         // Arm pickup stages
         armPickup =
@@ -369,6 +369,13 @@ public class MainOpMode extends BaseOpMode {
     private boolean lastTouchpad = false;
     public void run()
     {
+        if (gamepad2.y){
+            intakeMotor.set(-0.5);
+        } else if (gamepad2.a) {
+            intakeMotor.set(0.5);
+        } else {
+            intakeMotor.set(0);
+        }
         encoderDisconnectDetect.recordEncoderValues();
 
         telemetry.addData("Time left", beforeMatchEnd.remainingTime());
