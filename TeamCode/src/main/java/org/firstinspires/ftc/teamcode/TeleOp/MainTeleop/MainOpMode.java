@@ -47,9 +47,9 @@ public class MainOpMode extends BaseOpMode {
 
     // Axon max 12/26/2023
     public final static double armMin = 0.15;
-    public final static double armMax = 0.725;
+    public final static double armMax = 0.727;
 
-    public final static double pitchMin = 0.2; // 0.22 when red tape
+    public final static double pitchMin = 0.215; // 0.22 when red tape
     public final static double pitchMax = 0.75;
 
     public final static double clawClosed = 0.17;
@@ -142,10 +142,10 @@ public class MainOpMode extends BaseOpMode {
         // Test / tune arm
         gb2(PlaystationAliases.TRIANGLE).whenPressed(() -> {
             if (A_armPosition != -1) {
-//                arm.setPosition(A_armPosition);
+                arm.setPosition(A_armPosition);
 
-                armPosition = A_armPosition;
-                updateArm().schedule();
+//                armPosition = A_armPosition;
+//                updateArm().schedule();
             }
             if (A_pitchPosition != -1) {
                 pitch.setPosition(A_pitchPosition);
@@ -190,9 +190,16 @@ public class MainOpMode extends BaseOpMode {
                         // Arm is currently hovering over dustpan
 
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> {armPosition = 0.66;}),
-                            updateArm(),
-                            new WaitCommand(150),
+                            new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 5);}),
+                            new WaitCommand(50),
+                            new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 4);}),
+                            new WaitCommand(50),
+                            new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 3);}),
+                            new WaitCommand(50),
+                            new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 2);}),
+                            new WaitCommand(50),
+                            new InstantCommand(() -> {arm.setPosition(armMax - 0.02);}),
+                            new WaitCommand(50),
 
                             new InstantCommand(() -> {armPosition = armMax;}),
                             updateArm(),

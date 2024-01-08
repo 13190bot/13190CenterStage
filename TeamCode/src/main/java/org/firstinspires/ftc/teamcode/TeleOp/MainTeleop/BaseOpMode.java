@@ -61,7 +61,7 @@ public class BaseOpMode extends CommandOpModeEx {
             br = new MotorEx(hardwareMap, "backRight");
 
             bl.setInverted(true);
-            fl.setInverted(true);
+            fl.setInverted(false);
             br.setInverted(true);
             fr.setInverted(false);
         } else {
