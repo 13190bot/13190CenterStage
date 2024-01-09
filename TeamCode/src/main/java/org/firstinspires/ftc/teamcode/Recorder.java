@@ -52,6 +52,7 @@ public class Recorder {
     public static double o_kP = 0.00025;
     public static double o_kI = 0;
     public static double o_kD = 0;
+    public static double o_ClearIntegralIfNoChange = 0;
 
 
     public static double kM = 1; // ecMotor power TESTING correcting coefficient
@@ -311,11 +312,11 @@ public class Recorder {
                     double nextV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i + 1);
                     double error = currentV - odometry.get(i2).getCurrentPosition();
                     double derivative = (error - lastError[i2]) / currentT;
-                    double recordedchange = nextV - currentV;
-                    if (recordedchange != 0) {
+                    double recordedChange = nextV - currentV;
+                    if (recordedChange != 0) {
                         integral[i2] = integral[i2] + (error * currentT);
-                        powerMultiplier = powerMultiplier + (recordedchange > 0 ? 1 : -1) * ((o_kP * error) + (o_kI * integral[i2]) + (o_kD * derivative));
-                    } else {
+                        powerMultiplier = powerMultiplier + (recordedChange > 0 ? 1 : -1) * ((o_kP * error) + (o_kI * integral[i2]) + (o_kD * derivative));
+                    } else if (o_ClearIntegralIfNoChange) {
                         integral[i2] = 0;
                     }
 
