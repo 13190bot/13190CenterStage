@@ -52,7 +52,7 @@ public class Recorder {
     public static double o_kP = 0.00025;
     public static double o_kI = 0;
     public static double o_kD = 0;
-    public static double o_ClearIntegralIfNoChange = 0;
+    public static boolean o_ClearIntegralIfNoChange = true;
 
 
     public static double kM = 1; // ecMotor power TESTING correcting coefficient
