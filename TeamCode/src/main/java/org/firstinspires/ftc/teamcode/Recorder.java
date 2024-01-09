@@ -25,6 +25,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -35,6 +36,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Timer;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
@@ -44,7 +46,14 @@ import static org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode.USINGR
 @Config
 public class Recorder {
 
-    public static double kO = 0.001; // Odometry correcting coefficient
+
+    // kO = 0.001
+    // odometry pid coefficients
+    public static double o_kP = 0.00025;
+    public static double o_kI = 0;
+    public static double o_kD = 0;
+
+
     public static double kM = 1; // ecMotor power TESTING correcting coefficient
 
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
@@ -81,7 +90,7 @@ public class Recorder {
 
             voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-            motorNames = new ArrayList<>(Arrays.asList("frontLeft", "frontRight", "backLeft", "backRight"));
+            motorNames = new ArrayList<>(Arrays.asList("frontLeft", "frontRight", "backLeft", "backRight", "intakeMotor"));
             if (USINGREALBOT) {
                 servoNames = new ArrayList<>(Arrays.asList("arm", "pitch", "claw"));
             } else {
@@ -248,6 +257,10 @@ public class Recorder {
         // Reset encoders
         resetOdometry();
 
+        ElapsedTime timer = new ElapsedTime();
+        double lastError[] = new double[odometry.size()];
+        double integral[] = new double[odometry.size()];
+
         double replayingStartTime = System.nanoTime();
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
@@ -277,22 +290,39 @@ public class Recorder {
             if (i != length - 1) {
                 // If needed for (more) accuracy, factor in odometry
                 double powerMultiplier = 0;
+                double currentT = timer.seconds();
                 for (int i2 = 0; i2 < odometry.size(); i2++) {
 //                    double lastV = (double) data[2 + motors.size() + servos.size() + i2].get(i - 1);
-                    double currentV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i);
-                    double nextV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i + 1);
-                    double currentT = (double) (long) data[0].get(i);
-                    double nextT = (double) (long) data[0].get(i + 1);
-                    telemetry.addData("Encoder " + odometryNames.get(i2) + "(" + i2 + ") recorded: ", currentV);
+//                    double currentV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i);
+//                    double nextV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i + 1);
+//                    double currentT = (double) (long) data[0].get(i);
+//                    double nextT = (double) (long) data[0].get(i + 1);
+                    double currentV2 = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i);
+                    telemetry.addData("Encoder " + odometryNames.get(i2) + "(" + i2 + ") recorded: ", currentV2);
                     telemetry.addData("Encoder " + odometryNames.get(i2) + "(" + i2 + ") measured: ", odometry.get(i2).getCurrentPosition());
-                    telemetry.addData("Difference " + i2 + " (recorded - measured): ", currentV - odometry.get(i2).getCurrentPosition());
+                    telemetry.addData("Difference " + i2 + " (recorded - measured): ", currentV2 - odometry.get(i2).getCurrentPosition());
 //                    powerMultiplier = powerMultiplier + (1 + kO * (nextV - currentV) / (nextT - currentT) * (currentV - odometry.get(i2).getCurrentPosition())));
 //                    powerMultiplier = powerMultiplier + (1 + kO * (getSign(nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition())));
 //                    powerMultiplier = powerMultiplier + (1 + kO * (nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition()));
 //                    powerMultiplier = powerMultiplier + (1 + kO * (nextV - currentV) * (nextV - currentV) * (nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition()));
-                    powerMultiplier = powerMultiplier + (1 + kO * getSign(nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition()));
+//                    powerMultiplier = powerMultiplier + (1 + kO * getSign(nextV - currentV) * (currentV - odometry.get(i2).getCurrentPosition()));
+
+                    double currentV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i);
+                    double nextV = (double) (int) data[2 + motors.size() + servos.size() + i2].get(i + 1);
+                    double error = currentV - odometry.get(i2).getCurrentPosition();
+                    double derivative = (error - lastError[i2]) / currentT;
+                    double recordedchange = nextV - currentV;
+                    if (recordedchange != 0) {
+                        integral[i2] = integral[i2] + (error * currentT);
+                        powerMultiplier = powerMultiplier + (recordedchange > 0 ? 1 : -1) * ((o_kP * error) + (o_kI * integral[i2]) + (o_kD * derivative));
+                    } else {
+                        integral[i2] = 0;
+                    }
+
+                    lastError[i2] = error;
                 }
-                powerMultiplier = powerMultiplier / odometry.size();
+                timer.reset();
+                powerMultiplier = 1 + powerMultiplier / odometry.size();
                 telemetry.addData("powerMultiplier", powerMultiplier);
                 for (int i2 = 0; i2 < motors.size(); i2++) {
                     motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier * kM);

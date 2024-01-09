@@ -263,31 +263,36 @@ public class MainOpMode extends BaseOpMode {
             new InstantCommand(
                 () -> {
                     if (armPickupStage == 1) {
+
+                        // Arm is currently hovering over dustpan
+
                         new SequentialCommandGroup(
-                            new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 5);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 4);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 3);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 2);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02);}),
+                                new WaitCommand(50),
 
-                            new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm(),
+                                new InstantCommand(() -> {armPosition = armMax;}),
+                                updateArm(),
+                                new WaitCommand(250),
 
-                            new WaitCommand(200),
-
-
-                            // same as armPickupStage == 0 except pitchPosition
-                            new InstantCommand(() -> {armPosition = 0.86;}),
-                            updateArm(),
-                            new WaitCommand(150),
-
-                            new InstantCommand(() -> {armPosition = armMax;}),
-                            updateArm(),
-                            new WaitCommand(250),
-
-                            new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
-                            new WaitCommand(200),
-                            new InstantCommand(() -> {armPosition = 0.8;}),
-                            updateArm(),
+                                new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
+                                new WaitCommand(200),
+                                new InstantCommand(() -> {armPosition = 0.66;}),
+                                updateArm(),
 //                            new WaitCommand(0),
-                            new InstantCommand(() -> {pitch.setPosition(0.15);})
+                                new InstantCommand(() -> {pitch.setPosition(0.168);})
                         ).schedule();
+
+                        armPickupStage = 1;
+                        isClawOpen = false;
+
                     }
                 }
             )
@@ -389,9 +394,9 @@ public class MainOpMode extends BaseOpMode {
     public void run()
     {
         if (gamepad2.y){
-            intakeMotor.set(-0.5);
-        } else if (gamepad2.a) {
             intakeMotor.set(0.5);
+        } else if (gamepad2.a) {
+            intakeMotor.set(-0.5);
         } else {
             intakeMotor.set(0);
         }
@@ -474,7 +479,7 @@ public class MainOpMode extends BaseOpMode {
 
         telemetry.addData("isRecording", Recorder.recording);
         if (Recorder.recording) {
-            driveSubsystem.speedMultiplier = 0.5;
+            driveSubsystem.speedMultiplier = 0.9; // MAX RECORDING SPEED
         }
 
         // Test odometry and recording servo positions
