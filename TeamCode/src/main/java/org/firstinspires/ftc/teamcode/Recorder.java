@@ -26,17 +26,13 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Timer;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
@@ -55,7 +51,7 @@ public class Recorder {
     public static boolean o_ClearIntegralIfNoChange = true;
 
 
-    public static double kM = 1; // ecMotor power TESTING correcting coefficient
+    public static double o_kM = 1; // ecMotor power TESTING correcting coefficient
 
     public static void init (HardwareMap hardwareMap, String file, Telemetry t) {
         telemetry = t;
@@ -326,7 +322,7 @@ public class Recorder {
                 powerMultiplier = 1 + powerMultiplier / odometry.size();
                 telemetry.addData("powerMultiplier", powerMultiplier);
                 for (int i2 = 0; i2 < motors.size(); i2++) {
-                    motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier * kM);
+                    motors.get(i2).setPower((double) data[i2 + 2].get(i) * powerMultiplier * o_kM);
                 }
 
             } else {
