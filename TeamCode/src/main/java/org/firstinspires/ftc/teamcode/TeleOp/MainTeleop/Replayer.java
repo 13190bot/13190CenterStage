@@ -6,12 +6,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(group="Recorder", name="Replayer")
 public class Replayer extends LinearOpMode {
 
     // NOT AUTOGEN
-    public static double kO = 0.001; // Odometry correcting coefficient
+    // Odometry pid coefficients
+    public static double o_kP = 0;
+    public static double o_kI = 0;
+    public static double o_kD = 0;
+    public static boolean o_ClearIntegralIfNoChange = true;
+
+    public static double o_kM = 1; // ecMotor power TESTING correcting coefficient
+
 
 
     // AUTOGEN
@@ -56,6 +64,10 @@ public class Replayer extends LinearOpMode {
         // Reset encoders
         resetOdometry();
 
+        ElapsedTime timer = new ElapsedTime();
+        double lastError[] = new double[odometry.length];
+        double integral[] = new double[odometry.length];
+
         long replayingStartTime = System.nanoTime();
         int i = 0;
         // Busy looping for each ms (assuming replay loop time is less than recording loop time)
@@ -69,33 +81,43 @@ public class Replayer extends LinearOpMode {
 
 
             // Motors
-
-            // DOESN'T WORK
-            // If needed for (more) accuracy, factor in voltage difference (UNTESTED)
-//            double startVoltage = voltageSensor.getVoltage();
-//            double powerMultiplier = (double) data[1][i] / startVoltage; // assumes linear model
-//            for (int i2 = 0; i2 < motors.length; i2++) {
-//                motors[i2].setPower((double) data[i2 + 2][i] * powerMultiplier);
-//
-//                telemetry.addData("a", (double) data[i2 + 2][i] * powerMultiplier);
-//            }
-
-
-
             if (i != length - 1) {
                 // If needed for (more) accuracy, factor in odometry
                 double powerMultiplier = 0;
+                double currentT = timer.seconds();
                 for (int i2 = 0; i2 < odometry.length; i2++) {
-//                    double lastV = (double) data[2 + motors.length + servos.length + i2][i - 1];
+////                    double lastV = (double) data[2 + motors.length + servos.length + i2][i - 1];
+//                    double currentV = data[2 + motors.length + servos.length + i2][i];
+//                    double nextV = data[2 + motors.length + servos.length + i2][i + 1];
+//                    double currentT = data[0][i];
+//                    double nextT = data[0][i + 1];
+//                    telemetry.addData("Encoder " + odometryNames[i2] + "(" + i2 + "): ", odometry[i2].getCurrentPosition());
+//                    telemetry.addData("Difference (recorded - measured): ", currentV - odometry[i2].getCurrentPosition());
+//                    powerMultiplier = powerMultiplier + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry[i2].getCurrentPosition())));
+
+                    double currentV2 = data[2 + motors.length + servos.length + i2][i];
+                    telemetry.addData("Encoder " + odometryNames[i2] + "(" + i2 + ") recorded: ", currentV2);
+                    telemetry.addData("Encoder " + odometryNames[i2] + "(" + i2 + ") measured: ", odometry[i2].getCurrentPosition());
+                    telemetry.addData("Difference " + i2 + " (recorded - measured): ", currentV2 - odometry[i2].getCurrentPosition());
+
+
                     double currentV = data[2 + motors.length + servos.length + i2][i];
                     double nextV = data[2 + motors.length + servos.length + i2][i + 1];
-                    double currentT = data[0][i];
-                    double nextT = data[0][i + 1];
-                    telemetry.addData("Encoder " + odometryNames[i2] + "(" + i2 + "): ", odometry[i2].getCurrentPosition());
-                    telemetry.addData("Difference (recorded - measured): ", currentV - odometry[i2].getCurrentPosition());
-                    powerMultiplier = powerMultiplier + (1 + kO * ((nextV - currentV) / (nextT - currentT) * (currentV - odometry[i2].getCurrentPosition())));
+                    double error = currentV - odometry[i2].getCurrentPosition();
+                    double derivative = (error - lastError[i2]) / currentT;
+                    double recordedChange = nextV - currentV;
+                    if (recordedChange != 0) {
+                        integral[i2] = integral[i2] + (error * currentT);
+                        powerMultiplier = powerMultiplier + (recordedChange > 0 ? 1 : -1) * ((o_kP * error) + (o_kI * integral[i2]) + (o_kD * derivative));
+                    } else if (o_ClearIntegralIfNoChange) {
+                        integral[i2] = 0;
+                    }
+
+                    lastError[i2] = error;
                 }
-                powerMultiplier = powerMultiplier / odometry.length;
+                timer.reset();
+                powerMultiplier = 1 + powerMultiplier / odometry.length;
+                powerMultiplier = powerMultiplier * o_kM;
                 telemetry.addData("powerMultiplier", powerMultiplier);
                 for (int i2 = 0; i2 < motors.length; i2++) {
                     motors[i2].setPower(data[i2 + 2][i] * powerMultiplier);
