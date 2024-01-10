@@ -30,6 +30,11 @@ NEW
 @TeleOp(name = "MainTeleOp")
 public class MainOpMode extends BaseOpMode {
 
+
+    public static double dronePosition = 1;
+    public static double restingDronePosition = 0;
+
+
     public static double A_armPosition = -1;
     public static double A_pitchPosition = -1;
     public static double A_clawPosition = -1;
@@ -351,6 +356,13 @@ public class MainOpMode extends BaseOpMode {
         gb1(GamepadKeys.Button.DPAD_LEFT).whenPressed(() -> {
             Recorder.startRecording();
             Recorder.recording = true;
+        });
+
+
+        gb1(GamepadKeys.Button.LEFT_BUMPER).toggleWhenPressed(() -> {
+            drone.setPosition(dronePosition);
+        }, () -> {
+            drone.setPosition(restingDronePosition);
         });
 
         // Stop recording
