@@ -16,7 +16,7 @@ public class AprilTagDetector {
 
     private final static String webcam1Name = "Webcam 1";
     private final static String wecam2Name = "Webcam 2";
-    public static AprilTagProcessor aprilTagProcessor;
+    public static AprilTagProcessor aprilTagProcessor1, aprilTagProcessor2;
     public static VisionPortal visionPortal1, visionPortal2;
 
     protected static List<AprilTagDetection> allCurrentDetections;
@@ -26,19 +26,24 @@ public class AprilTagDetector {
 
 
     public static void initAprilTag(HardwareMap hardwareMap){
-        aprilTagProcessor = new AprilTagProcessor.Builder()
+        aprilTagProcessor1 = new AprilTagProcessor.Builder()
+                //Set Calibration Here
+
+                .build();
+
+        aprilTagProcessor2 = new AprilTagProcessor.Builder()
                 //Set Calibration Here
 
                 .build();
 
         visionPortal1 = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, webcam1Name))
-                .addProcessor(aprilTagProcessor)
+                .addProcessor(aprilTagProcessor1)
                 .build();
 
         visionPortal2 = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, wecam2Name))
-                .addProcessor(aprilTagProcessor)
+                .addProcessor(aprilTagProcessor2)
                 .build();
     }
 
@@ -47,8 +52,7 @@ public class AprilTagDetector {
     }
 
     public static void updateAprilTagDetections(){
-        allCurrentDetections = aprilTagProcessor.getDetections();
-
+        allCurrentDetections = aprilTagProcessor1.getDetections();
     }
 
     public int getNumberOfDetections(){

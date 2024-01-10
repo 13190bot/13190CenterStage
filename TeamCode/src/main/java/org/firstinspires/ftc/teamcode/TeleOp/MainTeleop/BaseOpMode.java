@@ -81,13 +81,14 @@ public class BaseOpMode extends CommandOpModeEx {
         bl.setInverted(true);
         fl.setInverted(true);
         br.setInverted(true);
-        fr.setInverted(true);
+        fr.setInverted(false);
 
        // pitch.setPosition(0.5);
 
         //Servos
         claw = new SimpleServo(hardwareMap, "claw", 0, 180);
         arm = new SimpleServo(hardwareMap, "arm", 0, 255);
+        arm.setInverted(true);
         pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
         drone = new SimpleServo(hardwareMap, "drone", 0, 255);
 

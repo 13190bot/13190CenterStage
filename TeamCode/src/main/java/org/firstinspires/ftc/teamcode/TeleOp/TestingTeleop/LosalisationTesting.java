@@ -20,7 +20,7 @@ public class LosalisationTesting extends BaseOpMode {
                         new IMULocaliser((BNO055IMUImpl) hardwareMap.getAll(BNO055IMU.class).get(0)),
                         new IMULocaliser((BNO055IMUImpl) hardwareMap.getAll(BNO055IMU.class).get(1)),
 
-                        new AprilTagLocalizer(AprilTagDetector.aprilTagProcessor)
+                        new AprilTagLocalizer(AprilTagDetector.aprilTagProcessor1)
 
 //                        new OdoLocalizer()
                 }
