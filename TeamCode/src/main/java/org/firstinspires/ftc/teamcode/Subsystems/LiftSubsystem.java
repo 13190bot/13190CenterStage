@@ -17,7 +17,7 @@ public class LiftSubsystem extends SubsystemBase {
     public static double kD = 0.0001;  //0.0003
     public static double kG = 0.001;
     public static double maxVelocity = 4000; // 4000
-    public static double maxAcceleration = 4000; // 4000
+    public static double maxAcceleration = 5000; // 4000
     public static int tolerance = 2;
     public static final int lowerLimit = 0;
     public static final int upperLimit = 4700;
@@ -39,7 +39,7 @@ public class LiftSubsystem extends SubsystemBase {
 
 
 
-    public static double manualPower = 300; //these are in ticks, 300
+    public static double manualPower = 350; //these are in ticks, 300
 
 
     public LiftSubsystem(MotorEx liftRight, MotorEx liftLeft, Telemetry telemetry) {

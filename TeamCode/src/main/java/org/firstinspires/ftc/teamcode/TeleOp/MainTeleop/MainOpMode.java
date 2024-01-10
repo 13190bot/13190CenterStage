@@ -135,8 +135,10 @@ public class MainOpMode extends BaseOpMode {
 
         //Reset Lift
         gb2(PlaystationAliases.SHARE).whenPressed(() -> {
-//            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
+            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
         });
+
+
 
 
         // Test / tune arm
@@ -320,15 +322,11 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-//        liftSubsystem.setDefaultCommand(PIDLiftCommand);
+        liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
-//        encoderOffTrigger.whenActive(manualLiftCommand);
+        encoderOffTrigger.whenActive(manualLiftCommand);
 
-        if (USINGREALBOT) {
-            telemetry.addData("Manual Lift", manualLiftCommand.isScheduled());
-            telemetry.addData("PID Lift", PIDLiftCommand.isScheduled());
-            telemetry.addData("Encoder Off Detector", encoderOffTrigger.get());
-        }
+
 
         Recorder.init(hardwareMap, "test", telemetry);
 
@@ -381,6 +379,12 @@ public class MainOpMode extends BaseOpMode {
     private boolean lastTouchpad = false;
     public void run()
     {
+        if (USINGREALBOT) {
+            telemetry.addData("Manual Lift", manualLiftCommand.isScheduled());
+            telemetry.addData("PID Lift", PIDLiftCommand.isScheduled());
+            telemetry.addData("Encoder Off Detector", encoderOffTrigger.get());
+        }
+
         if (gamepad2.y){
             intakeMotor.set(-0.5);
         } else if (gamepad2.a) {
@@ -438,22 +442,22 @@ public class MainOpMode extends BaseOpMode {
 
         // Manual lift, Not used for now
 
-        double power = -gamepad2.left_stick_y;
+//        double power = -gamepad2.left_stick_y;
+//
+//        if (gamepad2.dpad_up) {
+//            power = power + 1;
+//        }
+//        if (gamepad2.dpad_down) {
+//            power = power - 1;
+//        }
 
-        if (gamepad2.dpad_up) {
-            power = power + 1;
-        }
-        if (gamepad2.dpad_down) {
-            power = power - 1;
-        }
 
 
-
-        telemetry.addData("power", power);
-        if (USINGREALBOT) {
-            liftLeft.motor.setPower(-power);
-            liftRight.motor.setPower(-power);
-        }
+//        telemetry.addData("power", power);
+//        if (USINGREALBOT) {
+//            liftLeft.motor.setPower(-power);
+//            liftRight.motor.setPower(-power);
+//        }
 
 //        telemetry.addData("armPickupStage", armPickupStage);
 //        telemetry.addData("armPosition", armPosition);

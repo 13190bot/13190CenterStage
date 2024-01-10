@@ -29,7 +29,7 @@ public class EncoderDisconnectDetect {
 
         if (encoderValues.size() == 3) {
             if (encoderValues.get(2) == 0) {
-                if (abs(encoderValues.get(0)-encoderValues.get(2)) > 50) {
+                if (abs(encoderValues.get(0)-encoderValues.get(2)) > 20) {
                     encoderDisconnected = true;
                 }
             }
