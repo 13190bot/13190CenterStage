@@ -52,6 +52,16 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public void moveLiftToTarget() {
+        //Set PID values
+        controllerRight.setP(kP);
+        controllerRight.setI(kI);
+        controllerRight.setD(kD);
+
+        controllerLeft.setP(kP);
+        controllerLeft.setI(kI);
+        controllerLeft.setD(kD);
+
+
         controllerRight.setGoal(goalRight);
         controllerLeft.setGoal(goalLeft);
 
