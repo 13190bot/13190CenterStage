@@ -13,10 +13,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.*;
 public class MainOpMode_TestingChassis extends CommandOpMode {
 
     protected DriveSubsystem driveSubsystem;
-    protected IntakeSubsystem intakeSubsystem;
 //    protected ClawSubsystem clawSubsystem;
     protected LiftSubsystem liftSubsystem;
-    private MotorEx fl, fr, bl, br, intakeMotor, liftLeft, liftRight;
+    private MotorEx fl, fr, bl, br;
 
     private SimpleServo clawServo;
     private SimpleServo axleServo;

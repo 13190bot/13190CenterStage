@@ -17,6 +17,7 @@ import java.util.Comparator;
 public class PixelDetectionPipeline extends OpenCvPipeline {
     //testing
     public int blur = 0;
+    public static boolean testing = false;
     public boolean DEBUG = true;
     class SortKeyPointsByX implements Comparator<KeyPoint> {
         // Used for sorting in ascending order of
@@ -123,8 +124,14 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        // Rotate input since camera is rotated
+        Core.rotate(input, outputImage, Core.ROTATE_90_CLOCKWISE);
+        input = outputImage.clone();
+
+
+
         //testing
-        if (true) {
+        if (testing) {
             if (blur > 0 && blur % 2 == 1) {
                 Imgproc.GaussianBlur(input, input, new Size(blur, blur), 0);
             } else if (blur > 0) {
@@ -140,10 +147,11 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         blobDetector.detect(input, findBlobsOutput);
 
         // draw
-        outputImage = input.clone();
+//        outputImage = input.clone(); // cloned above earlier
 
 
         KeyPoint[] keyPoints = findBlobsOutput.toArray();
+        if (keyPoints.length == 0) return outputImage;
 
         // Average size and filter out "noise" (non-pixel blobs)
         double sizeSum = 0;
@@ -403,6 +411,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 //        // Your image, keypoints, and output image
 //        Features2d.drawKeypoints(input, findBlobsOutput, outputImage);
 
+        input.release();
         return outputImage;
     }
 

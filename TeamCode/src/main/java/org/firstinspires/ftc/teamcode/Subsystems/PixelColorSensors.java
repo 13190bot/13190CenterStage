@@ -3,11 +3,32 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.CV.BestPixelPlacement.PixelColor;
+import org.opencv.core.Scalar;
+
 
 /**
  * sensor for the dustpan pixels
  */
 public class PixelColorSensors {
+    Object[][] colorData = new Object[][] {
+            {
+                    new Scalar(239, 238, 244),
+                    PixelColor.WHITE
+            },
+            {
+                    new Scalar(176, 154, 227),
+                    PixelColor.PURPLE
+            },
+            {
+                    new Scalar(255, 199, 0),
+                    PixelColor.YELLOW
+            },
+            {
+                    new Scalar(85, 180, 36),
+                    PixelColor.GREEN
+            }
+    };
+
     public PixelColorSensors (HardwareMap hMap, String leftName, String rightName) {
         leftSensor  = hMap.colorSensor.get(leftName);
         rightSensor = hMap.colorSensor.get(rightName);

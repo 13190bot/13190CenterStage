@@ -16,8 +16,8 @@ public class LiftSubsystem extends SubsystemBase {
     public static double kI = 0.00001;
     public static double kD = 0.0001;  //0.0003
     public static double kG = 0.001;
-    public static double maxVelocity = 4000;
-    public static double maxAcceleration = 4000;
+    public static double maxVelocity = 4000; // 4000
+    public static double maxAcceleration = 5000; // 4000
     public static int tolerance = 2;
     public static final int lowerLimit = 0;
     public static final int upperLimit = 4700;
@@ -39,10 +39,10 @@ public class LiftSubsystem extends SubsystemBase {
 
 
 
-    public static double manualPower = 300; //these are in ticks
+    public static double manualPower = 350; //these are in ticks, 300
 
 
-    public LiftSubsystem(MotorEx liftRight, MotorEx liftLeft,Telemetry telemetry) {
+    public LiftSubsystem(MotorEx liftRight, MotorEx liftLeft, Telemetry telemetry) {
         this.liftRight = liftRight;
         this.liftLeft = liftLeft;
         this.telemetry = telemetry;
@@ -52,6 +52,16 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
     public void moveLiftToTarget() {
+        //Set PID values
+        controllerRight.setP(kP);
+        controllerRight.setI(kI);
+        controllerRight.setD(kD);
+
+        controllerLeft.setP(kP);
+        controllerLeft.setI(kI);
+        controllerLeft.setD(kD);
+
+
         controllerRight.setGoal(goalRight);
         controllerLeft.setGoal(goalLeft);
 
@@ -67,6 +77,8 @@ public class LiftSubsystem extends SubsystemBase {
         liftRight.set(leftPower);
         liftLeft.set(leftPower);
     }
+
+
 
     public static void setLiftGoal(int goal){
         goalRight = goal;

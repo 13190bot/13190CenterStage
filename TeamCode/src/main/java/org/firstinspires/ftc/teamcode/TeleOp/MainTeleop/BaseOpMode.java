@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp.MainTeleop;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.*;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -12,10 +14,14 @@ import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Commands.*;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 import org.firstinspires.ftc.teamcode.util.CommandOpModeEx;
+import org.firstinspires.ftc.teamcode.util.librarys.WireMannager.EncoderDisconnectDetect;
 
 import java.util.concurrent.TimeUnit;
 
+
 public class BaseOpMode extends CommandOpModeEx {
+    public static boolean USINGREALBOT = true; // true on real bot, false on test chassis
+
     protected DroneSubsystem droneSubsystem;
 
     protected DriveSubsystem driveSubsystem;
@@ -28,30 +34,62 @@ public class BaseOpMode extends CommandOpModeEx {
     protected GamepadEx gamepadEx2;
     protected DriveRobotOptimalCommand driveRobotOptimalCommand;
 
-//    protected PIDLiftCommand PIDLiftCommand;
-//    protected ManualLiftCommand manualLiftCommand;
+    protected PIDLiftCommand PIDLiftCommand;
+    protected ManualLiftCommand manualLiftCommand;
     protected Command grabAndUpCommand, releaseAndDownCommand;
     protected Timing.Timer beforeMatchEnd;
+
+    public AprilTagDetector aprilTagDetector1, aprilTagDetector2;
+
+    protected EncoderDisconnectDetect encoderDisconnectDetect;
+    protected Trigger encoderOffTrigger;
 
 
     @Override
     public void initialize() {
-        telemetry = new MultipleTelemetry(telemetry);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
 
         //Timer to calculate time left in match
         beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);
 
         //Motors
-        fl = new MotorEx(hardwareMap, "frontLeft");
-        fr = new MotorEx(hardwareMap, "frontRight");
-        bl = new MotorEx(hardwareMap, "backLeft");
-        br = new MotorEx(hardwareMap, "backRight");
+        if (USINGREALBOT) {
+            fl = new MotorEx(hardwareMap, "frontLeft");
+            fr = new MotorEx(hardwareMap, "frontRight");
+            bl = new MotorEx(hardwareMap, "backLeft");
+            br = new MotorEx(hardwareMap, "backRight");
 
-        intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+            bl.setInverted(true);
+            fl.setInverted(false);
+            br.setInverted(true);
+            fr.setInverted(false);
+        } else {
+            fl = new MotorEx(hardwareMap, "frontRight");
+            fr = new MotorEx(hardwareMap, "frontLeft");
+            bl = new MotorEx(hardwareMap, "backRight");
+            br = new MotorEx(hardwareMap, "backLeft");
 
+            bl.setInverted(false);
+            fl.setInverted(false);
+            br.setInverted(false);
+            fr.setInverted(false);
+        }
 
-        liftLeft = new MotorEx(hardwareMap, "liftLeft");
-        liftRight = new MotorEx(hardwareMap, "liftRight");
+        if (USINGREALBOT) {
+            intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
+            liftLeft = new MotorEx(hardwareMap, "liftLeft");
+            liftRight = new MotorEx(hardwareMap, "liftRight");
+
+            //ONLY USE IF NOT USING LIFT PID
+            liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            liftRight.setInverted(true);
+
+            //Zero the lift encoders
+            liftRight.resetEncoder();
+            liftLeft.resetEncoder();
+        }
 
 
         //Prevent Drift
@@ -60,38 +98,37 @@ public class BaseOpMode extends CommandOpModeEx {
         br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //ONLY USE IF NOT USING LIFT PID
-        liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftRight.setInverted(true);
-
-
-        //Zero the lift encoders
-
-        liftRight.resetEncoder();
-        liftLeft.resetEncoder();
 
 
 
-        //Reverse Motors
-//        fl.setInverted(true);
-//        fr.setInverted(true);
-//        br.setInverted(true);
 
-        bl.setInverted(true);
-        fl.setInverted(true);
-        br.setInverted(true);
-        fr.setInverted(false);
 
-       // pitch.setPosition(0.5);
+
+
+
+
+
+
+        // ODOMETRY ENCODERS
+        bl.stopAndResetEncoder();
+        fl.stopAndResetEncoder();
+//        bl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        fl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+
+
+
+
+
 
         //Servos
-        claw = new SimpleServo(hardwareMap, "claw", 0, 180);
-        arm = new SimpleServo(hardwareMap, "arm", 0, 255);
-        arm.setInverted(true);
-        pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
-        drone = new SimpleServo(hardwareMap, "drone", 0, 255);
-
+        if (USINGREALBOT) {
+            claw = new SimpleServo(hardwareMap, "claw", 0, 180);
+            arm = new SimpleServo(hardwareMap, "arm", 0, 255);
+            pitch = new SimpleServo(hardwareMap, "pitch", 0, 255);
+            drone = new SimpleServo(hardwareMap, "drone", 0, 255);
+        }
 
         //Gamepads
         gamepadEx1 = new GamepadEx(gamepad1);
@@ -99,22 +136,33 @@ public class BaseOpMode extends CommandOpModeEx {
 
         //Subsystems
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
-        intakeSubsystem = new IntakeSubsystem(intakeMotor);
-        liftSubsystem = new LiftSubsystem(liftRight, liftLeft,telemetry);
+        if (USINGREALBOT) {
+            intakeSubsystem = new IntakeSubsystem(intakeMotor);
+            liftSubsystem = new LiftSubsystem(liftRight, liftLeft, telemetry);
+        }
         droneSubsystem = new DroneSubsystem(drone);
 
 
 
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
-//        PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
-//        manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
-
+        if (USINGREALBOT) {
+            PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+            manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
+            encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
+            encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
+        }
 
         driveSubsystem.speedMultiplier = 1;
 
         //Setup up April Tag Detector
-        AprilTagDetector.initAprilTag(hardwareMap);
+        if (USINGREALBOT) {
+            aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
+        }
+//        aprilTagDetector2 = new AprilTagDetector("Webcam 2", hardwareMap);
+
+
+
 
     }
 

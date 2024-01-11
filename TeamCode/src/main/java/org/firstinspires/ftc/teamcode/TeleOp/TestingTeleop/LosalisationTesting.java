@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
 
 public class LosalisationTesting extends BaseOpMode {
     CompositeLocalizer localizer;
+    AprilTagDetector aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
 
     @Override
     public void initialize() {
@@ -20,7 +21,7 @@ public class LosalisationTesting extends BaseOpMode {
                         new IMULocaliser((BNO055IMUImpl) hardwareMap.getAll(BNO055IMU.class).get(0)),
                         new IMULocaliser((BNO055IMUImpl) hardwareMap.getAll(BNO055IMU.class).get(1)),
 
-                        new AprilTagLocalizer(AprilTagDetector.aprilTagProcessor1)
+                        new AprilTagLocalizer(aprilTagDetector1.aprilTagProcessor)
 
 //                        new OdoLocalizer()
                 }

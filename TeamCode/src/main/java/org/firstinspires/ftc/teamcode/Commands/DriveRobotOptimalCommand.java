@@ -13,6 +13,8 @@ import java.util.function.DoubleSupplier;
 
 public class DriveRobotOptimalCommand extends CommandBase {
 
+    public boolean tobyControls = true; // uses right gamepad x for strafe
+
     private DriveSubsystem driveSubsystem;
     private GamepadEx gamepadEx1;
 //    private double forward, strafe, rotate;
@@ -59,6 +61,10 @@ public class DriveRobotOptimalCommand extends CommandBase {
             driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
         }
 
+        if (gamepadEx1.wasJustPressed(PlaystationAliases.SHARE)) {
+            tobyControls = !tobyControls;
+        }
+
         if (gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) || gamepadEx1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
             // WheelRotate
             double side1 = gamepadEx1.getButton(GamepadKeys.Button.LEFT_BUMPER) ? -1 : 1;
@@ -67,7 +73,7 @@ public class DriveRobotOptimalCommand extends CommandBase {
             driveSubsystem.driveRobotCentric(side2, side1, side1);
         } else {
             // Normal
-            driveSubsystem.driveRobotCentric(gamepadEx1.getRightX(), gamepadEx1.getLeftY(), (gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)));
+            driveSubsystem.driveRobotCentric(tobyControls ? gamepadEx1.getRightX() : gamepadEx1.getLeftX(), gamepadEx1.getLeftY(), (gamepadEx1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)));
 //            driveSubsystem.driveRobotCentric(strafe, forward, rotate);
         }
 
