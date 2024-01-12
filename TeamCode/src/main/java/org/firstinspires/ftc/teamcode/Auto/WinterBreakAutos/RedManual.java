@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.winterBreakAutos;
+package org.firstinspires.ftc.teamcode.Auto.WinterBreakAutos;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
