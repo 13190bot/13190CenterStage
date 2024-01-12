@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.TeleOp.TestingTeleop;
 
 import android.graphics.Color;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -19,6 +21,8 @@ public class ColorSensorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // TODO: fix the name of color sensors
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "leftSensor");
         rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "rightSensor");
 
