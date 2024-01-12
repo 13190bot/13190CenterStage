@@ -12,19 +12,19 @@ public class LiftSubsystem extends SubsystemBase {
 
     public MotorEx liftRight, liftLeft;
 
-    public static double kP = 0.01; //0.01
+    public static double kP = 0.01001; //0.01
     public static double kI = 0.00001;
-    public static double kD = 0.0001;  //0.0003
+    public static double kD = 0.0002;  //0.0003
     public static double kG = 0.001;
-    public static double maxVelocity = 4000; // 4000
-    public static double maxAcceleration = 5000; // 4000
+    public static double maxVelocity = 5000; // 4000
+    public static double maxAcceleration = 4000; // 4000
     public static int tolerance = 2;
     public static final int lowerLimit = 0;
     public static final int upperLimit = 4700;
     private final boolean useLimits = true;
 
-    private static double goalRight = 0;
-    private static double goalLeft = 0;
+    public static double goalRight = 0;
+    public static double goalLeft = 0;
 
 
 
