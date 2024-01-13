@@ -53,7 +53,7 @@ public class MainOpMode_TestingChassis extends CommandOpMode {
 
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
-        driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
+        driveSubsystem = new DriveSubsystem(fl, fr, bl, br, telemetry);
         driveRobotOptimalCommand = new DriveRobotOptimalCommand2(driveSubsystem, gamepadEx1);
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 

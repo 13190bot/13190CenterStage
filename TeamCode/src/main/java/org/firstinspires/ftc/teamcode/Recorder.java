@@ -193,7 +193,11 @@ public class Recorder {
         String out = "double[][]data={";
         for (int i = 0; i < data.length; i++) {
             // Optimized (https://stackoverflow.com/a/23183963)
-            out = out + "{" + data[i].stream().map(Object::toString).collect(Collectors.joining(",")) + "}";
+            if (i == 0) {
+                out = out + "{" + data[i].stream().map(Object::toString).collect(Collectors.joining(".0,")) + ".0}";
+            } else {
+                out = out + "{" + data[i].stream().map(Object::toString).collect(Collectors.joining(",")) + "}";
+            }
             if (i != data.length - 1) {
                 out = out + ",";
             }
@@ -209,7 +213,8 @@ public class Recorder {
 
     public static String generateAuto() {
         // Replayer.java
-        return hardwareToCode() + "\n\n" + dataToCode();
+//        return hardwareToCode() + "\n\n" + dataToCode();
+        return dataToCode();
     }
 
     public static void displayData(String data, BooleanSupplier cont) throws InterruptedException {

@@ -61,7 +61,7 @@ public class BaseDriveOpMode extends CommandOpMode {
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
 
-        driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
+        driveSubsystem = new DriveSubsystem(fl, fr, bl, br, telemetry);
         individualMotorTestCommand = new IndividualMotorTestCommand(
                 driveSubsystem,
                 fl,fr,bl,br,

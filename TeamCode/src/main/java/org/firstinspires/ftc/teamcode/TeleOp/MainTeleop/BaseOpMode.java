@@ -135,7 +135,7 @@ public class BaseOpMode extends CommandOpModeEx {
         gamepadEx2 = new GamepadEx(gamepad2);
 
         //Subsystems
-        driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
+        driveSubsystem = new DriveSubsystem(fl, fr, bl, br, telemetry);
         if (USINGREALBOT) {
             intakeSubsystem = new IntakeSubsystem(intakeMotor);
             liftSubsystem = new LiftSubsystem(liftRight, liftLeft, telemetry);
