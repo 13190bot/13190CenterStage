@@ -24,25 +24,27 @@ public class CloseRed extends BaseAuto {
     @Override
     public void overrideMe() {
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
-        FtcDashboard.getInstance().startCameraStream(camera, 30);
-        ColorDetectionYCRCBPipeline colorDetectionYCRCBPipeline = new ColorDetectionYCRCBPipeline(colorInd);
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+//        FtcDashboard.getInstance().startCameraStream(camera, 30);
+//        ColorDetectionYCRCBPipeline colorDetectionYCRCBPipeline = new ColorDetectionYCRCBPipeline(colorInd);
+//
+//        camera.setPipeline(colorDetectionYCRCBPipeline);
+//        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+//        {
+//            @Override
+//            public void onOpened()
+//            {
+//                camera.startStreaming(1280 , 720, OpenCvCameraRotation.UPRIGHT);
+//            }
+//            @Override
+//            public void onError(int errorCode)
+//            {
+//
+//            }
+//        });
 
-        camera.setPipeline(colorDetectionYCRCBPipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                camera.startStreaming(1280 , 720, OpenCvCameraRotation.UPRIGHT);
-            }
-            @Override
-            public void onError(int errorCode)
-            {
-
-            }
-        });
+        spike = 0;
 
         while (!isStarted()) {
             telemetry.addData("Current Position: ", colorDetectionYCRCBPipeline.getPosition());
@@ -64,42 +66,42 @@ public class CloseRed extends BaseAuto {
 
         //move forwards
         builder.forward(TILE_SIZE);
-
-        //if left, turn
-        if (spike == -1) builder.turn(-90);
-
-        //if not forwards, deposit center pix
-        if (spike != 1) {
-            builder
-                    .addDisplacementMarker(() -> intakeMotor.set(-.5) )
-                    .waitSeconds(1)
-                    .addDisplacementMarker(() -> intakeMotor.set(0) )
-                    ;
-        }
-
-        //if right, turn, move, and deposit
-        else {
-            builder
-                    .turn(90)
-                    .forward(TILE_SIZE)
-                    .addDisplacementMarker(() -> intakeMotor.set(-.5))
-                    .waitSeconds(1)
-                    .addDisplacementMarker( () -> intakeMotor.set(0))
-                    ;
-        }
-
-        //if not already facing proper heading, face proper dir
-        if(spike != 1) builder.turn(90 * (spike+1));
-
-        //approach bord, stafe to pos, deposit yellow
-        builder
-                .forward(10 + (spike != 1 ? 10 : 0))
-                .strafeRight(ZONE_WIDTH * spike)
-
-                .addDisplacementMarker(() -> {
-                    //
-                })
-                ;
+//
+//        //if left, turn
+//        if (spike == -1) builder.turn(-90);
+//
+//        //if not forwards, deposit center pix
+//        if (spike != 1) {
+//            builder
+//                    .addDisplacementMarker(() -> intakeMotor.set(-.5) )
+//                    .waitSeconds(1)
+//                    .addDisplacementMarker(() -> intakeMotor.set(0) )
+//                    ;
+//        }
+//
+//        //if right, turn, move, and deposit
+//        else {
+//            builder
+//                    .turn(90)
+//                    .forward(TILE_SIZE)
+//                    .addDisplacementMarker(() -> intakeMotor.set(-.5))
+//                    .waitSeconds(1)
+//                    .addDisplacementMarker( () -> intakeMotor.set(0))
+//                    ;
+//        }
+//
+//        //if not already facing proper heading, face proper dir
+//        if(spike != 1) builder.turn(90 * (spike+1));
+//
+//        //approach bord, stafe to pos, deposit yellow
+//        builder
+//                .forward(10 + (spike != 1 ? 10 : 0))
+//                .strafeRight(ZONE_WIDTH * spike)
+//
+//                .addDisplacementMarker(() -> {
+//                    //
+//                })
+//                ;
 
         //build and follow traj
         drive.followTrajectorySequence(builder.build());
