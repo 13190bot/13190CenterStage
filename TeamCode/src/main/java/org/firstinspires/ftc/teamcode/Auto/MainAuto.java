@@ -58,30 +58,8 @@ public class MainAuto extends BaseOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory goToMiddle = drive.trajectoryBuilder(new Pose2d())
-                .forward(27)
-                .build();
-
-        TrajectorySequence placeOnSpike = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(10)
-                .back(7)
-                .addDisplacementMarker(() -> {
-                    // spin intake
-                    intakeMotor.set(0.5);
-                })
-                .waitSeconds(2)
-                .back(3)
-                .build();
 
         double farBackdropDistance = 80;
-        TrajectorySequence moveToBackdropFar = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(farBackdropDistance)
-                .build();
-
-        TrajectorySequence moveToBackdrop = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(farBackdropDistance - 48)
-                .build();
-
 //        waitForStart();
 
         while (!isStarted()) {
@@ -94,52 +72,65 @@ public class MainAuto extends BaseOpMode {
 
         if(isStopRequested()) return;
 
-        drive.followTrajectory(goToMiddle);
+        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d())
+                .back(27)
+                .build());
 
         switch(propPosition) {
             case LEFT:
-                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .turn(Math.toRadians(90))
-                        .build());
+                drive.turn(Math.toRadians(90));
+                break;
             case CENTER:
+                break;
             case RIGHT:
-                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .turn(Math.toRadians(-90))
-                        .build());
+                drive.turn(Math.toRadians(-90));
+                break;
             case NOPOS:
+                break;
             default:
+                break;
         }
 
-        drive.followTrajectorySequence(placeOnSpike);
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                .back(10)
+                .forward(7)
+                .addDisplacementMarker(() -> {
+                    // spin intake
+                    intakeMotor.set(0.1);
+                })
+                .waitSeconds(2)
+                .addDisplacementMarker(() -> {
+                    // stop intake
+                    intakeMotor.set(0);
+                })
+                .forward(3)
+                .build());
 
         if (colorInd == 2) {
             // blue (needs to face right)
 
             switch(propPosition) {
                 case LEFT:
-                    drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                            .turn(Math.toRadians(-180))
-                            .build());
+                    drive.turn(Math.toRadians(-180));
+                    break;
                 case CENTER:
-                    drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                            .turn(Math.toRadians(-90))
-                            .build());
+                    drive.turn(Math.toRadians(-90));
+                    break;
                 case RIGHT:
+                    break;
                 case NOPOS:
+                    break;
                 default:
+                    break;
             }
         } else {
             // red (needs to face left)
             switch(propPosition) {
                 case LEFT:
                 case CENTER:
-                    drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                            .turn(Math.toRadians(90))
-                            .build());
+                    drive.turn(Math.toRadians(90));
                 case RIGHT:
-                    drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                            .turn(Math.toRadians(180))
-                            .build());
+                    drive.turn(Math.toRadians(180));
                 case NOPOS:
                 default:
             }
@@ -147,9 +138,13 @@ public class MainAuto extends BaseOpMode {
 
 
         if (isFarSide) {
-            drive.followTrajectorySequence(moveToBackdropFar);
+            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                    .back(farBackdropDistance)
+                    .build());
         } else {
-            drive.followTrajectorySequence(moveToBackdrop);
+            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                    .back(farBackdropDistance - 48)
+                    .build());
         }
 
         // score
