@@ -47,29 +47,6 @@ public abstract class BaseAuto extends LinearOpMode {
         //Timer to calculate time left in match
         beforeMatchEnd = new Timing.Timer(150, TimeUnit.SECONDS);
 
-        //Motors
-        if (USINGREALBOT) {
-            fl = new MotorEx(hardwareMap, "frontLeft");
-            fr = new MotorEx(hardwareMap, "frontRight");
-            bl = new MotorEx(hardwareMap, "backLeft");
-            br = new MotorEx(hardwareMap, "backRight");
-
-            bl.setInverted(true);
-            fl.setInverted(false);
-            br.setInverted(true);
-            fr.setInverted(false);
-        } else {
-            fl = new MotorEx(hardwareMap, "frontRight");
-            fr = new MotorEx(hardwareMap, "frontLeft");
-            bl = new MotorEx(hardwareMap, "backRight");
-            br = new MotorEx(hardwareMap, "backLeft");
-
-            bl.setInverted(false);
-            fl.setInverted(false);
-            br.setInverted(false);
-            fr.setInverted(false);
-        }
-
         if (USINGREALBOT) {
             intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
             liftLeft = new MotorEx(hardwareMap, "liftLeft");
@@ -85,19 +62,6 @@ public abstract class BaseAuto extends LinearOpMode {
             liftLeft.resetEncoder();
         }
 
-
-        //Prevent Drift
-        fl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        fr.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        br.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bl.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // ODOMETRY ENCODERS
-        bl.stopAndResetEncoder();
-        fl.stopAndResetEncoder();
-//        bl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        fl.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         //Servos
         if (USINGREALBOT) {
             claw = new SimpleServo(hardwareMap, "claw", 0, 180);
@@ -107,7 +71,6 @@ public abstract class BaseAuto extends LinearOpMode {
         }
 
         //Subsystems
-        driveSubsystem = new DriveSubsystem(fl, fr, bl, br);
         if (USINGREALBOT) {
             intakeSubsystem = new IntakeSubsystem(intakeMotor);
             liftSubsystem = new LiftSubsystem(liftRight, liftLeft, telemetry);
@@ -115,20 +78,8 @@ public abstract class BaseAuto extends LinearOpMode {
         droneSubsystem = new DroneSubsystem(drone);
 
 
-
-        if (USINGREALBOT) {
-            encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
-        }
-
-        driveSubsystem.speedMultiplier = 1;
-
-        //Setup up April Tag Detector
-        if (USINGREALBOT) {
-            aprilTagDetector1 = new AprilTagDetector("Webcam 1", hardwareMap);
-        }
-//        aprilTagDetector2 = new AprilTagDetector("Webcam 2", hardwareMap);
-
         drive = new SampleMecanumDrive(hardwareMap);
+
 
     }
 
