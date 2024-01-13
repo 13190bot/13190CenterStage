@@ -45,8 +45,8 @@ public class ColorSensorTest extends LinearOpMode {
             int[] rightValues = new int[3];
 
               // RGB to HSV
-            Color.RGBToHSV(leftColorSensor.red() * 8, leftColorSensor.green() * 8, leftColorSensor.blue() * 8, lhsvValues);
-            Color.RGBToHSV(rightColorSensor.red() * 8, rightColorSensor.green() * 8, rightColorSensor.blue() * 8, rhsvValues);
+            Color.RGBToHSV(leftColorSensor.red() * 8, leftColorSensor.green() * 7, leftColorSensor.blue() * 8, lhsvValues);
+            Color.RGBToHSV(rightColorSensor.red() * 8, rightColorSensor.green() * 7, rightColorSensor.blue() * 8, rhsvValues);
 
 
             // defining R, G, and B values of left, scale factor removed for now

@@ -300,6 +300,8 @@ public class MainOpMode extends BaseOpMode {
                         armPickupStage = 1;
                         isClawOpen = false;
 
+                    } else if (armPickupStage == 0) {
+
                     }
                 }
             )
