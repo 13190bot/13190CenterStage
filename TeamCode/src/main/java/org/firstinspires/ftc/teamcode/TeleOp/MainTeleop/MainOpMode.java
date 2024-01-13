@@ -30,7 +30,7 @@ NEW
 @TeleOp(name = "MainTeleOp")
 public class MainOpMode extends BaseOpMode {
 
-
+    public static double intakeSpeed = 0.3;
     public static double dronePosition = 1;
     public static double restingDronePosition = 0;
 
@@ -410,9 +410,9 @@ public class MainOpMode extends BaseOpMode {
         }
 
         if (gamepad2.y){
-            intakeMotor.set(0.5);
+            intakeMotor.set(intakeSpeed);
         } else if (gamepad2.a) {
-            intakeMotor.set(-0.5);
+            intakeMotor.set(-intakeSpeed);
         } else {
             intakeMotor.set(0);
         }
