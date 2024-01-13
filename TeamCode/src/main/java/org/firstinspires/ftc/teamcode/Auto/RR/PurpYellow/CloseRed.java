@@ -2,10 +2,16 @@ package org.firstinspires.ftc.teamcode.Auto.RR.PurpYellow;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.sun.tools.javac.Main;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Auto.RR.BaseAuto;
 import org.firstinspires.ftc.teamcode.CV.ColorDetectionYCRCBPipeline;
+import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode;
 import org.firstinspires.ftc.teamcode.util.librarys.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -92,17 +98,55 @@ public class CloseRed extends BaseAuto {
         if(spike != 1) builder.turn(90 * (spike+1));
 
         //approach bord, stafe to pos, deposit yellow
+
+        MainOpMode mainOpMode = new MainOpMode();
+
         builder
                 .forward(10 + (spike != 1 ? 10 : 0))
                 .strafeRight(ZONE_WIDTH * spike)
 
                 .addDisplacementMarker(() -> {
-                    //
+
+                    new SequentialCommandGroup(
+                            // 1
+                            new InstantCommand(() -> claw.setPosition(mainOpMode.clawClosed)), // Close claw
+                            new WaitCommand(250),
+                            new InstantCommand(() -> {mainOpMode.armPosition = 0.66;}),
+                            mainOpMode.updateArm(),
+                            new WaitCommand(250),
+                            new InstantCommand(() -> {pitch.setPosition(0.168);}),
+
+                            new WaitCommand(1000),
+                            // 2
+                            new InstantCommand(() -> {mainOpMode.armPosition = mainOpMode.armMin;}), // Slightly above pixel bottom
+                            mainOpMode.updateArm(),
+
+                            new WaitCommand(3000),
+
+                            // 3
+                            new InstantCommand(() -> claw.setPosition(mainOpMode.clawOpen)), // Open claw
+                            new WaitCommand(100),
+
+                            // Shake it
+                            new InstantCommand(() -> {pitch.setPosition(pitch.getPosition() + 0.1);}),
+                            new WaitCommand(100),
+                            new InstantCommand(() -> {pitch.setPosition(pitch.getPosition() - 0.1);}),
+                            new WaitCommand(100),
+
+                            new WaitCommand(500),
+
+                            // Move arm back
+                            new InstantCommand(() -> {mainOpMode.armPosition = 0.6;}),
+                            mainOpMode.updateArm()
+                    ).schedule();
+
                 })
                 ;
 
         //build and follow traj
-        drive.followTrajectorySequence(builder.build());
+        drive.followTrajectorySequenceAsync(builder.build());
+
+        while (true) CommandScheduler.getInstance().run();
     }
 
     int spike; //0 for center, -1 for left, 1 for right

@@ -270,7 +270,6 @@ public class MainOpMode extends BaseOpMode {
             new InstantCommand(
                 () -> {
                     if (armPickupStage == 1) {
-
                         // Arm is currently hovering over dustpan
 
                         new SequentialCommandGroup(
@@ -299,9 +298,35 @@ public class MainOpMode extends BaseOpMode {
 
                         armPickupStage = 1;
                         isClawOpen = false;
-
                     } else if (armPickupStage == 0) {
+                        // Arm is currently hovering over dustpan
 
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 5);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 4);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 3);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 2);}),
+                                new WaitCommand(50),
+                                new InstantCommand(() -> {arm.setPosition(armMax - 0.02);}),
+                                new WaitCommand(50),
+
+                                new InstantCommand(() -> {armPosition = armMax;}),
+                                updateArm(),
+                                new WaitCommand(250),
+
+                                new InstantCommand(() -> claw.setPosition(clawClosed)), // Close claw
+                                new WaitCommand(200),
+                                new InstantCommand(() -> {armPosition = 0.66;}),
+                                updateArm(),
+//                            new WaitCommand(0),
+                                new InstantCommand(() -> {pitch.setPosition(0.168);})
+                        ).schedule();
+
+                        armPickupStage = 1;
+                        isClawOpen = false;
                     }
                 }
             )
