@@ -30,6 +30,8 @@ public class MainAuto extends BaseOpMode {
     private final boolean isFarSide = false;
     @Override
     public void runOpMode() {
+        telemetry = new MultipleTelemetry(telemetry);
+
         intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
 
@@ -67,7 +69,7 @@ public class MainAuto extends BaseOpMode {
                 .back(7)
                 .addDisplacementMarker(() -> {
                     // spin intake
-                    intakeMotor.set(0.5);
+//                    intakeMotor.set(0.5);
                 })
                 .waitSeconds(2)
                 .back(3)
@@ -101,13 +103,17 @@ public class MainAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .turn(Math.toRadians(90))
                         .build());
-            case CENTER:
+                break;
+
             case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .turn(Math.toRadians(-90))
                         .build());
-            case NOPOS:
-            default:
+                break;
+
+            case CENTER: break;
+            case NOPOS:  break;
+            default:     break;
         }
 
         drive.followTrajectorySequence(placeOnSpike);
@@ -120,28 +126,32 @@ public class MainAuto extends BaseOpMode {
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                             .turn(Math.toRadians(-180))
                             .build());
+                    break;
+
                 case CENTER:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                             .turn(Math.toRadians(-90))
                             .build());
-                case RIGHT:
-                case NOPOS:
-                default:
+                    break;
+
+                case RIGHT: break;
+                default:    break;
             }
         } else {
             // red (needs to face left)
             switch(propPosition) {
-                case LEFT:
                 case CENTER:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                             .turn(Math.toRadians(90))
                             .build());
+                    break;
+
                 case RIGHT:
                     drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                             .turn(Math.toRadians(180))
                             .build());
-                case NOPOS:
-                default:
+
+                default: break;
             }
         }
 
