@@ -30,6 +30,8 @@ public class MainAuto extends BaseOpMode {
     private final boolean isFarSide = false;
     @Override
     public void runOpMode() {
+        telemetry = new MultipleTelemetry(telemetry);
+
         intakeMotor = new MotorEx(hardwareMap, "intakeMotor");
 
 
