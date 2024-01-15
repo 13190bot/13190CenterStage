@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.teamcode.Commands.ManualLiftCommand;
 import org.firstinspires.ftc.teamcode.Recorder;
 import org.firstinspires.ftc.teamcode.util.PlaystationAliases;
 
@@ -30,7 +31,7 @@ NEW
 @TeleOp(name = "MainTeleOp")
 public class MainOpMode extends BaseOpMode {
 
-    public static double intakeSpeed = 0.3;
+    public static double intakeSpeed = 0.4;
     public static double dronePosition = 1;
     public static double restingDronePosition = 0;
 
@@ -134,14 +135,15 @@ public class MainOpMode extends BaseOpMode {
 //        register(driveSubsystem, intakeSubsystem);
         register(driveSubsystem);
         if (USINGREALBOT) {
-            register(liftSubsystem, intakeSubsystem);
+//            register(liftSubsystem);
+            register(intakeSubsystem);
         }
 
 
         //Reset Lift
-        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
-            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
-        });
+//        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
+//            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
+//        });
 
 
 
@@ -273,6 +275,13 @@ public class MainOpMode extends BaseOpMode {
                         // Arm is currently hovering over dustpan
 
                         new SequentialCommandGroup(
+                                new InstantCommand(() -> claw.setPosition(clawOpen)), // Open claw
+
+                                // Move arm back
+                                new InstantCommand(() -> {armPosition = 0.6;}),
+                                updateArm(),
+                                new WaitCommand(100),
+
                                 new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 5);}),
                                 new WaitCommand(50),
                                 new InstantCommand(() -> {arm.setPosition(armMax - 0.02 * 4);}),
@@ -366,9 +375,9 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-        liftSubsystem.setDefaultCommand(PIDLiftCommand);
+//        liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
-        encoderOffTrigger.whenActive(manualLiftCommand);
+//        encoderOffTrigger.whenActive(manualLiftCommand);
 
 
 
@@ -431,9 +440,9 @@ public class MainOpMode extends BaseOpMode {
     public void run()
     {
         if (USINGREALBOT) {
-            telemetry.addData("Manual Lift", manualLiftCommand.isScheduled());
-            telemetry.addData("PID Lift", PIDLiftCommand.isScheduled());
-            telemetry.addData("Encoder Off Detector", encoderOffTrigger.get());
+//            telemetry.addData("Manual Lift", manualLiftCommand.isScheduled());
+//            telemetry.addData("PID Lift", PIDLiftCommand.isScheduled());
+//            telemetry.addData("Encoder Off Detector", encoderOffTrigger.get());
         }
 
         if (gamepad2.y){
@@ -444,7 +453,7 @@ public class MainOpMode extends BaseOpMode {
             intakeMotor.set(0);
         }
         if (USINGREALBOT) {
-            encoderDisconnectDetect.recordEncoderValues();
+//            encoderDisconnectDetect.recordEncoderValues();
         }
 
         telemetry.addData("Time left", beforeMatchEnd.remainingTime());
@@ -493,26 +502,26 @@ public class MainOpMode extends BaseOpMode {
 
         // Manual lift, Not used for now
 
-//        double power = -gamepad2.left_stick_y;
-//
-//        if (gamepad2.dpad_up) {
-//            power = power + 1;
-//        }
-//        if (gamepad2.dpad_down) {
-//            power = power - 1;
-//        }
+        double power = -gamepad2.left_stick_y;
+
+        if (gamepad2.dpad_up) {
+            power = power + 1;
+        }
+        if (gamepad2.dpad_down) {
+            power = power - 1;
+        }
 
 
 
-//        telemetry.addData("power", power);
-//        if (USINGREALBOT) {
-//            liftLeft.motor.setPower(-power);
-//            liftRight.motor.setPower(-power);
-//        }
+        telemetry.addData("power", power);
+        if (USINGREALBOT) {
+            liftLeft.motor.setPower(-power);
+            liftRight.motor.setPower(-power);
+        }
 
-//        telemetry.addData("armPickupStage", armPickupStage);
-//        telemetry.addData("armPosition", armPosition);
-//        telemetry.update();
+        telemetry.addData("armPickupStage", armPickupStage);
+        telemetry.addData("armPosition", armPosition);
+        telemetry.update();
 //        AprilTagDetector.updateAprilTagDetections();
 //        AprilTagDetector.aprilTagTelemetry(telemetry);
 

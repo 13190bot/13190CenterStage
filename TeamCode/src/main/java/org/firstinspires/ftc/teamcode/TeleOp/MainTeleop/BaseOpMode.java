@@ -85,6 +85,8 @@ public class BaseOpMode extends CommandOpModeEx {
             liftLeft.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             liftRight.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             liftRight.setInverted(true);
+            liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             //Zero the lift encoders
             liftRight.resetEncoder();
@@ -138,7 +140,7 @@ public class BaseOpMode extends CommandOpModeEx {
         driveSubsystem = new DriveSubsystem(fl, fr, bl, br, telemetry);
         if (USINGREALBOT) {
             intakeSubsystem = new IntakeSubsystem(intakeMotor);
-            liftSubsystem = new LiftSubsystem(liftRight, liftLeft, telemetry);
+//            liftSubsystem = new LiftSubsystem(liftRight, liftLeft, telemetry);
         }
         droneSubsystem = new DroneSubsystem(drone);
 
@@ -147,10 +149,10 @@ public class BaseOpMode extends CommandOpModeEx {
         //Commands
         driveRobotOptimalCommand = new DriveRobotOptimalCommand(driveSubsystem, gamepadEx1);
         if (USINGREALBOT) {
-            PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
-            manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
-            encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
-            encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
+//            PIDLiftCommand = new PIDLiftCommand(liftSubsystem, gamepadEx2::getLeftY);
+//            manualLiftCommand = new ManualLiftCommand(liftSubsystem, gamepadEx2);
+//            encoderDisconnectDetect = new EncoderDisconnectDetect(liftLeft);
+//            encoderOffTrigger = new Trigger(encoderDisconnectDetect::isEncoderDisconnected);
         }
 
         driveSubsystem.speedMultiplier = 1;

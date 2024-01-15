@@ -10,10 +10,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Auto.Recorded.LoadRecorded;
 import org.firstinspires.ftc.teamcode.CV.ColorDetectionYCRCBPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import java.io.IOException;
 
 @Autonomous(group="Recorder", name="MainAuto_NearOnlyPlease")
 public class MainAuto extends LinearOpMode {
@@ -70,6 +73,15 @@ public class MainAuto extends LinearOpMode {
             odometry[i] = hardwareMap.get(DcMotor.class, odometryNames[i]);
         }
 
+
+        double[][][] out;
+        try {
+            LoadRecorded.load();
+            out = LoadRecorded.getArrayData();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         telemetry = new MultipleTelemetry(telemetry);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -100,39 +112,40 @@ public class MainAuto extends LinearOpMode {
 
         ColorDetectionYCRCBPipeline.PropPosition propPosition = colorDetectionYCRCBPipeline.getPosition();
 
-//        if (colorInd == 2) {
-//            switch(propPosition) {
-//                case LEFT:
-//                    replay(blueLeft);
-//                    break;
-//                case CENTER:
-//                    replay(blueCenter);
-//                    break;
-//                case RIGHT:
-//                    replay(blueRight);
-//                    break;
-//                case NOPOS:
-//                    break;
-//                default:
-//                    break;
-//            }
-//        } else {
-//            switch(propPosition) {
-//                case LEFT:
-//                    replay(redLeft);
-//                    break;
-//                case CENTER:
-//                    replay(redCenter);
-//                    break;
-//                case RIGHT:
-//                    replay(redRight);
-//                    break;
-//                case NOPOS:
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
+        // {"blueCenter","blueLeft","blueRight","redCenter","redLeft","redRight"};
+        if (colorInd == 2) {
+            switch(propPosition) {
+                case LEFT:
+                    replay(out[1]);
+                    break;
+                case CENTER:
+                    replay(out[0]);
+                    break;
+                case RIGHT:
+                    replay(out[2]);
+                    break;
+                case NOPOS:
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch(propPosition) {
+                case LEFT:
+                    replay(out[4]);
+                    break;
+                case CENTER:
+                    replay(out[3]);
+                    break;
+                case RIGHT:
+                    replay(out[5]);
+                    break;
+                case NOPOS:
+                    break;
+                default:
+                    break;
+            }
+        }
 
 
     }
