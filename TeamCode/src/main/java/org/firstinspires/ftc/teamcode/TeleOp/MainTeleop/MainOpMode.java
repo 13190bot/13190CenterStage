@@ -31,17 +31,19 @@ NEW
 @TeleOp(name = "MainTeleOp")
 public class MainOpMode extends BaseOpMode {
 
-    public static double intakeSpeed = 0.4;
-    public static double dronePosition = 1;
-    public static double restingDronePosition = 0;
+    // CONFIIG
+    public static double intakeSpeed = 0.4; // speed of intake between [0, 1]
+    public static double dronePosition = 1; // drone position after driver launches drone
+    public static double restingDronePosition = 0; // drone position for resting
 
 
+    // TESTING STUFF (dw about this)
     public static double A_armPosition = -1;
     public static double A_pitchPosition = -1;
     public static double A_clawPosition = -1;
 
 
-    public boolean activated = true;
+//    public boolean activated = true;
     public boolean isClawOpen = true;
 
 
@@ -52,18 +54,18 @@ public class MainOpMode extends BaseOpMode {
 //    public double armMax = 0.92; // 0.88 when red tape
 
     // Axon max 12/26/2023
-    public final static double armMin = 0.15;
-    public final static double armMax = 0.727;
+    public final static double armMin = 0.15; // arm on board
+    public final static double armMax = 0.727; // arm: when arm on dustpan
 
-    public final static double pitchMin = 0.215; // 0.22 when red tape
-    public final static double pitchMax = 0.75;
+    public final static double pitchMin = 0.215; // pitch: when arm on dustpan // 0.22 when red tape
+    public final static double pitchMax = 0.75; // pitch: when arm on board
 
-    public final static double clawClosed = 0.17;
-    public final static double clawOpen = 0.08;
+    public final static double clawClosed = 0.17; // claw: when closed
+    public final static double clawOpen = 0.08; // claw: when open
 
-    public final static double manualArmIncrement = 0.0005;
+    public final static double manualArmIncrement = 0.0005; // increment per "frame" for manual arm control
 
-    public double test = 250;
+    public double test = 250; // useless testing var
 
 
 //    public void setArmPosition(double targetArmPosition) {
@@ -82,7 +84,7 @@ public class MainOpMode extends BaseOpMode {
 //    }
 
     public boolean axonInitialized = false;
-    public boolean noPitchDelayForNext = true;
+    public boolean noPitchDelayForNext = true; // well, we need to delay pitch when axon is initializing to make it sync
     public double armPosition = 1;
 //    public double targetArmPosition;
     public double armPercent;
@@ -90,6 +92,7 @@ public class MainOpMode extends BaseOpMode {
         return new SequentialCommandGroup(
             new InstantCommand(() -> {armPercent = (armPosition - armMin) / (armMax - armMin);}),
             new ConditionalCommand(
+                // If arm is in "scoring position"
                 new SequentialCommandGroup(
                     // arm is mostly up: adjust pitch so that pitch/claw is perpendicular against wall
                     new InstantCommand(() -> {
@@ -97,10 +100,12 @@ public class MainOpMode extends BaseOpMode {
                     }),
 //                    new WaitCommand(500),
 //                    new WaitCommand(noPitchDelayForNext ? 0 : (500 - (axonInitialized ? 200 : 0))),
+                    // pitch delay code to sync with axon
                     new WaitCommand(axonInitialized ? (noPitchDelayForNext ? 0 : 300) : 500),
                     new InstantCommand(() -> {
                         double pitchPercent = (0.5 - armPercent) / (0.5);
                         // pitchPercent * 1 - (1 - pitchPercent) * 0.65
+                        // Adjust pitch to be perpendicular against board
                         pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax); // perpendicular to board
                         axonInitialized = true;
                         noPitchDelayForNext = false;
@@ -126,6 +131,7 @@ public class MainOpMode extends BaseOpMode {
      */
     public double armPickupStage = -1;
 
+    // Moves to the next stage of arm
     public InstantCommand armPickup;
 
 
@@ -164,6 +170,7 @@ public class MainOpMode extends BaseOpMode {
             }
         });
 
+        // Drone launcher
         gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand()
                 .andThen( new InstantCommand(() -> {
                     telemetry.addData("drone", "launched");
