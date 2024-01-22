@@ -41,7 +41,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     public static double manualPower = 350; //these are in ticks, 300
 
-
+    //Pass on values
     public LiftSubsystem(MotorEx liftRight, MotorEx liftLeft, Telemetry telemetry) {
         this.liftRight = liftRight;
         this.liftLeft = liftLeft;
@@ -51,6 +51,7 @@ public class LiftSubsystem extends SubsystemBase {
         controllerRight.setTolerance(tolerance);
     }
 
+    //Function that is run repeatedly to move the lift to the target
     public void moveLiftToTarget() {
         //Set PID values
         controllerRight.setP(kP);
@@ -79,12 +80,13 @@ public class LiftSubsystem extends SubsystemBase {
     }
 
 
-
+    //Set the goal position
     public static void setLiftGoal(int goal){
         goalRight = goal;
         goalLeft = goal;
     }
 
+    //Check if the lift is within the limits
     public boolean checkLimits(double inputPower){
         if (useLimits) {
             if (inputPower > 0 && liftLeft.getCurrentPosition() >= upperLimit) {
@@ -103,7 +105,7 @@ public class LiftSubsystem extends SubsystemBase {
 
 
 
-
+    //Move the lift manually
     public void lift(double inputPower) {
         if (checkLimits(inputPower)) {
                 //Set PID Goal
@@ -123,7 +125,7 @@ public class LiftSubsystem extends SubsystemBase {
         goalLeft = liftLeft.getCurrentPosition();
     }
 
-
+    //Lift debug telemetry
     public void liftTelemetry(){
         telemetry.addData("Goal Pos",goalLeft);
         telemetry.addData("Current Pos Right",liftRight.getCurrentPosition());
