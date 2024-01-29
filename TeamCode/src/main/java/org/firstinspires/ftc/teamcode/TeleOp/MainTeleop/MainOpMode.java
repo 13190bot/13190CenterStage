@@ -54,14 +54,16 @@ public class MainOpMode extends BaseOpMode {
 //    public double armMax = 0.92; // 0.88 when red tape
 
     // Axon max 12/26/2023
+
+    // 1/28/2024
     public final static double armMin = 0.15; // arm on board
-    public final static double armMax = 0.727; // arm: when arm on dustpan
+    public final static double armMax = 0.72; // arm: when arm on dustpan
 
-    public final static double pitchMin = 0.215; // pitch: when arm on dustpan // 0.22 when red tape
-    public final static double pitchMax = 0.75; // pitch: when arm on board
+    public final static double pitchMin = 0.238; // pitch: when arm on dustpan // 0.22 when red tape
+    public final static double pitchMax = 0.72; // pitch: when arm on board
 
-    public final static double clawClosed = 0.17; // claw: when closed
-    public final static double clawOpen = 0.08; // claw: when open
+    public final static double clawClosed = 0.155; // claw: when closed
+    public final static double clawOpen = 0.065; // claw: when open
 
     public final static double manualArmIncrement = 0.0005; // increment per "frame" for manual arm control
 
