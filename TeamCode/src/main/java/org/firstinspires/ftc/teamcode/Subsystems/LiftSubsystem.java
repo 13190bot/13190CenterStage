@@ -75,8 +75,8 @@ public class LiftSubsystem extends SubsystemBase {
         if (controllerLeft.atGoal()) leftPower = 0;
 
         //Set power based on PID output
-        liftRight.set(leftPower);
-        liftLeft.set(leftPower);
+        liftRight.set(rightPower);
+        liftLeft.set(rightPower);
     }
 
 
@@ -89,9 +89,9 @@ public class LiftSubsystem extends SubsystemBase {
     //Check if the lift is within the limits
     public boolean checkLimits(double inputPower){
         if (useLimits) {
-            if (inputPower > 0 && liftLeft.getCurrentPosition() >= upperLimit) {
+            if (inputPower > 0 && liftRight.getCurrentPosition() >= upperLimit) {
                 return false;
-            } else if (inputPower < 0 && liftLeft.getCurrentPosition() <= lowerLimit) {
+            } else if (inputPower < 0 && liftRight.getCurrentPosition() <= lowerLimit) {
                 return false;
             } else {
                 return true;

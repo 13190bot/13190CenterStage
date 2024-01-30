@@ -25,8 +25,8 @@ public class ManualLiftCommand extends CommandBase {
 
 
                     if (power != 0) {
-                        liftSubsystem.liftRight.set(power);
-                        liftSubsystem.liftLeft.set(power);
+                        liftSubsystem.liftRight.set(-power);
+                        liftSubsystem.liftLeft.set(-power);
                     } else {
                         //Stabilize
                         liftSubsystem.liftRight.set(0);

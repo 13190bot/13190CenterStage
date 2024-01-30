@@ -27,6 +27,8 @@ public class RecordedParser {
         columns = commas+1;
 
         parsed = new double[rows][columns];
+        return parsed; // Idk what im doing but there was no return before
+        //Without return it throws an error
     }
 
 }
