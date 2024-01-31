@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Commands;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.CV.AprilTagDetector;
 import org.firstinspires.ftc.teamcode.Subsystems.DriveSubsystem;
@@ -19,14 +20,20 @@ public class AlignCommand extends CommandBase {
     double strafe = 0;
     double forward = 0;
     double rotate = 0;
-    private PIDFController rotatePIDF;
-    private PIDFController forwardPIDF;
-    private PIDFController strafePIDF;
+    PIDFController rotatePIDF;
+    PIDFController forwardPIDF;
+    PIDFController strafePIDF;
 
-    public static double kp = 0.07;
-    public static double ki = 0;
-    public static double kd = 0.0001;
-    public static double kf = 0;
+    public static double forwardsError = 0;
+
+    public static PIDFCoefficients
+            rC = new PIDFCoefficients(0.003, 0.1, 0.0002, 0),
+            fC = new PIDFCoefficients(0.05, 0.075, 0, 0),
+            sC = new PIDFCoefficients();
+//    public static double kp = 0.00;
+//    public static double ki = 0;
+//    public static double kd = 0.0000;
+//    public static double kf = 0;
 
     AprilTagDetector aprilTagDetector;
 
@@ -36,9 +43,14 @@ public class AlignCommand extends CommandBase {
         this.aprilTagDetector = aprilTagDetector;
 
         // https://docs.ftclib.org/ftclib/features/controllers
-        rotatePIDF = new PIDFController(0.07, 0, 0.0001, 0);
-        forwardPIDF = new PIDFController(0.05, 0, 0.0001, 0);
-        strafePIDF = new PIDFController(0.1, 0, 0, 0);
+        rotatePIDF  = new PIDFController(0.0, 0, 0.0, 0);
+        forwardPIDF = new PIDFController(0.00, 0, 0.0000, 0);
+        strafePIDF  = new PIDFController(0.0, 0, 0, 0);
+
+//        if (rC == null) rC = new PIDFCoefficients();
+//        if (fC == null) fC = new PIDFCoefficients();
+//        if (rC == null) sC = new PIDFCoefficients();
+
         rotatePIDF.setTolerance(0);
         forwardPIDF.setTolerance(0);
         strafePIDF.setTolerance(0);
@@ -51,26 +63,21 @@ public class AlignCommand extends CommandBase {
 
     @Override
     public void execute() {
-//        rotatePIDF.setPIDF(kp, ki, kd, kf);
-//        forwardPIDF.setPIDF(kp, ki, kd, kf);
-//        strafePIDF.setPIDF(kp, ki, kd, kf);
+        rotatePIDF.setPIDF(rC.p, rC.i, rC.d, rC.f);
+        forwardPIDF.setPIDF(fC.p, fC.i, fC.d, fC.f);
+        strafePIDF.setPIDF(sC.p, sC.i, sC.d, sC.f);
 
         aprilTagDetector.updateAprilTagDetections();
 
         List allTags = aprilTagDetector.getAllCurrentDetections();
 
-
-
-
-
         telemetry.addData("numTags", allTags.size());
-
 
         if (allTags.size() > 0) {
             AprilTagDetection tag = (AprilTagDetection) allTags.get(0);
             telemetry.addData("tag id: ", tag.id);
 
-            if (!rotatePIDF.atSetPoint()) {
+            if (!rotatePIDF.atSetPoint() && false) {
                 // DON'T USE BEARING, USE YAW
                 if (rotate == 0) {
                     rotatePIDF.reset();
@@ -109,8 +116,10 @@ public class AlignCommand extends CommandBase {
                     }
 
                     telemetry.addLine("Forward PIDF");
+                    telemetry.addData("forwards error", forwardsError);
                     double input = tag.ftcPose.y; // Inches: TODO: tune
                     double output = forwardPIDF.calculate(input, 10);
+                    forwardsError = input - 10;
 //                    rotate = 0;
                     forward = output;
                     strafe = 0;
@@ -127,10 +136,10 @@ public class AlignCommand extends CommandBase {
                         double output = strafePIDF.calculate(input, 0);
 //                    rotate = 0;
 //                    forward = 0;
-                        strafe = output;
+                        strafe = -output;
                     }
 
-                    if (true) {
+                    if (false) {
                         // Done aligning!
                         telemetry.addLine("Done aligning!");
                     rotate = 0;
