@@ -74,10 +74,9 @@ public class MainAuto extends LinearOpMode {
         }
 
 
-        double[][][] out;
+        double[][][] out = new double[0][][];
         try {
-            LoadRecorded.load();
-            out = LoadRecorded.getArrayData();
+            out = RecordedParser.getAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -113,39 +112,43 @@ public class MainAuto extends LinearOpMode {
         ColorDetectionYCRCBPipeline.PropPosition propPosition = colorDetectionYCRCBPipeline.getPosition();
 
         // {"blueCenter","blueLeft","blueRight","redCenter","redLeft","redRight"};
-        if (colorInd == 2) {
-            switch(propPosition) {
-                case LEFT:
-                    replay(out[1]);
-                    break;
-                case CENTER:
-                    replay(out[0]);
-                    break;
-                case RIGHT:
-                    replay(out[2]);
-                    break;
-                case NOPOS:
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            switch(propPosition) {
-                case LEFT:
-                    replay(out[4]);
-                    break;
-                case CENTER:
-                    replay(out[3]);
-                    break;
-                case RIGHT:
-                    replay(out[5]);
-                    break;
-                case NOPOS:
-                    break;
-                default:
-                    break;
-            }
-        }
+
+
+        replay(out[1]);
+
+//        if (colorInd == 2) {
+//            switch(propPosition) {
+//                case LEFT:
+//                    replay(out[1]);
+//                    break;
+//                case CENTER:
+//                    replay(out[0]);
+//                    break;
+//                case RIGHT:
+//                    replay(out[2]);
+//                    break;
+//                case NOPOS:
+//                    break;
+//                default:
+//                    break;
+//            }
+//        } else {
+//            switch(propPosition) {
+//                case LEFT:
+//                    replay(out[4]);
+//                    break;
+//                case CENTER:
+//                    replay(out[3]);
+//                    break;
+//                case RIGHT:
+//                    replay(out[5]);
+//                    break;
+//                case NOPOS:
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
 
 
     }
