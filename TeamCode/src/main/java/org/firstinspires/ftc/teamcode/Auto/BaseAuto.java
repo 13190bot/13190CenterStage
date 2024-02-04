@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.RR;
+package org.firstinspires.ftc.teamcode.Auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
@@ -35,6 +35,8 @@ public abstract class BaseAuto extends LinearOpMode {
     public SimpleServo arm,pitch,claw,drone;
     private MotorEx[] motors = {fl, fr, bl, br};
     protected Timing.Timer beforeMatchEnd;
+
+    ColorDetectionYCRCBPipeline.PropPosition position;
 
     public AprilTagDetector aprilTagDetector1, aprilTagDetector2;
 
