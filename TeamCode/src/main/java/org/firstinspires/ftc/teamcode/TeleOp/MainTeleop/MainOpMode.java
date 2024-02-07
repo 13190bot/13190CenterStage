@@ -32,7 +32,7 @@ NEW
 public class MainOpMode extends BaseOpMode {
 
     // CONFIIG
-    public static double intakeSpeed = 0.4; // speed of intake between [0, 1]
+    public static double intakeSpeed = 0.6; // speed of intake between [0, 1]
     public static double dronePosition = 1; // drone position after driver launches drone
     public static double restingDronePosition = 0; // drone position for resting
 
@@ -260,7 +260,7 @@ public class MainOpMode extends BaseOpMode {
                             new WaitCommand(500),
 
                             // Move arm back
-                            new InstantCommand(() -> {armPosition = 0.6;}),
+                            new InstantCommand(() -> {armPosition = 0.655;}),
                             updateArm()
                         ).schedule();
 
