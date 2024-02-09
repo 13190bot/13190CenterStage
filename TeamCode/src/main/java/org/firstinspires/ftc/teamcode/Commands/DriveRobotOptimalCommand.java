@@ -56,10 +56,10 @@ public class DriveRobotOptimalCommand extends CommandBase {
                 driveSubsystem.speedMultiplier = driveSubsystem.speedMultiplier / slowmodeMultiplier;
             }
         }
-
-        if (gamepadEx1.wasJustPressed(PlaystationAliases.CROSS)) {
-            driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
-        }
+// Remove
+//        if (gamepadEx1.wasJustPressed(PlaystationAliases.CROSS)) {
+//            driveSubsystem.speedMultiplier = -driveSubsystem.speedMultiplier;
+//        }
 
         if (gamepadEx1.wasJustPressed(PlaystationAliases.SHARE)) {
             tobyControls = !tobyControls;

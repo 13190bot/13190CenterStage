@@ -33,9 +33,6 @@ public class MainOpMode extends BaseOpMode {
 
     // CONFIIG
     public static double intakeSpeed = 0.6; // speed of intake between [0, 1]
-    public static double dronePosition = 1; // drone position after driver launches drone
-    public static double restingDronePosition = 0; // drone position for resting
-
 
     // TESTING STUFF (dw about this)
     public static double A_armPosition = -1;
@@ -149,9 +146,9 @@ public class MainOpMode extends BaseOpMode {
 
 
         //Reset Lift
-//        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
-//            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
-//        });
+        gb2(PlaystationAliases.SHARE).whenPressed(() -> {
+            liftSubsystem.setLiftGoal(liftSubsystem.lowerLimit);
+        });
 
 
 
@@ -173,11 +170,8 @@ public class MainOpMode extends BaseOpMode {
         });
 
         // Drone launcher
-        gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand()
-                .andThen( new InstantCommand(() -> {
-                    telemetry.addData("drone", "launched");
-                    telemetry.update();
-                })));
+        gb2(GamepadKeys.Button.LEFT_BUMPER).whenPressed(droneSubsystem.launchCommand());
+
 
 
         // Intake normal and reverse
@@ -384,7 +378,7 @@ public class MainOpMode extends BaseOpMode {
         driveSubsystem.setDefaultCommand(driveRobotOptimalCommand);
 
 
-        liftSubsystem.setDefaultCommand(manualLiftCommand);
+        liftSubsystem.setDefaultCommand(PIDLiftCommand);
 
 
 
@@ -401,11 +395,6 @@ public class MainOpMode extends BaseOpMode {
         });
 
 
-        gb1(GamepadKeys.Button.LEFT_BUMPER).toggleWhenPressed(() -> {
-            drone.setPosition(dronePosition);
-        }, () -> {
-            drone.setPosition(restingDronePosition);
-        });
 
         // Stop recording
         gb1(GamepadKeys.Button.DPAD_DOWN).whenPressed(() -> {

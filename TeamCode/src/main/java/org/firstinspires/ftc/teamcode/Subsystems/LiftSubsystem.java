@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
+import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.KalmanFilter;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -25,6 +26,7 @@ public class LiftSubsystem extends SubsystemBase {
 
     public static double goalRight = 0;
     public static double goalLeft = 0;
+
 
 
 
@@ -127,11 +129,11 @@ public class LiftSubsystem extends SubsystemBase {
 
     //Lift debug telemetry
     public void liftTelemetry(){
-        telemetry.addData("Goal Pos",goalLeft);
+        telemetry.addData("Goal Pos",goalRight);
         telemetry.addData("Current Pos Right",liftRight.getCurrentPosition());
         telemetry.addData("Current Pos Left",liftLeft.getCurrentPosition());
 
-        dashboardTelemetry.addData("Goal Pos",goalLeft);
+        dashboardTelemetry.addData("Goal Pos",goalRight);
         dashboardTelemetry.addData("Current Pos Right",liftRight.getCurrentPosition());
         dashboardTelemetry.addData("Current Pos Left",liftLeft.getCurrentPosition());
         dashboardTelemetry.update();
