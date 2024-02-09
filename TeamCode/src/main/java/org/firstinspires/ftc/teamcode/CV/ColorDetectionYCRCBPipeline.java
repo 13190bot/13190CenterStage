@@ -17,11 +17,11 @@ public class ColorDetectionYCRCBPipeline extends OpenCvPipeline {
     private final Mat binaryMat = new Mat();
 
     //TODO: change anchor points to correct points
-    private final Point LEFTPOS_TOPLEFT_ANCHOR_POINT = new Point(50, 400);
+    private final Point LEFTPOS_TOPLEFT_ANCHOR_POINT = new Point(50, 500);
 
-    private final Point CENTERPOS_TOPLEFT_ANCHOR_POINT = new Point(550, 400);
+    private final Point CENTERPOS_TOPLEFT_ANCHOR_POINT = new Point(625, 500);
 
-    private final Point RIGHTPOS_TOPLEFT_ANCHOR_POINT = new Point(1200, 400);
+    private final Point RIGHTPOS_TOPLEFT_ANCHOR_POINT = new Point(1200, 500);
 
     // Width and height for the bounding boxes
     public static int REGION_WIDTH = 70;

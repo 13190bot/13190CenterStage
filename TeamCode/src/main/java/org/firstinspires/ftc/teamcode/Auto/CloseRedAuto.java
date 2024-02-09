@@ -3,34 +3,25 @@ package org.firstinspires.ftc.teamcode.Auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.CV.ColorDetectionYCRCBPipeline;
-import org.firstinspires.ftc.teamcode.CV.PixelDetectionPipeline;
 import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
-import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode;
 import org.firstinspires.ftc.teamcode.util.librarys.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.librarys.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.util.librarys.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import static org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode.*;
 
-@Autonomous(name = "MainAuto")
-public class MainAuto extends BaseOpMode {
+@Autonomous(name = "CloseRedAuto")
+public class CloseRedAuto extends BaseOpMode {
     private OpenCvCamera camera;
 
     // 2 = blue, 1 = red
-    private int colorInd = 2;
+    private int colorInd = 1;
     private final boolean isFarSide = false;
     @Override
     public void runOpMode() {
@@ -83,40 +74,64 @@ public class MainAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(27)
                         .turn(Math.toRadians(90))
-                        .forward(5)
-                        .turn(Math.toRadians(-90))
-                        .back(5)
+                        .forward(10)
+                        .back(10)
+                        .addTemporalMarker(() -> {
+                            intakeMotor.set(-0.3);
+                        })
+                        .waitSeconds(1)
+                        .addTemporalMarker(() -> {
+                            intakeMotor.set(0.25);
+                        })
+                        .waitSeconds(1.2)
+                        .addTemporalMarker(() -> {
+                            intakeMotor.set(0);
+                        })
+                        .back(37)
+                        .strafeLeft(15)
                         .build());
                 break;
             case CENTER:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(40)
-                        .back(10)
+                        .back(11.5)
                         .addTemporalMarker(() -> {
-                            intakeMotor.set(-0.4);
+                            intakeMotor.set(-0.3);
                         })
                         .waitSeconds(1)
                         .addTemporalMarker(() -> {
-                            intakeMotor.set(0.2);
+                            intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1)
+                        .waitSeconds(1.2)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0);
                         })
-                        .back(8)
+                        .back(9)
 
-                        .turn(Math.toRadians(-90))
-                        .back(35)
-                        .strafeRight(5)
+                        .turn(Math.toRadians(90))
+                        .back(38)
+                        .strafeLeft(11)
                         .build());
                 break;
             case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(27)
-                        .turn(Math.toRadians(-90))
-                        .forward(5)
-                        .turn(Math.toRadians(90))
+                        .strafeLeft(10)
+                        .addTemporalMarker(() -> {
+                            intakeMotor.set(-0.3);
+                        })
+                        .waitSeconds(1)
+                        .addTemporalMarker(() -> {
+                            intakeMotor.set(0.25);
+                        })
+                        .waitSeconds(1.2)
+                        .addTemporalMarker(() -> {
+                            intakeMotor.set(0);
+                        })
                         .back(5)
+                        .turn(Math.toRadians(90))
+                        .back(28.5)
+                        .strafeLeft(7)
                         .build());
                 break;
             case NOPOS:
@@ -127,28 +142,56 @@ public class MainAuto extends BaseOpMode {
 
 
 
-        claw.setPosition(clawClosed);
-        sleep(1000);
-        double armPosition = armMin;
-        arm.setPosition(armPosition);
-        sleep(1000);
-        
-        double armPercent = (armPosition - armMin) / (armMax - armMin);
-        double pitchPercent = (0.5 - armPercent) / (0.5);
-        pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax);
-        sleep(1000);
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                        .strafeRight(0.1)
+                        .addDisplacementMarker(() -> {
+                            claw.setPosition(clawClosed);
+                            sleep(1000);
+                            double armPosition = armMin;
+                            arm.setPosition(armPosition);
+                            sleep(1000);
 
-        claw.setPosition(clawOpen);
-        sleep(100);
+                            double armPercent = (armPosition - armMin) / (armMax - armMin);
+                            double pitchPercent = (0.5 - armPercent) / (0.5);
+                            pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax);
+                            sleep(1000);
 
-        // Shake it
-        pitch.setPosition(pitch.getPosition() + 0.1);
-        sleep(100);
-        pitch.setPosition(pitch.getPosition() - 0.1);
-        sleep(600);
-        armPosition = 0.655;
-        pitch.setPosition(pitchMin); // ready to pick up
-        arm.setPosition(armPosition);
+                            claw.setPosition(clawOpen+0.02);
+                            sleep(300);
+                            claw.setPosition(clawOpen-0.02);
+                            sleep(300);
+                            // Shake it
+                            pitch.setPosition(pitch.getPosition() + 0.1);
+                            sleep(100);
+                            pitch.setPosition(pitch.getPosition() - 0.1);
+                            sleep(600);
+                            armPosition = 0.655;
+                            pitch.setPosition(pitchMin); // ready to pick up
+                            arm.setPosition(armPosition);
+                        })
+                .build());
+
+
+        switch(propPosition) {
+            case LEFT:
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                        .strafeRight(27)
+                        .turn(Math.toRadians(30))
+                        .back(18)
+                        .build());
+            case CENTER:
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                        .strafeRight(23)
+                        .turn(Math.toRadians(30))
+                        .back(18)
+                        .build());
+            case RIGHT:
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
+                        .strafeRight(10)
+                        .turn(Math.toRadians(30))
+                        .back(5)
+                        .build());
+        }
 
 
 
