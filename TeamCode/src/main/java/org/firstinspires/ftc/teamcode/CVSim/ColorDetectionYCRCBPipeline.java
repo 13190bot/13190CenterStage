@@ -79,74 +79,74 @@ public class ColorDetectionYCRCBPipeline extends OpenCvPipeline {
 //
         Core.inRange(ycrcbMat, lowerB, upperB, binaryMat);
 
-//        Imgproc.rectangle(
-//                input,
-//                left_pointA,
-//                left_pointB,
-//                new Scalar(255, 255, 255),
-//                1
-//        );
+        Imgproc.rectangle(
+                input,
+                left_pointA,
+                left_pointB,
+                new Scalar(255, 255, 255),
+                1
+        );
+
+        Imgproc.rectangle(
+                input,
+                center_pointA,
+                center_pointB,
+                new Scalar(255, 255, 255),
+                1
+        );
+
+        Imgproc.rectangle(
+                input,
+                right_pointA,
+                right_pointB,
+                new Scalar(255, 255, 255),
+                1
+        );
+
+        Mat leftRegion = binaryMat.submat(new Rect(left_pointA, left_pointB));
+        Mat centerRegion = binaryMat.submat(new Rect(center_pointA, center_pointB));
+        Mat rightRegion = binaryMat.submat(new Rect(right_pointA, right_pointB));
 //
-//        Imgproc.rectangle(
-//                input,
-//                center_pointA,
-//                center_pointB,
-//                new Scalar(255, 255, 255),
-//                1
-//        );
 //
-//        Imgproc.rectangle(
-//                input,
-//                right_pointA,
-//                right_pointB,
-//                new Scalar(255, 255, 255),
-//                1
-//        );
+        int leftAvg = (int) Core.mean(leftRegion).val[0];
+        int centerAvg = (int) Core.mean(centerRegion).val[0];
+        int rightAvg = (int) Core.mean(rightRegion).val[0];
+
+        int max = Math.max(leftAvg, Math.max(centerAvg, rightAvg));
 //
-//        Mat leftRegion = binaryMat.submat(new Rect(left_pointA, left_pointB));
-//        Mat centerRegion = binaryMat.submat(new Rect(center_pointA, center_pointB));
-//        Mat rightRegion = binaryMat.submat(new Rect(right_pointA, right_pointB));
-////
-////
-//        int leftAvg = (int) Core.mean(leftRegion).val[0];
-//        int centerAvg = (int) Core.mean(centerRegion).val[0];
-//        int rightAvg = (int) Core.mean(rightRegion).val[0];
 //
-//        int max = Math.max(leftAvg, Math.max(centerAvg, rightAvg));
-////
-////
-//        if (max == leftAvg) {
-//            position = PropPosition.LEFT;
-//            Imgproc.rectangle(
-//                    input,
-//                    left_pointA,
-//                    left_pointB,
-//                    new Scalar(255, 0, 0),
-//                    1
-//            );
-//        }
-//
-//        if (max == centerAvg) {
-//            position = PropPosition.CENTER;
-//            Imgproc.rectangle(
-//                    input,
-//                    center_pointA,
-//                    center_pointB,
-//                    new Scalar(255, 0, 0),
-//                    1
-//            );
-//        }
-//
-//        if (max == rightAvg) {
-//            position = PropPosition.RIGHT;
-//            Imgproc.rectangle(
-//                    input,
-//                    right_pointA,
-//                    right_pointB,
-//                    new Scalar(255, 0, 0),
-//                    1
-//            );
-//        }
+        if (max == leftAvg) {
+            position = PropPosition.LEFT;
+            Imgproc.rectangle(
+                    input,
+                    left_pointA,
+                    left_pointB,
+                    new Scalar(255, 0, 0),
+                    1
+            );
+        }
+
+        if (max == centerAvg) {
+            position = PropPosition.CENTER;
+            Imgproc.rectangle(
+                    input,
+                    center_pointA,
+                    center_pointB,
+                    new Scalar(255, 0, 0),
+                    1
+            );
+        }
+
+        if (max == rightAvg) {
+            position = PropPosition.RIGHT;
+            Imgproc.rectangle(
+                    input,
+                    right_pointA,
+                    right_pointB,
+                    new Scalar(255, 0, 0),
+                    1
+            );
+        }
 
         return binaryMat;
 
