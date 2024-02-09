@@ -45,40 +45,40 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
-        double strafeAcceleration = (strafe0 - lastStrafe) / timer.seconds();
-        if (strafeAcceleration > maxAcceleration) {
-            strafeAcceleration = maxAcceleration;
-            strafe0 = lastStrafe + strafeAcceleration;
-        } else if (strafeAcceleration < -maxAcceleration) {
-            strafeAcceleration = -maxAcceleration;
-            strafe0 = lastStrafe + strafeAcceleration;
-        }
-
-        double forwardAcceleration = (forward0 - lastForward) / timer.seconds();
-        telemetry.addData("forwardAcceleration", forwardAcceleration);
-        telemetry.update();
-        if (forwardAcceleration > maxAcceleration) {
-            forwardAcceleration = maxAcceleration;
-            forward0 = lastForward + forwardAcceleration;
-        } else if (forwardAcceleration < -maxAcceleration) {
-            forwardAcceleration = -maxAcceleration;
-            forward0 = lastForward + forwardAcceleration;
-        }
-
-        double rotateAcceleration = (rotate0 - lastRotate) / timer.seconds();
-        if (rotateAcceleration > maxAcceleration) {
-            rotateAcceleration = maxAcceleration;
-            rotate0 = lastRotate + rotateAcceleration;
-        } else if (rotateAcceleration < -maxAcceleration) {
-            rotateAcceleration = -maxAcceleration;
-            rotate0 = lastRotate + rotateAcceleration;
-        }
-
-        lastStrafe = strafe0;
-        lastForward = forward0;
-        lastRotate = rotate0;
-
-        timer.reset();
+//        double strafeAcceleration = (strafe0 - lastStrafe) / timer.seconds();
+//        if (strafeAcceleration > maxAcceleration) {
+//            strafeAcceleration = maxAcceleration;
+//            strafe0 = lastStrafe + strafeAcceleration;
+//        } else if (strafeAcceleration < -maxAcceleration) {
+//            strafeAcceleration = -maxAcceleration;
+//            strafe0 = lastStrafe + strafeAcceleration;
+//        }
+//
+//        double forwardAcceleration = (forward0 - lastForward) / timer.seconds();
+////          telemetry.addData("forwardAcceleration", forwardAcceleration);
+////          telemetry.update();
+//        if (forwardAcceleration > maxAcceleration) {
+//            forwardAcceleration = maxAcceleration;
+//            forward0 = lastForward + forwardAcceleration;
+//        } else if (forwardAcceleration < -maxAcceleration) {
+//            forwardAcceleration = -maxAcceleration;
+//            forward0 = lastForward + forwardAcceleration;
+//        }
+//
+//        double rotateAcceleration = (rotate0 - lastRotate) / timer.seconds();
+//        if (rotateAcceleration > maxAcceleration) {
+//            rotateAcceleration = maxAcceleration;
+//            rotate0 = lastRotate + rotateAcceleration;
+//        } else if (rotateAcceleration < -maxAcceleration) {
+//            rotateAcceleration = -maxAcceleration;
+//            rotate0 = lastRotate + rotateAcceleration;
+//        }
+//
+//        lastStrafe = strafe0;
+//        lastForward = forward0;
+//        lastRotate = rotate0;
+//
+//        timer.reset();
 
         mecanumDrive.driveRobotCentric(strafe0 * speedMultiplier, forward0 * speedMultiplier, rotate0 * Math.abs(speedMultiplier));
     }

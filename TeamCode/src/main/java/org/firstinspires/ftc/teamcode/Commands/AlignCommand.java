@@ -24,12 +24,11 @@ public class AlignCommand extends CommandBase {
     PIDFController forwardPIDF;
     PIDFController strafePIDF;
 
-    public static double forwardsError = 0;
 
     public static PIDFCoefficients
             rC = new PIDFCoefficients(0.003, 0.1, 0.0002, 0),
             fC = new PIDFCoefficients(0.05, 0.075, 0, 0),
-            sC = new PIDFCoefficients();
+            sC = new PIDFCoefficients(-0.15, -0.13, 0, 0);
 //    public static double kp = 0.00;
 //    public static double ki = 0;
 //    public static double kd = 0.0000;
@@ -73,15 +72,18 @@ public class AlignCommand extends CommandBase {
 
         telemetry.addData("numTags", allTags.size());
 
+        rotate = 0;
+        forward = 0;
+        strafe = 0;
         if (allTags.size() > 0) {
             AprilTagDetection tag = (AprilTagDetection) allTags.get(0);
             telemetry.addData("tag id: ", tag.id);
 
-            if (!rotatePIDF.atSetPoint() && false) {
+            if (!rotatePIDF.atSetPoint() || true) {
                 // DON'T USE BEARING, USE YAW
-                if (rotate == 0) {
-                    rotatePIDF.reset();
-                }
+//                if (rotate == 0) {
+//                    rotatePIDF.reset();
+//                }
 
 //                double bearing = 0;
 //                for (int i = 0; i < allTags.size(); i++) {
@@ -116,44 +118,42 @@ public class AlignCommand extends CommandBase {
                     }
 
                     telemetry.addLine("Forward PIDF");
-                    telemetry.addData("forwards error", forwardsError);
+//                    telemetry.addData("forwards error", forwardsError);
                     double input = tag.ftcPose.y; // Inches: TODO: tune
                     double output = forwardPIDF.calculate(input, 10);
-                    forwardsError = input - 10;
+//                    forwardsError = input - 10;
 //                    rotate = 0;
                     forward = output;
                     strafe = 0;
                 }
 
-                if (true) {
-                    if (false && !strafePIDF.atSetPoint()) {
+                if (false) {
+                    if (!strafePIDF.atSetPoint()) {
                         if (strafe == 0) {
                             strafePIDF.reset();
                         }
 
                         telemetry.addLine("Strafe PIDF");
-                        double input = tag.ftcPose.x; // Inches: TODO: tune
+                        double input = tag.ftcPose.z; // Inches: TODO: tune
                         double output = strafePIDF.calculate(input, 0);
 //                    rotate = 0;
 //                    forward = 0;
                         strafe = -output;
+                        telemetry.addData("error", input);
                     }
 
                     if (false) {
                         // Done aligning!
                         telemetry.addLine("Done aligning!");
-                    rotate = 0;
-                    forward = 0;
-                    strafe = 0;
+                        rotate = 0;
+                        forward = 0;
+                        strafe = 0;
                     }
                 }
 
             }
         } else {
             telemetry.addLine("No PIDF (apriltag not detected)");
-            rotate = 0;
-            forward = 0;
-            strafe = 0;
         }
 
         telemetry.addData("rotate", rotate);
