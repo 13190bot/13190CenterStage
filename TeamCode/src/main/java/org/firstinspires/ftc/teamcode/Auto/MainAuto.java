@@ -132,15 +132,24 @@ public class MainAuto extends BaseOpMode {
         double armPosition = armMin;
         arm.setPosition(armPosition);
         sleep(1000);
+        
         double armPercent = (armPosition - armMin) / (armMax - armMin);
         double pitchPercent = (0.5 - armPercent) / (0.5);
         pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax);
-        sleep(250);
-//        pitch.setPosition(0.168);
-
         sleep(1000);
 
+        claw.setPosition(clawOpen);
+        sleep(100);
 
+        // Shake it
+        pitch.setPosition(pitch.getPosition() + 0.1);
+        sleep(100);
+        pitch.setPosition(pitch.getPosition() - 0.1);
+        sleep(100);
+        sleep(500);
+        armPosition = 0.655;
+        pitch.setPosition(pitchMin); // ready to pick up
+        arm.setPosition(armPosition);
 
 
 
