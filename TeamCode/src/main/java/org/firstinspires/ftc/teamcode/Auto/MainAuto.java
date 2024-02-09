@@ -128,7 +128,7 @@ public class MainAuto extends BaseOpMode {
 
 
         claw.setPosition(clawClosed);
-        sleep(500);
+        sleep(1000);
         double armPosition = armMin;
         arm.setPosition(armPosition);
         sleep(1000);
@@ -145,8 +145,7 @@ public class MainAuto extends BaseOpMode {
         pitch.setPosition(pitch.getPosition() + 0.1);
         sleep(100);
         pitch.setPosition(pitch.getPosition() - 0.1);
-        sleep(100);
-        sleep(500);
+        sleep(600);
         armPosition = 0.655;
         pitch.setPosition(pitchMin); // ready to pick up
         arm.setPosition(armPosition);
