@@ -32,7 +32,7 @@ NEW
 public class MainOpMode extends BaseOpMode {
 
     // CONFIIG
-    public static double intakeSpeed = 0.6; // speed of intake between [0, 1]
+    public static double intakeSpeed = 0.5; // speed of intake between [0, 1]
 
     // TESTING STUFF (dw about this)
     public static double A_armPosition = -1;
@@ -53,14 +53,14 @@ public class MainOpMode extends BaseOpMode {
     // Axon max 12/26/2023
 
     // 1/28/2024
-    public final static double armMin = 0.15; // arm on board
-    public final static double armMax = 0.72; // arm: when arm on dustpan
+    public static double armMin = 0.15; // arm on board
+    public static double armMax = 0.72; // arm: when arm on dustpan
 
-    public final static double pitchMin = 0.238; // pitch: when arm on dustpan // 0.22 when red tape
-    public final static double pitchMax = 0.72; // pitch: when arm on board
+    public static double pitchMin = 0.2 ; // pitch: when arm on dustpan // 0.22 when red tape
+    public static double pitchMax = 0.72; // pitch: when arm on board
 
-    public final static double clawClosed = 0.19; // claw: when closed
-    public final static double clawOpen = 0.04; // claw: when open
+    public static double clawClosed = 0.16; // claw: when closed
+    public static double clawOpen = 0.06; // claw: when open
 
     public final static double manualArmIncrement = 0.0005; // increment per "frame" for manual arm control
 

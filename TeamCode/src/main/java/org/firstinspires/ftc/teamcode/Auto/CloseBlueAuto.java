@@ -100,7 +100,7 @@ public class CloseBlueAuto extends BaseOpMode {
 
                         })
                         .strafeRight(12.3)
-                        .turn(Math.toRadians(-90))
+                        .turn(Math.toRadians(-92))
                         .back(38)
                         .build());
                 break;
@@ -135,15 +135,15 @@ public class CloseBlueAuto extends BaseOpMode {
                         })
                         .back(9)
 
-                        .turn(Math.toRadians(-90))
+                        .turn(Math.toRadians(-92))
                         .back(38)
-                        .strafeRight(7)
+                        .strafeRight(9)
                         .build());
                 break;
             case LEFT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .forward(27)
-                        .strafeRight(14)
+                        .forward(29)
+                        .strafeRight(11)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -169,8 +169,8 @@ public class CloseBlueAuto extends BaseOpMode {
 
                         })
                         .back(5)
-                        .turn(Math.toRadians(-90))
-                        .back(25.8)
+                        .turn(Math.toRadians(-92))
+                        .back(28.3)
                         .strafeRight(7)
                         .build());
                 break;
@@ -230,7 +230,7 @@ public class CloseBlueAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeLeft(23)
                         .turn(Math.toRadians(-30))
-                        .back(14)
+                        .back(18)
                         .build());
                 break;
         }
