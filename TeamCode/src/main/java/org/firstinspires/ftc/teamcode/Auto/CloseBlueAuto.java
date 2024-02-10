@@ -67,13 +67,14 @@ public class CloseBlueAuto extends BaseOpMode {
         if(isStopRequested()) return;
 
 
-
+        intakeMotor.resetEncoder();
 
         switch(propPosition) {
-            case LEFT:
+            case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .forward(27)
-                        .strafeRight(10)
+                        .forward(30)
+                        .strafeLeft(12.3)
+
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -81,20 +82,33 @@ public class CloseBlueAuto extends BaseOpMode {
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1.2)
+                        .waitSeconds(1.25)
                         .addTemporalMarker(() -> {
+                            int intakeTarget = 150 * (Math.round(intakeMotor.getCurrentPosition() / 150 ));
+                            telemetry.addData("intakeTarget",intakeTarget);
+                            telemetry.addData("Current Pos",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+                            intakeMotor.setTargetPosition(150);
+                            while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
+                                intakeMotor.set(0.23);
+                            }
+
+                            telemetry.addData("Reached",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+
                             intakeMotor.set(0);
+
                         })
-                        .back(5)
+                        .strafeRight(12.3)
                         .turn(Math.toRadians(-90))
-                        .back(28.5)
-                        .strafeRight(7)
+                        .back(38)
                         .build());
                 break;
             case CENTER:
+            case NOPOS:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(40)
-                        .back(11.5)
+                        .back(11)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -102,23 +116,34 @@ public class CloseBlueAuto extends BaseOpMode {
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1.2)
+                        .waitSeconds(1.25)
                         .addTemporalMarker(() -> {
+                            int intakeTarget = 150 * (Math.round(intakeMotor.getCurrentPosition() / 150 ));
+                            telemetry.addData("intakeTarget",intakeTarget);
+                            telemetry.addData("Current Pos",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+                            intakeMotor.setTargetPosition(150);
+                            while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
+                                intakeMotor.set(0.2);
+                            }
+
+                            telemetry.addData("Reached",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+
                             intakeMotor.set(0);
+
                         })
                         .back(9)
 
                         .turn(Math.toRadians(-90))
-                        .back(36)
-                        .strafeRight(11)
+                        .back(38)
+                        .strafeRight(7)
                         .build());
                 break;
-            case RIGHT:
+            case LEFT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(27)
-                        .turn(Math.toRadians(-90))
-                        .forward(10)
-                        .back(10)
+                        .strafeRight(14)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -126,15 +151,28 @@ public class CloseBlueAuto extends BaseOpMode {
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1.2)
+                        .waitSeconds(1.25)
                         .addTemporalMarker(() -> {
+                            int intakeTarget = 150 * (Math.round(intakeMotor.getCurrentPosition() / 150 ));
+                            telemetry.addData("intakeTarget",intakeTarget);
+                            telemetry.addData("Current Pos",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+                            intakeMotor.setTargetPosition(150);
+                            while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
+                                intakeMotor.set(0.2);
+                            }
+
+                            telemetry.addData("Reached",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+
                             intakeMotor.set(0);
+
                         })
-                        .back(37)
-                        .strafeRight(15)
+                        .back(5)
+                        .turn(Math.toRadians(-90))
+                        .back(25.8)
+                        .strafeRight(7)
                         .build());
-                break;
-            case NOPOS:
                 break;
             default:
                 break;
@@ -143,54 +181,58 @@ public class CloseBlueAuto extends BaseOpMode {
 
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .strafeRight(0.1)
-                        .addDisplacementMarker(() -> {
-                            claw.setPosition(clawClosed);
-                            sleep(1000);
-                            double armPosition = armMin;
-                            arm.setPosition(armPosition);
-                            sleep(1000);
+                .strafeRight(8)
+                .addDisplacementMarker(() -> {
+                    claw.setPosition(clawClosed);
+                    sleep(1000);
+                    double armPosition = armMin;
+                    arm.setPosition(armPosition);
+                    sleep(1000);
 
-                            double armPercent = (armPosition - armMin) / (armMax - armMin);
-                            double pitchPercent = (0.5 - armPercent) / (0.5);
-                            pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax);
-                            sleep(1000);
+                    double armPercent = (armPosition - armMin) / (armMax - armMin);
+                    double pitchPercent = (0.5 - armPercent) / (0.5);
+                    pitch.setPosition((1 - pitchPercent) * (1 - pitchMax) + pitchMax);
+                    sleep(1000);
 
-                            claw.setPosition(clawOpen+0.02);
-                            sleep(300);
-                            claw.setPosition(clawOpen-0.02);
-                            sleep(300);
-                            // Shake it
-                            pitch.setPosition(pitch.getPosition() + 0.1);
-                            sleep(100);
-                            pitch.setPosition(pitch.getPosition() - 0.1);
-                            sleep(600);
-                            armPosition = 0.655;
-                            pitch.setPosition(pitchMin); // ready to pick up
-                            arm.setPosition(armPosition);
-                        })
+                    claw.setPosition(clawOpen+0.02);
+                    sleep(300);
+                    claw.setPosition(clawOpen-0.02);
+                    sleep(300);
+                    // Shake it
+                    pitch.setPosition(pitch.getPosition() + 0.1);
+                    sleep(100);
+                    pitch.setPosition(pitch.getPosition() - 0.1);
+                    sleep(600);
+                    armPosition = 0.655;
+                    pitch.setPosition(pitchMin); // ready to pick up
+                    arm.setPosition(armPosition);
+                })
                 .build());
 
 
         switch(propPosition) {
-            case LEFT:
+            case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .strafeLeft(10)
+                        .strafeLeft(22)
                         .turn(Math.toRadians(-30))
-                        .back(5)
+                        .back(18)
                         .build());
+                break;
+            case NOPOS:
             case CENTER:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeLeft(23)
                         .turn(Math.toRadians(-30))
-                        .back(18)
+                        .back(20)
                         .build());
-            case RIGHT:
+                break;
+            case LEFT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .strafeLeft(27)
+                        .strafeLeft(23)
                         .turn(Math.toRadians(-30))
-                        .back(18)
+                        .back(14)
                         .build());
+                break;
         }
 
 

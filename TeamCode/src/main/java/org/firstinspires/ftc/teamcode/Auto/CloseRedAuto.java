@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.CV.ColorDetectionYCRCBPipeline;
 import org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.BaseOpMode;
@@ -16,6 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import static org.firstinspires.ftc.teamcode.TeleOp.MainTeleop.MainOpMode.*;
 
+@Config
 @Autonomous(name = "CloseRedAuto")
 public class CloseRedAuto extends BaseOpMode {
     private OpenCvCamera camera;
@@ -66,16 +70,14 @@ public class CloseRedAuto extends BaseOpMode {
 
         if(isStopRequested()) return;
 
-
-
+        intakeMotor.resetEncoder();
 
         switch(propPosition) {
             case LEFT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .forward(27)
-                        .turn(Math.toRadians(90))
-                        .forward(10)
-                        .back(10)
+                        .forward(30)
+                        .strafeRight(11)
+
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -83,18 +85,33 @@ public class CloseRedAuto extends BaseOpMode {
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1.2)
+                        .waitSeconds(1.25)
                         .addTemporalMarker(() -> {
+                            int intakeTarget = 150 * (Math.round(intakeMotor.getCurrentPosition() / 150 ));
+                            telemetry.addData("intakeTarget",intakeTarget);
+                            telemetry.addData("Current Pos",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+                            intakeMotor.setTargetPosition(150);
+                            while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
+                                intakeMotor.set(0.23);
+                            }
+
+                            telemetry.addData("Reached",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+
                             intakeMotor.set(0);
+
                         })
-                        .back(37)
-                        .strafeLeft(15)
+                        .strafeLeft(11)
+                        .turn(Math.toRadians(90))
+                        .back(38)
                         .build());
                 break;
             case CENTER:
+            case NOPOS:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(40)
-                        .back(11.5)
+                        .back(11)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -102,21 +119,34 @@ public class CloseRedAuto extends BaseOpMode {
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1.2)
+                        .waitSeconds(1.25)
                         .addTemporalMarker(() -> {
+                            int intakeTarget = 150 * (Math.round(intakeMotor.getCurrentPosition() / 150 ));
+                            telemetry.addData("intakeTarget",intakeTarget);
+                            telemetry.addData("Current Pos",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+                            intakeMotor.setTargetPosition(150);
+                            while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
+                                intakeMotor.set(0.2);
+                            }
+
+                            telemetry.addData("Reached",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+
                             intakeMotor.set(0);
+
                         })
                         .back(9)
 
                         .turn(Math.toRadians(90))
                         .back(38)
-                        .strafeLeft(11)
+                        .strafeLeft(7)
                         .build());
                 break;
             case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .forward(27)
-                        .strafeLeft(10)
+                        .strafeLeft(14)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
                         })
@@ -124,17 +154,28 @@ public class CloseRedAuto extends BaseOpMode {
                         .addTemporalMarker(() -> {
                             intakeMotor.set(0.25);
                         })
-                        .waitSeconds(1.2)
+                        .waitSeconds(1.25)
                         .addTemporalMarker(() -> {
+                            int intakeTarget = 150 * (Math.round(intakeMotor.getCurrentPosition() / 150 ));
+                            telemetry.addData("intakeTarget",intakeTarget);
+                            telemetry.addData("Current Pos",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+                            intakeMotor.setTargetPosition(150);
+                            while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
+                                intakeMotor.set(0.2);
+                            }
+
+                            telemetry.addData("Reached",intakeMotor.getCurrentPosition());
+                            telemetry.update();
+
                             intakeMotor.set(0);
+
                         })
                         .back(5)
                         .turn(Math.toRadians(90))
-                        .back(28.5)
+                        .back(25.8)
                         .strafeLeft(7)
                         .build());
-                break;
-            case NOPOS:
                 break;
             default:
                 break;
@@ -175,22 +216,26 @@ public class CloseRedAuto extends BaseOpMode {
         switch(propPosition) {
             case LEFT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .strafeRight(27)
+                        .strafeRight(22)
                         .turn(Math.toRadians(30))
                         .back(18)
                         .build());
+                break;
+            case NOPOS:
             case CENTER:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeRight(23)
                         .turn(Math.toRadians(30))
                         .back(18)
                         .build());
+                break;
             case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .strafeRight(10)
+                        .strafeRight(23)
                         .turn(Math.toRadians(30))
-                        .back(5)
+                        .back(14)
                         .build());
+                break;
         }
 
 
