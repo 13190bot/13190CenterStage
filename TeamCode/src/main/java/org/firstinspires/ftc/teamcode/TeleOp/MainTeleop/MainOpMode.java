@@ -56,10 +56,10 @@ public class MainOpMode extends BaseOpMode {
     public static double armMin = 0.15; // arm on board
     public static double armMax = 0.72; // arm: when arm on dustpan
 
-    public static double pitchMin = 0.2 ; // pitch: when arm on dustpan // 0.22 when red tape
+    public static double pitchMin = 0.22 ; // pitch: when arm on dustpan // 0.22 when red tape
     public static double pitchMax = 0.72; // pitch: when arm on board
 
-    public static double clawClosed = 0.16; // claw: when closed
+    public static double clawClosed = 0.19; // claw: when closed
     public static double clawOpen = 0.06; // claw: when open
 
     public final static double manualArmIncrement = 0.0005; // increment per "frame" for manual arm control

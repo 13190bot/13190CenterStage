@@ -69,6 +69,8 @@ public class CloseBlueAuto extends BaseOpMode {
 
         intakeMotor.resetEncoder();
 
+        claw.setPosition(clawClosed);
+
         switch(propPosition) {
             case RIGHT:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
@@ -170,7 +172,7 @@ public class CloseBlueAuto extends BaseOpMode {
                         })
                         .back(5)
                         .turn(Math.toRadians(-92))
-                        .back(28.3)
+                        .back(37)
                         .strafeRight(7)
                         .build());
                 break;
@@ -218,7 +220,7 @@ public class CloseBlueAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeLeft(22)
                         .turn(Math.toRadians(-30))
-                        .back(18)
+                        .back(24)
                         .build());
                 break;
             case NOPOS:
@@ -233,7 +235,7 @@ public class CloseBlueAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeLeft(23)
                         .turn(Math.toRadians(-30))
-                        .back(18)
+                        .back(24)
                         .build());
                 break;
         }

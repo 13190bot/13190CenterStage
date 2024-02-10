@@ -104,7 +104,7 @@ public class CloseRedAuto extends BaseOpMode {
                         })
                         .strafeLeft(11)
                         .turn(Math.toRadians(90))
-                        .back(38)
+                        .back(40)
                         .build());
                 break;
             case CENTER:
@@ -173,7 +173,7 @@ public class CloseRedAuto extends BaseOpMode {
                         })
                         .back(5)
                         .turn(Math.toRadians(90))
-                        .back(25.8)
+                        .back(39)
                         .strafeLeft(7)
                         .build());
                 break;
