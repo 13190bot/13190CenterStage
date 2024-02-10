@@ -139,7 +139,7 @@ public class CloseRedAuto extends BaseOpMode {
                         .back(9)
 
                         .turn(Math.toRadians(90))
-                        .back(38)
+                        .back(41)
                         .strafeLeft(7)
                         .build());
                 break;
@@ -226,7 +226,7 @@ public class CloseRedAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeRight(23)
                         .turn(Math.toRadians(30))
-                        .back(18)
+                        .back(22)
                         .build());
                 break;
             case RIGHT:

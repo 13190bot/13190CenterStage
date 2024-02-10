@@ -107,7 +107,7 @@ public class CloseBlueAuto extends BaseOpMode {
             case CENTER:
             case NOPOS:
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
-                        .forward(40)
+                        .forward(42)
                         .back(11)
                         .addTemporalMarker(() -> {
                             intakeMotor.set(-0.3);
@@ -124,7 +124,7 @@ public class CloseBlueAuto extends BaseOpMode {
                             telemetry.update();
                             intakeMotor.setTargetPosition(150);
                             while ( (150 - 10 <= intakeMotor.getCurrentPosition()) && (intakeMotor.getCurrentPosition() <= 150 +10)) {
-                                intakeMotor.set(0.2);
+                                intakeMotor.set(0.19);
                             }
 
                             telemetry.addData("Reached",intakeMotor.getCurrentPosition());
@@ -184,9 +184,12 @@ public class CloseBlueAuto extends BaseOpMode {
                 .strafeRight(8)
                 .addDisplacementMarker(() -> {
                     claw.setPosition(clawClosed);
-                    sleep(1000);
+                })
+                .waitSeconds(1)
+                .addDisplacementMarker(() -> {
                     double armPosition = armMin;
                     arm.setPosition(armPosition);
+
                     sleep(1000);
 
                     double armPercent = (armPosition - armMin) / (armMax - armMin);
@@ -223,7 +226,7 @@ public class CloseBlueAuto extends BaseOpMode {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d())
                         .strafeLeft(23)
                         .turn(Math.toRadians(-30))
-                        .back(20)
+                        .back(24)
                         .build());
                 break;
             case LEFT:
